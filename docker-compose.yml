@@ -1,0 +1,40 @@
+services:
+  redis:
+    command: 'redis-server --requirepass redis'
+    container_name: bloombot-redis
+    image: 'redis:alpine'
+    networks:
+      - infi
+    ports:
+      - '6379:6379'
+    restart: always
+    logging:
+      options:
+        max-size: '20m'
+        max-file: '3'
+
+  bloombot:
+    build:
+      context: ../
+    container_name: bloombot
+    depends_on:
+      - redis
+      - influx
+    env_file:
+      - src/.env
+      - src/.env.development.local
+    image: bloombot:latest
+    logging:
+      options:
+        max-size: '1g'
+        max-file: '3'
+    networks:
+      - infi
+    restart: always
+    tty: true
+
+volumes:
+  influx-data:
+
+networks:
+  infi:

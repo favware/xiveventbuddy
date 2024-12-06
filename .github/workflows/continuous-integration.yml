@@ -1,0 +1,22 @@
+name: Continuous Integration
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  linting:
+    name: Linting
+    uses: sapphiredev/.github/.github/workflows/reusable-lint.yml@main
+
+  typecheck:
+    name: Typecheck
+    uses: sapphiredev/.github/.github/workflows/reusable-yarn-job.yml@main
+    with:
+      script-name: prisma:generate && yarn typecheck
+
+  build:
+    name: Building
+    uses: sapphiredev/.github/.github/workflows/reusable-build.yml@main
