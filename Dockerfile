@@ -35,6 +35,7 @@ FROM base AS runner
 
 ENV NODE_ENV="production"
 ENV NODE_OPTIONS="--enable-source-maps"
+ENV TZ="Europe/London"
 
 COPY --chown=node:node .env .env
 COPY --chown=node:node --from=builder /usr/src/app/dist dist
