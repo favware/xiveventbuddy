@@ -1,4 +1,5 @@
 import type { Emojis } from '#lib/util/constants';
+import type { $Enums } from '@prisma/client';
 import { formatEmoji } from 'discord.js';
 
 export const BloombotEmojis: Record<Emojis, string> = {
@@ -51,3 +52,7 @@ export const BloombotEmojis: Record<Emojis, string> = {
 	RedCross: formatEmoji('1324572748130947143', false),
 	GreenTick: formatEmoji('1324572747069915188', false)
 } as const;
+
+export function getEmojiForJob(job: $Enums.Jobs): string {
+	return BloombotEmojis[job] || '';
+}

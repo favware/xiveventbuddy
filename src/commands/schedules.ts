@@ -1,10 +1,9 @@
 import { BloomCommand } from '#lib/extensions/BloomComand';
 import { BloombotEmojis } from '#lib/util/emojis';
-import type { Interval } from '@prisma/client';
 import { ApplyOptions } from '@sapphire/decorators';
 import type { ApplicationCommandRegistry, Awaitable, ChatInputCommand } from '@sapphire/framework';
-import { toTitleCase } from '@sapphire/utilities';
-import { heading, unorderedList, time, TimestampStyles, roleMention } from 'discord.js';
+import { filterNullish, toTitleCase } from '@sapphire/utilities';
+import { heading, roleMention, unorderedList } from 'discord.js';
 
 @ApplyOptions<ChatInputCommand.Options>({
 	description: 'Manage existing schedules'
@@ -74,12 +73,14 @@ export class SlashCommand extends BloomCommand {
 
 				return [
 					`${eventIdHeader}: ${id}`,
-					unorderedList([
-						`**Name:** ${name}`,
-						`**Description:** ${description}`,
-						`**Interval:** ${toTitleCase(interval.toLowerCase())}`,
-						`**Roles to ping:** ${roleMention(roleToPing)}`
-					])
+					unorderedList(
+						[
+							`**Name:** ${name}`,
+							`**Description:** ${description}`,
+							interval ? `**Interval:** ${toTitleCase(interval.toLowerCase())}` : undefined,
+							roleToPing ? `**Role to ping:** ${roleMention(roleToPing)}` : undefined
+						].filter(filterNullish)
+					)
 				].join('\n');
 			})
 			.join('\n\n');

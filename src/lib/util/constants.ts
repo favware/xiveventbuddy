@@ -1,14 +1,31 @@
-import type { Jobs } from '@prisma/client';
-import { URL } from 'node:url';
+import type { Jobs, Participant } from '@prisma/client';
 
-export const rootFolder = new URL('../../../', import.meta.url);
-export const srcFolder = new URL('src/', rootFolder);
+/**
+ * Left-to-right mark character.
+ * @see {@link https://en.wikipedia.org/wiki/Left-to-right_mark}
+ */
+export const leftToRightMark = String.fromCharCode(8206);
+
+/**
+ * Braille pattern blank character
+ * @see {@link https://en.wikipedia.org/wiki/Braille_Patterns}
+ */
+export const braillePatternBlank = String.fromCharCode(10240);
+
+export const ownerId = '268792781713965056';
+export const ownerPing = userMention(ownerId);
 
 export const enum BrandingColors {
 	Primary = 0xbb77ea
 }
 
-export const enum ErrorIdentifiers {}
+import type { Event, EventInstance } from '@prisma/client';
+import { userMention } from 'discord.js';
+export type EventData = Pick<Event, 'id' | 'description' | 'name' | 'roleToPing' | 'leader'> & {
+	instance: Pick<EventInstance, 'dateTime'> & {
+		participants: Pick<Participant, 'job' | 'role' | 'discordId' | 'signupOrder'>[];
+	};
+};
 
 type JobTypeEmojis = 'AllRounder' | 'DPS' | 'Healer' | 'MeleeDPS' | 'MagicRangedDPS' | 'PhysRangedDPS' | 'Tank';
 type EventDataEmojis = 'Absence' | 'Bench' | 'Countdown' | 'Date' | 'Late' | 'Leader' | 'Signups' | 'SpecReset' | 'Tentative' | 'Time';
