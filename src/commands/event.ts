@@ -1,7 +1,8 @@
 import { BloomCommand } from '#lib/extensions/BloomComand';
-import { ownerId, ownerPing, type EventData } from '#lib/util/constants';
+import type { EventData } from '#lib/util/constants';
 import { BloombotEmojis } from '#lib/util/emojis';
 import { buildEventEmbed } from '#lib/util/functions/buildEventEmbed';
+import { OwnerMentions, Owners } from '#root/config';
 import { Interval } from '@prisma/client';
 import { ApplyOptions } from '@sapphire/decorators';
 import type { ApplicationCommandRegistry, Awaitable, ChatInputCommand } from '@sapphire/framework';
@@ -188,9 +189,9 @@ export class SlashCommand extends BloomCommand {
 
 		if (!event.instance) {
 			return interaction.editReply({
-				content: `${BloombotEmojis.RedCross} An unexpected fatal error occurred while creating the event. Contact ${ownerPing} for assistance.`,
+				content: `${BloombotEmojis.RedCross} An unexpected fatal error occurred while creating the event. Contact ${OwnerMentions} for assistance.`,
 				allowedMentions: {
-					users: [ownerId]
+					users: Owners
 				}
 			});
 		}

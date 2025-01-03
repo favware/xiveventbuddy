@@ -1,4 +1,4 @@
-import type { Jobs, Participant } from '@prisma/client';
+import type { Event, EventInstance, Jobs, Participant } from '@prisma/client';
 
 /**
  * Left-to-right mark character.
@@ -12,15 +12,10 @@ export const leftToRightMark = String.fromCharCode(8206);
  */
 export const braillePatternBlank = String.fromCharCode(10240);
 
-export const ownerId = '268792781713965056';
-export const ownerPing = userMention(ownerId);
-
 export const enum BrandingColors {
 	Primary = 0xbb77ea
 }
 
-import type { Event, EventInstance } from '@prisma/client';
-import { userMention } from 'discord.js';
 export type EventData = Pick<Event, 'id' | 'description' | 'name' | 'roleToPing' | 'leader'> & {
 	instance: Pick<EventInstance, 'dateTime'> & {
 		participants: Pick<Participant, 'job' | 'role' | 'discordId' | 'signupOrder'>[];
