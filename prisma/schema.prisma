@@ -81,7 +81,6 @@ model Event {
     id          String          @id @default(cuid())
     name        String
     description String?
-    date        DateTime
     interval    Interval
     roleToPing  String          @map("role_to_ping")
     createdAt   DateTime        @default(now())
