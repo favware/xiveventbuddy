@@ -22,8 +22,8 @@ declare module '@sapphire/pieces' {
 
 declare module '@sapphire/framework' {
 	interface Preconditions {
-		ValidServer: never;
-		IsManagerRole: never;
+		VerifiedServer: never;
+		IsEventManager: never;
 	}
 }
 

@@ -1,40 +1,46 @@
 services:
-  redis:
-    command: 'redis-server --requirepass redis'
-    container_name: bloombot-redis
-    image: 'redis:alpine'
+  postgres:
+    container_name: postgres
+    image: postgres:17-alpine
     networks:
-      - infi
+      - bloombot
     ports:
-      - '6379:6379'
+      - '5432:5432'
     restart: always
+    volumes:
+      - 'postgres-data:/var/lib/postgresql/data'
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=bloombot
     logging:
       options:
         max-size: '20m'
         max-file: '3'
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready']
+      interval: 30s
+      timeout: 60s
+      retries: 5
+      start_period: 80s
 
   bloombot:
-    build:
-      context: ../
     container_name: bloombot
-    depends_on:
-      - redis
-      - influx
     env_file:
-      - src/.env
-      - src/.env.development.local
-    image: bloombot:latest
+      - .env
+      - .env.development.local
+    image: favware/bloombot:latest
     logging:
       options:
         max-size: '1g'
         max-file: '3'
     networks:
-      - infi
+      - bloombot
     restart: always
     tty: true
 
 volumes:
-  influx-data:
+  postgres-data:
 
 networks:
-  infi:
+  bloombot:

@@ -6,3 +6,111 @@ datasource db {
     provider = "postgresql"
     url      = env("DATABASE_URL")
 }
+
+enum Interval {
+    DAILY
+    WEEKLY
+    MONTHLY
+    YEARLY
+
+    @@map("interval")
+}
+
+enum Roles {
+    AllRounder     @map("all_rounder")
+    DPS            @map("dps")
+    Healer         @map("healer")
+    MeleeDPS       @map("melee_dps")
+    MagicRangedDPS @map("magic_ranged_dps")
+    PhysRangedDPS  @map("phys_ranged_dps")
+    Tank           @map("tank")
+    Absence        @map("absence")
+    Bench          @map("bench")
+    Late           @map("late")
+    Tentative      @map("tentative")
+
+    @@map("roles")
+}
+
+enum Jobs {
+    Paladin     @map("paladin")
+    Warrior     @map("warrior")
+    Dragoon     @map("dragoon")
+    Monk        @map("monk")
+    Bard        @map("bard")
+    BlackMage   @map("black_mage")
+    Summoner    @map("summoner")
+    Scholar     @map("scholar")
+    WhiteMage   @map("white_mage")
+    Ninja       @map("ninja")
+    DarkKnight  @map("dark_knight")
+    Machinist   @map("machinist")
+    Astrologian @map("astrologian")
+    Samurai     @map("samurai")
+    RedMage     @map("red_mage")
+    BlueMage    @map("blue_mage")
+    Gunbreaker  @map("gunbreaker")
+    Dancer      @map("dancer")
+    Reaper      @map("reaper")
+    Sage        @map("sage")
+    Viper       @map("viper")
+    Pictomancer @map("pictomancer")
+
+    @@map("jobs")
+}
+
+model EventManagers {
+    id        String   @id @default(cuid())
+    discordId String   @unique
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@map("event_managers")
+}
+
+model VerifiedServers {
+    id        String   @id @default(cuid())
+    discordId String   @unique
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@map("verified_servers")
+}
+
+model Event {
+    id          String          @id @default(cuid())
+    name        String
+    description String?
+    date        DateTime
+    interval    Interval
+    roleToPing  String          @map("role_to_ping")
+    createdAt   DateTime        @default(now())
+    updatedAt   DateTime        @updatedAt
+    instances   EventInstance[]
+
+    @@map("events")
+}
+
+model EventInstance {
+    id           String        @id @default(cuid())
+    eventId      String        @map("event_id")
+    event        Event         @relation(fields: [eventId], references: [id])
+    date         DateTime
+    participants Participant[]
+    createdAt    DateTime      @default(now())
+    updatedAt    DateTime      @updatedAt
+
+    @@map("event_instances")
+}
+
+model Participant {
+    id            String        @id
+    role          Roles
+    job           Jobs?
+    eventId       String        @map("event_id")
+    eventInstance EventInstance @relation(fields: [eventId], references: [id])
+    createdAt     DateTime      @default(now())
+    updatedAt     DateTime      @updatedAt
+
+    @@map("participants")
+}
