@@ -26,10 +26,14 @@ services:
 
   bloombot:
     container_name: bloombot
+    build: .
     env_file:
       - .env
       - .env.development.local
+    cap_add:
+      - SYS_TIME
     environment:
+      - NTP_SERVERS=pool.ntp.org
       - TZ="Europe/London"
     image: favware/bloombot:latest
     logging:
