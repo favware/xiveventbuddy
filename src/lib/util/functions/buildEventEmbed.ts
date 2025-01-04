@@ -29,7 +29,11 @@ export function buildEventEmbed(event: EventData) {
 	const healerParticipants = getHealerParticipants(event);
 	const allRounderParticipants = getAllRounderParticipants(event);
 
-	builder.setColor(BrandingColors.Primary);
+	builder.setTitle(event.name).setColor(BrandingColors.Primary);
+
+	if (event.description) {
+		builder.setDescription(event.description.split(/\\{2,4}n/).join('\n'));
+	}
 
 	builder.addFields(
 		{
