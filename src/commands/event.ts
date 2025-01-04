@@ -1,12 +1,13 @@
 import { BloomCommand } from '#lib/extensions/BloomComand';
-import type { EventData } from '#lib/util/constants';
+import { ErrorIdentifiers, type EventData } from '#lib/util/constants';
 import { BloombotEmojis } from '#lib/util/emojis';
 import { buildEventEmbed } from '#lib/util/functions/buildEventEmbed';
 import { OwnerMentions, Owners } from '#root/config';
 import { Interval } from '@prisma/client';
 import { ApplyOptions } from '@sapphire/decorators';
-import type { ApplicationCommandRegistry, Awaitable, ChatInputCommand } from '@sapphire/framework';
+import { UserError, type ApplicationCommandRegistry, type Awaitable, type ChatInputCommand } from '@sapphire/framework';
 import { filterNullish } from '@sapphire/utilities';
+import { format } from 'date-fns/format';
 import { heading, inlineCode, roleMention, time, TimestampStyles, unorderedList } from 'discord.js';
 
 @ApplyOptions<ChatInputCommand.Options>({
@@ -93,31 +94,31 @@ export class SlashCommand extends BloomCommand {
 						.addStringOption((builder) =>
 							builder //
 								.setName('name')
-								.setDescription('The name of the event')
-								.setRequired(true)
+								.setDescription('The new name of the event')
+								.setRequired(false)
 						)
 						.addStringOption((builder) =>
 							builder //
 								.setName('date')
-								.setDescription('The date of the event, or first occurrence if interval is set. Format is DD-MM-YYYY or DD/MM/YYYY')
-								.setRequired(true)
+								.setDescription('The new date of the event. Format is DD-MM-YYYY or DD/MM/YYYY')
+								.setRequired(false)
 						)
 						.addStringOption((builder) =>
 							builder //
 								.setName('time')
-								.setDescription('The time of the event. Format is HH:MM (24 hour clock). Time is always Light server time (UTC)')
-								.setRequired(true)
+								.setDescription('The new time of the event. Format is HH:MM (24 hour clock). Time is always Light server time (UTC)')
+								.setRequired(false)
 						)
 						.addStringOption((builder) =>
 							builder //
 								.setName('description')
-								.setDescription('The description of the event, for newlines type \\n')
+								.setDescription('The new description of the event, for newlines type \\n')
 								.setRequired(false)
 						)
 						.addStringOption((builder) =>
 							builder //
 								.setName('interval')
-								.setDescription('The interval at which this event should repeat')
+								.setDescription('The new interval at which this event should repeat')
 								.setRequired(false)
 								.setChoices(
 									{ name: 'Daily', value: Interval.DAILY },
@@ -130,13 +131,19 @@ export class SlashCommand extends BloomCommand {
 						.addRoleOption((builder) =>
 							builder //
 								.setName('role-to-ping')
-								.setDescription('A role to ping when the event is created')
+								.setDescription('The new role to ping for the event')
 								.setRequired(false)
 						)
 						.addChannelOption((builder) =>
 							builder //
 								.setName('channel')
 								.setDescription('The channel in which the event should posted, if omitted the current channel is used.')
+								.setRequired(false)
+						)
+						.addUserOption((builder) =>
+							builder //
+								.setName('leader')
+								.setDescription('The new event leader for this event.')
 								.setRequired(false)
 						)
 				)
@@ -338,37 +345,9 @@ export class SlashCommand extends BloomCommand {
 	}
 
 	private async editEvent(interaction: ChatInputCommand.Interaction<'cached'>) {
-		const { dateUnixTimestamp, dateIsInvalid } = this.validateStringDate(interaction.options.getString('date', true));
-
-		if (dateIsInvalid) {
-			return interaction.editReply({
-				content: `${BloombotEmojis.RedCross} The date you provided is invalid, it has to be in the format of ${inlineCode('DD-MM-YYY')} or ${inlineCode('DD/MM/YYY')}.`
-			});
-		}
-
-		const stringTime = interaction.options.getString('time', true);
-
-		if (!this.timeRegex.test(stringTime)) {
-			return interaction.editReply({
-				content: `${BloombotEmojis.RedCross} The time you provided is invalid, it has to be in the format of ${inlineCode('HH:MM')}.`
-			});
-		}
-
-		const eventDate = this.setEventTimeAndTimezone(dateUnixTimestamp, stringTime);
-
-		const channel = interaction.options.getChannel('channel', false);
-
-		const eventChannel = channel ?? interaction.channel;
-
-		if (!eventChannel?.isSendable()) {
-			return interaction.editReply({
-				content: `${BloombotEmojis.RedCross} The channel you provided is invalid.`
-			});
-		}
-
 		const id = interaction.options.getString('id', true);
 
-		const eventForId = await this.container.prisma.event.findFirst({
+		const existingEvent = await this.container.prisma.event.findFirst({
 			where: {
 				id
 			},
@@ -397,31 +376,71 @@ export class SlashCommand extends BloomCommand {
 			}
 		});
 
-		if (!eventForId) {
+		if (!existingEvent || !existingEvent.instance) {
 			return interaction.editReply({
 				content: `${BloombotEmojis.RedCross} No event found with ID ${inlineCode(id)}.`
 			});
 		}
 
-		const name = interaction.options.getString('name', true);
-		const description = interaction.options.getString('description', false);
-		const interval = interaction.options.getString('interval', false);
-		const roleToPing = interaction.options.getRole('role-to-ping', false);
+		const stringDate = interaction.options.getString('date', false);
+		let dateUnixTimestamp: number | null = null;
+		let dateIsInvalid: boolean = false;
 
-		const event = await this.container.prisma.event.update({
+		if (stringDate) {
+			const validatedStringDate = this.validateStringDate(stringDate);
+			dateUnixTimestamp = validatedStringDate.dateUnixTimestamp;
+			dateIsInvalid = validatedStringDate.dateIsInvalid;
+
+			if (dateIsInvalid) {
+				return interaction.editReply({
+					content: `${BloombotEmojis.RedCross} The date you provided is invalid, it has to be in the format of ${inlineCode('DD-MM-YYY')} or ${inlineCode('DD/MM/YYY')}.`
+				});
+			}
+		}
+
+		let stringTime = interaction.options.getString('time', false);
+
+		if (stringTime && !this.timeRegex.test(stringTime)) {
+			return interaction.editReply({
+				content: `${BloombotEmojis.RedCross} The time you provided is invalid, it has to be in the format of ${inlineCode('HH:MM')}.`
+			});
+		}
+
+		dateUnixTimestamp = dateUnixTimestamp ?? existingEvent.instance.dateTime.getTime();
+		stringTime = stringTime ?? format(existingEvent.instance.dateTime, 'HH:mm');
+
+		const eventDate = this.setEventTimeAndTimezone(dateUnixTimestamp, stringTime);
+
+		const name = interaction.options.getString('name', false) ?? existingEvent.name;
+		const description = interaction.options.getString('description', false) ?? existingEvent.description;
+		const interval = interaction.options.getString('interval', false) ?? existingEvent.interval;
+		const channel = interaction.options.getChannel('channel', false);
+		const roleToPing = interaction.options.getRole('role-to-ping', false);
+		const leader = interaction.options.getUser('leader', false);
+
+		const resolvedEventChannel =
+			channel ?? (existingEvent.channelId ? interaction.guild.channels.cache.get(existingEvent.channelId) : null) ?? interaction.channel;
+
+		if (!resolvedEventChannel?.isSendable()) {
+			return interaction.editReply({
+				content: `${BloombotEmojis.RedCross} The channel you provided is invalid.`
+			});
+		}
+
+		const updatedEvent = await this.container.prisma.event.update({
 			where: {
 				id
 			},
 			data: {
-				name: name ?? eventForId.name,
-				description: description ?? eventForId.description,
-				channelId: eventChannel.id ?? eventForId.channelId,
-				interval: (interval as Interval) ?? eventForId.interval,
-				roleToPing: roleToPing?.id ?? eventForId.roleToPing,
-				leader: interaction.user.id ?? eventForId.leader,
+				name,
+				description,
+				channelId: resolvedEventChannel.id,
+				interval: interval as Interval,
+				roleToPing: roleToPing?.id ?? existingEvent.roleToPing,
+				leader: leader?.id ?? existingEvent.leader,
 				instance: {
 					update: {
-						dateTime: eventDate ?? eventForId.instance?.dateTime
+						dateTime: eventDate
 					}
 				}
 			},
@@ -431,6 +450,7 @@ export class SlashCommand extends BloomCommand {
 				description: true,
 				roleToPing: true,
 				leader: true,
+				channelId: true,
 				instance: {
 					select: {
 						dateTime: true,
@@ -448,39 +468,57 @@ export class SlashCommand extends BloomCommand {
 			}
 		});
 
-		const postedMessageChannel = await interaction.guild.channels.fetch(eventChannel.id);
+		if (resolvedEventChannel.id === existingEvent.channelId) {
+			const postedMessageChannel = await interaction.guild.channels.fetch(updatedEvent.channelId);
 
-		if (postedMessageChannel?.isSendable() && event.instance?.messageId) {
-			// "https://discord.com/api/v10/channels/838895947052089366/messages/1324894872305533010"
-			// guild id: 838895946397646850 channel id: 902281783196921857
-			// message link: https://discord.com/channels/838895946397646850/902281783196921857/1324894872305533010
-			try {
-				const postedMessage = await postedMessageChannel.messages.fetch(event.instance.messageId);
+			if (postedMessageChannel?.isSendable() && updatedEvent.instance?.messageId) {
+				try {
+					const postedMessage = await postedMessageChannel.messages.fetch(updatedEvent.instance.messageId);
 
-				if (postedMessage) {
-					await postedMessage.edit({
-						content: event.roleToPing ? roleMention(event.roleToPing) : undefined,
-						embeds: [buildEventEmbed(event as EventData)],
-						// components: [buildEventComponents(event as EventData)],
-						allowedMentions: { roles: event.roleToPing ? [event.roleToPing] : undefined }
-					});
-				} else {
-					return interaction.editReply({
-						content: `${BloombotEmojis.RedCross} I was unexpectedly unable to posted event message. Contact ${OwnerMentions} for assistance.`,
-						allowedMentions: { users: Owners }
+					if (postedMessage) {
+						await postedMessage.edit({
+							content: updatedEvent.roleToPing ? roleMention(updatedEvent.roleToPing) : undefined,
+							embeds: [buildEventEmbed(updatedEvent as EventData)],
+							// components: [buildEventComponents(event as EventData)],
+							allowedMentions: { roles: updatedEvent.roleToPing ? [updatedEvent.roleToPing] : undefined }
+						});
+					} else {
+						throw new UserError({
+							message: `${BloombotEmojis.RedCross} I was unexpectedly unable to posted event message. Contact ${OwnerMentions} for assistance.`,
+							identifier: ErrorIdentifiers.EventEditPostedMessageUndefinedError
+						});
+					}
+				} catch (error) {
+					throw new UserError({
+						message: `${BloombotEmojis.RedCross} I was unexpectedly unable to posted event message. Contact ${OwnerMentions} for assistance.`,
+						identifier: ErrorIdentifiers.EventEditMessageFetchFailedError
 					});
 				}
-			} catch (error) {
-				return interaction.editReply({
-					content: `${BloombotEmojis.RedCross} I was unexpectedly unable to posted event message. Contact ${OwnerMentions} for assistance.`,
-					allowedMentions: { users: Owners }
+			} else {
+				throw new UserError({
+					message: `${BloombotEmojis.RedCross} I was unexpectedly unable to find the channel the event was posted in. Contact ${OwnerMentions} for assistance.`,
+					identifier: ErrorIdentifiers.EventEditMessageChannelNotFoundError
 				});
 			}
 		} else {
-			return interaction.editReply({
-				content: `${BloombotEmojis.RedCross} I was unexpectedly unable to find the channel the event was posted in. Contact ${OwnerMentions} for assistance.`,
-				allowedMentions: { users: Owners }
-			});
+			const existingMessageChannel = await interaction.guild.channels.fetch(existingEvent.channelId);
+
+			if (existingMessageChannel?.isSendable() && existingEvent.instance.messageId) {
+				const oldPostedMessage = await existingMessageChannel.messages.fetch(existingEvent.instance.messageId);
+				await oldPostedMessage.delete();
+
+				const postedMessage = await resolvedEventChannel.send({
+					content: updatedEvent.roleToPing ? roleMention(updatedEvent.roleToPing) : undefined,
+					embeds: [buildEventEmbed(updatedEvent as EventData)],
+					// components: [buildEventComponents(event as EventData)],
+					allowedMentions: { roles: updatedEvent.roleToPing ? [updatedEvent.roleToPing] : undefined }
+				});
+
+				await this.container.prisma.event.update({
+					where: { id: updatedEvent.id },
+					data: { instance: { update: { messageId: postedMessage.id } } }
+				});
+			}
 		}
 
 		return interaction.editReply({

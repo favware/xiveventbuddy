@@ -39,6 +39,7 @@
 		"@skyra/start-banner": "^2.0.1",
 		"bufferutil": "^4.0.8",
 		"colorette": "^2.0.20",
+		"date-fns": "^4.1.0",
 		"discord.js": "^14.16.3",
 		"figlet": "^1.8.0",
 		"gradient-string": "^3.0.0",
