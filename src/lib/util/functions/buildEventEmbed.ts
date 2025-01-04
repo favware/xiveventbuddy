@@ -3,6 +3,7 @@ import { BloombotEmojis, getEmojiForJob } from '#lib/util/emojis';
 import {
 	getAbsentParticipants,
 	getAllRounderParticipants,
+	getBenchedParticipants,
 	getHealerParticipants,
 	getLateParticipants,
 	getMagicRangedDpsParticipants,
@@ -10,7 +11,8 @@ import {
 	getPhysRangedDpsParticipants,
 	getPresentParticipants,
 	getTankParticipants,
-	getTentativeParticipants
+	getTentativeParticipants,
+	type FilteredParticipant
 } from '#lib/util/functions/participantRoleFilters';
 import { bold, EmbedBuilder, inlineCode, time, TimestampStyles, underline, userMention } from 'discord.js';
 
@@ -18,6 +20,7 @@ export function buildEventEmbed(event: EventData) {
 	const builder = new EmbedBuilder();
 
 	const eventDateTime = event.instance.dateTime;
+	const benchedParticipants = getBenchedParticipants(event);
 	const presentParticipants = getPresentParticipants(event);
 	const absentParticipants = getAbsentParticipants(event);
 	const lateParticipants = getLateParticipants(event);
@@ -48,7 +51,7 @@ export function buildEventEmbed(event: EventData) {
 			inline: true,
 			name: leftToRightMark,
 			value: [
-				`${BloombotEmojis.Signups} ${bold(presentParticipants.length.toString())} (+${absentParticipants.length + lateParticipants.length + tentativeParticipants.length})`,
+				`${BloombotEmojis.Signups} ${bold(presentParticipants.length.toString())} (+${benchedParticipants.length + absentParticipants.length + lateParticipants.length + tentativeParticipants.length})`,
 				`${BloombotEmojis.Time} ${underline(time(eventDateTime, TimestampStyles.ShortTime))}`
 			].join('\n')
 		},
@@ -75,10 +78,7 @@ export function buildEventEmbed(event: EventData) {
 	);
 
 	if (tankParticipants.length > 0) {
-		const tankLines = tankParticipants.map((participant) => {
-			const emoji = getEmojiForJob(participant.job);
-			return `${emoji} ${inlineCode(participant.signupOrder.toString())} ${bold(userMention(participant.discordId))}`;
-		});
+		const tankLines = tankParticipants.map(filteredParticipantsNewLines);
 
 		builder.addFields({
 			inline: true,
@@ -91,10 +91,7 @@ export function buildEventEmbed(event: EventData) {
 	}
 
 	if (meleeDpsParticipants.length > 0) {
-		const meleeDpsLines = meleeDpsParticipants.map((participant) => {
-			const emoji = getEmojiForJob(participant.job);
-			return `${emoji} ${inlineCode(participant.signupOrder.toString())} ${bold(userMention(participant.discordId))}`;
-		});
+		const meleeDpsLines = meleeDpsParticipants.map(filteredParticipantsNewLines);
 
 		builder.addFields({
 			inline: true,
@@ -107,10 +104,7 @@ export function buildEventEmbed(event: EventData) {
 	}
 
 	if (physRangedDpsParticipants.length > 0) {
-		const physRangedDpsLines = physRangedDpsParticipants.map((participant) => {
-			const emoji = getEmojiForJob(participant.job);
-			return `${emoji} ${inlineCode(participant.signupOrder.toString())} ${bold(userMention(participant.discordId))}`;
-		});
+		const physRangedDpsLines = physRangedDpsParticipants.map(filteredParticipantsNewLines);
 
 		builder.addFields({
 			inline: true,
@@ -123,10 +117,7 @@ export function buildEventEmbed(event: EventData) {
 	}
 
 	if (magicRangedDpsParticipants.length > 0) {
-		const magicRangedDpsLines = magicRangedDpsParticipants.map((participant) => {
-			const emoji = getEmojiForJob(participant.job);
-			return `${emoji} ${inlineCode(participant.signupOrder.toString())} ${bold(userMention(participant.discordId))}`;
-		});
+		const magicRangedDpsLines = magicRangedDpsParticipants.map(filteredParticipantsNewLines);
 
 		builder.addFields({
 			inline: true,
@@ -139,10 +130,7 @@ export function buildEventEmbed(event: EventData) {
 	}
 
 	if (healerParticipants.length > 0) {
-		const healerLines = healerParticipants.map((participant) => {
-			const emoji = getEmojiForJob(participant.job);
-			return `${emoji} ${inlineCode(participant.signupOrder.toString())} ${bold(userMention(participant.discordId))}`;
-		});
+		const healerLines = healerParticipants.map(filteredParticipantsNewLines);
 
 		builder.addFields({
 			inline: true,
@@ -155,10 +143,7 @@ export function buildEventEmbed(event: EventData) {
 	}
 
 	if (allRounderParticipants.length > 0) {
-		const allRounderLines = allRounderParticipants.map((participant) => {
-			const emoji = getEmojiForJob(participant.job);
-			return `${emoji} ${inlineCode(participant.signupOrder.toString())} ${bold(userMention(participant.discordId))}`;
-		});
+		const allRounderLines = allRounderParticipants.map(filteredParticipantsNewLines);
 
 		builder.addFields({
 			inline: true,
@@ -171,12 +156,7 @@ export function buildEventEmbed(event: EventData) {
 	}
 
 	if (lateParticipants.length > 0) {
-		const formattedLateParticipants = lateParticipants
-			.map((participant) => {
-				const emoji = getEmojiForJob(participant.job);
-				return `${emoji} ${inlineCode(participant.signupOrder.toString())} ${bold(userMention(participant.discordId))}`;
-			})
-			.join(', ');
+		const formattedLateParticipants = lateParticipants.map(formatParticipantsCommaSeparated).join(', ');
 
 		builder.addFields({
 			inline: false,
@@ -185,13 +165,18 @@ export function buildEventEmbed(event: EventData) {
 		});
 	}
 
+	if (benchedParticipants.length > 0) {
+		const formattedBenchedParticipants = benchedParticipants.map(formatParticipantsCommaSeparated).join(', ');
+
+		builder.addFields({
+			inline: false,
+			name: leftToRightMark,
+			value: `${BloombotEmojis.Tentative} (${benchedParticipants.length}): ${formattedBenchedParticipants}`
+		});
+	}
+
 	if (tentativeParticipants.length > 0) {
-		const formattedTentativeParticipants = tentativeParticipants
-			.map((participant) => {
-				const emoji = getEmojiForJob(participant.job);
-				return `${emoji} ${inlineCode(participant.signupOrder.toString())} ${bold(userMention(participant.discordId))}`;
-			})
-			.join(', ');
+		const formattedTentativeParticipants = tentativeParticipants.map(formatParticipantsCommaSeparated).join(', ');
 
 		builder.addFields({
 			inline: false,
@@ -201,12 +186,7 @@ export function buildEventEmbed(event: EventData) {
 	}
 
 	if (absentParticipants.length > 0) {
-		const formattedAbsentParticipants = absentParticipants
-			.map((participant) => {
-				const emoji = getEmojiForJob(participant.job);
-				return `${emoji} ${inlineCode(participant.signupOrder.toString())} ${bold(userMention(participant.discordId))}`;
-			})
-			.join(', ');
+		const formattedAbsentParticipants = absentParticipants.map(formatParticipantsCommaSeparated).join(', ');
 
 		builder.addFields({
 			inline: false,
@@ -216,4 +196,14 @@ export function buildEventEmbed(event: EventData) {
 	}
 
 	return builder;
+}
+
+function filteredParticipantsNewLines(participant: FilteredParticipant): string {
+	const emoji = getEmojiForJob(participant.job);
+	return `${emoji} ${inlineCode(participant.signupOrder.toString())} ${bold(userMention(participant.discordId))}`;
+}
+
+function formatParticipantsCommaSeparated(participant: FilteredParticipant): string {
+	const emoji = getEmojiForJob(participant.job);
+	return `${emoji} ${inlineCode(participant.signupOrder.toString())} ${bold(userMention(participant.discordId))}`;
 }
