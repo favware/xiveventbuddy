@@ -16,6 +16,12 @@ export const enum BrandingColors {
 	Primary = 0xbb77ea
 }
 
+export const enum ErrorIdentifiers {
+	EventEditMessageFetchFailedError = 'EventEditMessageFetchFailedError',
+	EventEditPostedMessageUndefinedError = 'EventEditPostedMessageUndefinedError',
+	EventEditMessageChannelNotFoundError = 'EventEditMessageChannelNotFoundError'
+}
+
 export type EventData = Pick<Event, 'id' | 'description' | 'name' | 'roleToPing' | 'leader'> & {
 	instance: Pick<EventInstance, 'dateTime'> & {
 		participants: Pick<Participant, 'job' | 'role' | 'discordId' | 'signupOrder'>[];
