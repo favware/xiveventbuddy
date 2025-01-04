@@ -362,21 +362,13 @@ export class SlashCommand extends BloomCommand {
 				instance: {
 					select: {
 						dateTime: true,
-						messageId: true,
-						participants: {
-							select: {
-								job: true,
-								role: true,
-								signupOrder: true,
-								discordId: true
-							}
-						}
+						messageId: true
 					}
 				}
 			}
 		});
 
-		if (!existingEvent || !existingEvent.instance) {
+		if (!existingEvent?.instance) {
 			return interaction.editReply({
 				content: `${BloombotEmojis.RedCross} No event found with ID ${inlineCode(id)}.`
 			});
