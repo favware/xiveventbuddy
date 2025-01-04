@@ -95,9 +95,9 @@ model Event {
 
 model EventInstance {
     id           String        @id @default(cuid())
-    event        Event         @relation(fields: [eventId], references: [id])
+    event        Event         @relation(fields: [eventId], references: [id], onUpdate: Cascade, onDelete: Cascade)
     eventId      String        @unique @map("event_id")
-    messageId    String?        @map("message_id")
+    messageId    String?       @map("message_id")
     dateTime     DateTime      @map("date_time")
     participants Participant[]
     createdAt    DateTime      @default(now())

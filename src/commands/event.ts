@@ -518,5 +518,76 @@ export class SlashCommand extends BloomCommand {
 		});
 	}
 
-	private async deleteEvent(_interaction: ChatInputCommand.Interaction<'cached'>) {}
+	private async deleteEvent(interaction: ChatInputCommand.Interaction<'cached'>) {
+		const id = interaction.options.getString('id', true);
+
+		const existingEvent = await this.container.prisma.event.findFirst({
+			where: {
+				id
+			},
+			select: {
+				channelId: true,
+				instance: {
+					select: {
+						messageId: true
+					}
+				}
+			}
+		});
+
+		if (!existingEvent?.instance) {
+			return interaction.editReply({
+				content: `${BloombotEmojis.RedCross} No event found with ID ${inlineCode(id)}.`
+			});
+		}
+
+		const resolvedEventChannel = interaction.guild.channels.cache.get(existingEvent.channelId);
+
+		if (!resolvedEventChannel) {
+			return interaction.editReply({
+				content: `${BloombotEmojis.RedCross} The channel the event was posted could not be found, was it maybe deleted?.`
+			});
+		}
+
+		if (resolvedEventChannel.isSendable()) {
+			try {
+				const postedMessage = await resolvedEventChannel.messages.fetch(existingEvent.instance.messageId!);
+
+				if (postedMessage) {
+					await postedMessage.delete();
+				} else {
+					throw new UserError({
+						message: `${BloombotEmojis.RedCross} I was unexpectedly unable to posted event message. Contact ${OwnerMentions} for assistance.`,
+						identifier: ErrorIdentifiers.EventEditPostedMessageUndefinedError
+					});
+				}
+			} catch (error) {
+				throw new UserError({
+					message: `${BloombotEmojis.RedCross} I was unexpectedly unable to posted event message. Contact ${OwnerMentions} for assistance.`,
+					identifier: ErrorIdentifiers.EventEditMessageFetchFailedError
+				});
+			}
+		} else {
+			throw new UserError({
+				message: `${BloombotEmojis.RedCross} I was unexpectedly unable to find the channel the event was posted in. Contact ${OwnerMentions} for assistance.`,
+				identifier: ErrorIdentifiers.EventEditMessageChannelNotFoundError
+			});
+		}
+
+		try {
+			await this.container.prisma.event.delete({
+				where: {
+					id
+				}
+			});
+
+			return interaction.editReply({
+				content: `${BloombotEmojis.GreenTick} Event with ID ${inlineCode(id)} successfully deleted.`
+			});
+		} catch (error) {
+			return interaction.editReply({
+				content: `${BloombotEmojis.RedCross} Failed to delete the event from the database. Contact ${OwnerMentions} for assistance.`
+			});
+		}
+	}
 }
