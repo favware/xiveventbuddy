@@ -3,7 +3,7 @@ import { BloombotEmojis } from '#lib/util/emojis';
 import { ApplyOptions } from '@sapphire/decorators';
 import type { ApplicationCommandRegistry, Awaitable, ChatInputCommand } from '@sapphire/framework';
 import { filterNullish, toTitleCase } from '@sapphire/utilities';
-import { heading, roleMention, unorderedList } from 'discord.js';
+import { heading, MessageFlags, roleMention, unorderedList } from 'discord.js';
 
 @ApplyOptions<ChatInputCommand.Options>({
 	description: 'Manage existing schedules'
@@ -33,7 +33,7 @@ export class SlashCommand extends BloomCommand {
 	}
 
 	public override async chatInputRun(interaction: ChatInputCommand.Interaction<'cached'>) {
-		await interaction.deferReply({ ephemeral: true });
+		await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 
 		const subcommand = interaction.options.getSubcommand(true) as 'list' | 'edit' | 'delete';
 

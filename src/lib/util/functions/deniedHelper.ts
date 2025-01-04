@@ -1,4 +1,5 @@
 import type { ChatInputCommandDeniedPayload, ContextMenuCommandDeniedPayload, UserError } from '@sapphire/framework';
+import { MessageFlags } from 'discord.js';
 
 export function handleChatInputOrContextMenuCommandDenied(
 	{ context, message: content }: UserError,
@@ -10,6 +11,6 @@ export function handleChatInputOrContextMenuCommandDenied(
 	return interaction.reply({
 		content,
 		allowedMentions: { users: [interaction.user.id], roles: [] },
-		ephemeral: true
+		flags: MessageFlags.Ephemeral
 	});
 }

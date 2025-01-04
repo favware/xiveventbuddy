@@ -15,6 +15,7 @@ import {
 	HTTPError,
 	hyperlink,
 	Message,
+	MessageFlags,
 	RESTJSONErrorCodes,
 	userMention,
 	type APIMessage,
@@ -109,7 +110,7 @@ async function alert(interaction: CommandInteraction, content: string) {
 	return interaction.reply({
 		content,
 		allowedMentions: { users: [interaction.user.id], roles: [] },
-		ephemeral: true
+		flags: MessageFlags.Ephemeral
 	});
 }
 

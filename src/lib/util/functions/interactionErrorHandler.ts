@@ -2,7 +2,7 @@ import { OwnerMentions, Owners } from '#root/config';
 import { getWarnError } from '#utils/functions/errorHelpers';
 import { ArgumentError, container, Events, UserError, type InteractionHandlerError, type InteractionHandlerParseError } from '@sapphire/framework';
 import { codeBlock } from '@sapphire/utilities';
-import { bold, DiscordAPIError, HTTPError, RESTJSONErrorCodes, userMention, type Interaction } from 'discord.js';
+import { bold, DiscordAPIError, HTTPError, MessageFlags, RESTJSONErrorCodes, userMention, type Interaction } from 'discord.js';
 
 const ignoredCodes = [RESTJSONErrorCodes.UnknownChannel, RESTJSONErrorCodes.UnknownMessage];
 
@@ -86,6 +86,6 @@ function alert(interaction: Interaction, content: string) {
 	return interaction.reply({
 		content,
 		allowedMentions: { users: [interaction.user.id, ...Owners], roles: [] },
-		ephemeral: true
+		flags: MessageFlags.Ephemeral
 	});
 }

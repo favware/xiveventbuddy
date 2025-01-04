@@ -8,7 +8,7 @@ import { ApplyOptions } from '@sapphire/decorators';
 import { UserError, type ApplicationCommandRegistry, type Awaitable, type ChatInputCommand } from '@sapphire/framework';
 import { filterNullish } from '@sapphire/utilities';
 import { format } from 'date-fns/format';
-import { heading, inlineCode, roleMention, time, TimestampStyles, unorderedList } from 'discord.js';
+import { heading, inlineCode, MessageFlags, roleMention, time, TimestampStyles, unorderedList } from 'discord.js';
 
 @ApplyOptions<ChatInputCommand.Options>({
 	description: 'Manage the Nightbloom events'
@@ -163,7 +163,7 @@ export class SlashCommand extends BloomCommand {
 	}
 
 	public override async chatInputRun(interaction: ChatInputCommand.Interaction<'cached'>) {
-		await interaction.deferReply({ ephemeral: true });
+		await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 
 		const subcommand = interaction.options.getSubcommand(true) as 'create' | 'list' | 'edit' | 'delete';
 
