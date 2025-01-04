@@ -35,7 +35,7 @@ CREATE TABLE "events" (
     "interval" "interval",
     "leader" TEXT NOT NULL,
     "role_to_ping" TEXT,
-    "channel" TEXT NOT NULL,
+    "channel_id" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -46,6 +46,7 @@ CREATE TABLE "events" (
 CREATE TABLE "event_instances" (
     "id" TEXT NOT NULL,
     "event_id" TEXT NOT NULL,
+    "message_id" TEXT,
     "date_time" TIMESTAMP(3) NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,

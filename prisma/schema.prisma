@@ -85,7 +85,7 @@ model Event {
     interval    Interval?
     leader      String
     roleToPing  String?        @map("role_to_ping")
-    channel     String         @map("channel")
+    channelId   String         @map("channel_id")
     createdAt   DateTime       @default(now())
     updatedAt   DateTime       @updatedAt
     instance    EventInstance?
@@ -97,6 +97,7 @@ model EventInstance {
     id           String        @id @default(cuid())
     event        Event         @relation(fields: [eventId], references: [id])
     eventId      String        @unique @map("event_id")
+    messageId    String?        @map("message_id")
     dateTime     DateTime      @map("date_time")
     participants Participant[]
     createdAt    DateTime      @default(now())
