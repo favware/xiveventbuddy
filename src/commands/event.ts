@@ -520,6 +520,7 @@ export class SlashCommand extends BloomCommand {
 			},
 			select: {
 				channelId: true,
+				discordEventId: true,
 				instance: {
 					select: {
 						messageId: true
@@ -573,6 +574,10 @@ export class SlashCommand extends BloomCommand {
 					id
 				}
 			});
+
+			if (existingEvent.discordEventId) {
+				await interaction.guild.scheduledEvents.delete(existingEvent.discordEventId);
+			}
 
 			return interaction.editReply({
 				content: `${BloombotEmojis.GreenTick} Event with ID ${inlineCode(id)} successfully deleted.`
