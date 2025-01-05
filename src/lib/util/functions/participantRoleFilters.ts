@@ -1,19 +1,7 @@
 import type { EventData } from '#lib/util/constants';
-import { $Enums } from '@prisma/client';
+import { $Enums, type Participant } from '@prisma/client';
 
-export type FilteredParticipant = Pick<
-	{
-		id: string;
-		createdAt: Date;
-		updatedAt: Date;
-		eventId: string;
-		role: $Enums.Roles;
-		job: $Enums.Jobs;
-		discordId: string;
-		signupOrder: number;
-	},
-	'role' | 'job' | 'discordId' | 'signupOrder'
->;
+export type FilteredParticipant = Pick<Participant, 'role' | 'job' | 'discordId' | 'signupOrder'>;
 
 export function getBenchedParticipants(event: EventData): FilteredParticipant[] {
 	return event.instance.participants.filter((participant) => participant.role === 'Bench');
