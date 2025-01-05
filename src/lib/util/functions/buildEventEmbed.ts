@@ -205,6 +205,10 @@ export function buildEventEmbed(event: EventData) {
 }
 
 function filteredParticipantsNewLines(participant: FilteredParticipant): string {
+	if (participant.job === null) {
+		return formatParticipantsCommaSeparated(participant);
+	}
+
 	const emoji = getEmojiForJob(participant.job);
 	return `${emoji} ${inlineCode(participant.signupOrder.toString())} ${bold(userMention(participant.discordId))}`;
 }
