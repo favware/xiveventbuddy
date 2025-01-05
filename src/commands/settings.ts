@@ -83,7 +83,7 @@ export class SlashCommand extends BloomCommand {
 	private async addManagerRole(interaction: ChatInputCommand.Interaction<'cached'>) {
 		const roleToAdd = interaction.options.getRole('role', true);
 
-		const roleAlreadyInRoles = await this.container.prisma.eventManagers.findFirst({
+		const roleAlreadyInRoles = await this.container.prisma.eventManagers.findFirstOrThrow({
 			where: {
 				discordId: roleToAdd.id
 			}
@@ -109,7 +109,7 @@ export class SlashCommand extends BloomCommand {
 	private async removeManagerRole(interaction: ChatInputCommand.Interaction<'cached'>) {
 		const roleToRemove = interaction.options.getRole('role', true);
 
-		const roleInRoles = await this.container.prisma.eventManagers.findFirst({
+		const roleInRoles = await this.container.prisma.eventManagers.findFirstOrThrow({
 			where: {
 				discordId: roleToRemove.id
 			}
@@ -135,7 +135,7 @@ export class SlashCommand extends BloomCommand {
 	private async addVerifiedServer(interaction: ChatInputCommand.Interaction<'cached'>) {
 		const serverToAdd = interaction.options.getString('server', true);
 
-		const serverAlreadyInList = await this.container.prisma.verifiedServers.findFirst({
+		const serverAlreadyInList = await this.container.prisma.verifiedServers.findFirstOrThrow({
 			where: {
 				discordId: serverToAdd
 			}
@@ -161,7 +161,7 @@ export class SlashCommand extends BloomCommand {
 	private async removeVerifiedServer(interaction: ChatInputCommand.Interaction<'cached'>) {
 		const serverToRemove = interaction.options.getString('server', true);
 
-		const serverInList = await this.container.prisma.verifiedServers.findFirst({
+		const serverInList = await this.container.prisma.verifiedServers.findFirstOrThrow({
 			where: {
 				discordId: serverToRemove
 			}
