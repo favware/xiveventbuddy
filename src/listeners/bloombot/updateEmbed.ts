@@ -47,7 +47,7 @@ export class UserListener extends Listener<typeof BloombotEvents.UpdateEmbed> {
 									shouldDisableEvent
 								)
 							],
-							components: buildEventComponents(eventData.id, userId, shouldDisableEvent),
+							components: buildEventComponents(eventData.id, userId ?? eventData.leader, shouldDisableEvent),
 							allowedMentions: { roles: eventData.roleToPing ? [eventData.roleToPing] : undefined }
 						});
 					} else {

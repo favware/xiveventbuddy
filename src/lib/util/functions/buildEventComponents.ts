@@ -33,7 +33,7 @@ const AllRounderOption = new StringSelectMenuOptionBuilder()
 	.setEmoji({ id: '1324558617193746502', name: 'AllRounder' })
 	.setDescription('Select this option if you are an All Rounder.');
 
-export function buildEventComponents(eventId: string, userId: string | null, shouldDisableEvent = false) {
+export function buildEventComponents(eventId: string, userId: string, shouldDisableEvent = false) {
 	const roleSelectMenu = new StringSelectMenuBuilder()
 		.setCustomId(`${CustomIdPrefixes.RoleSelectMenu}|${eventId}|${userId}`)
 		.setOptions(TankOption, MeleeDpsOption, PhysRangeDpsOption, MagicOption, HealerOption, AllRounderOption);

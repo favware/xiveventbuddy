@@ -1,6 +1,4 @@
 import type { Event, EventInstance, Jobs, Participant } from '@prisma/client';
-import type { ChatInputCommand } from '@sapphire/framework';
-import type { ButtonInteraction, CacheType, StringSelectMenuInteraction } from 'discord.js';
 
 export const rootFolder = new URL('../../../', import.meta.url);
 
@@ -17,7 +15,8 @@ export const leftToRightMark = String.fromCharCode(8206);
 export const braillePatternBlank = String.fromCharCode(10240);
 
 export enum BloombotEvents {
-	UpdateEmbed = 'updateEmbed'
+	UpdateEmbed = 'updateEmbed',
+	PostEmbed = 'postEmbed'
 }
 
 export const enum BrandingColors {
@@ -70,6 +69,12 @@ export const enum CustomIdPrefixes {
 	Gunbreaker = 'gunbreaker',
 	Paladin = 'paladin',
 	Warrior = 'warrior'
+}
+
+export interface PostEmbedPayload {
+	eventId: string;
+	guildId: string;
+	userId: string | null;
 }
 
 export interface UpdateEmbedPayload {

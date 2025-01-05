@@ -4,7 +4,7 @@ import { BloombotEmojis } from '#lib/util/emojis';
 import { buildEventComponents } from '#lib/util/functions/buildEventComponents';
 import { buildEventEmbed } from '#lib/util/functions/buildEventEmbed';
 import { OwnerMentions, Owners } from '#root/config';
-import { Interval } from '@prisma/client';
+import { $Enums } from '@prisma/client';
 import { ApplyOptions } from '@sapphire/decorators';
 import { UserError, type ApplicationCommandRegistry, type Awaitable, type ChatInputCommand } from '@sapphire/framework';
 import { filterNullish } from '@sapphire/utilities';
@@ -56,10 +56,13 @@ export class SlashCommand extends BloomCommand {
 								.setDescription('The interval at which this event should repeat')
 								.setRequired(false)
 								.setChoices(
-									{ name: 'Weekly', value: Interval.WEEKLY },
-									{ name: 'Once every other week', value: Interval.ONCE_EVERY_OTHER_WEEK },
-									{ name: 'Monthly', value: Interval.MONTHLY },
-									{ name: 'Every one before last friday of the month', value: Interval.ONE_BEFORE_LAST_FRIDAY_OF_THE_MONTH }
+									{ name: 'Weekly', value: $Enums.EventInterval.WEEKLY },
+									{ name: 'Once every other week', value: $Enums.EventInterval.ONCE_EVERY_OTHER_WEEK },
+									{ name: 'Monthly', value: $Enums.EventInterval.MONTHLY },
+									{
+										name: 'Every one before last friday of the month',
+										value: $Enums.EventInterval.ONE_BEFORE_LAST_FRIDAY_OF_THE_MONTH
+									}
 								)
 						)
 						.addRoleOption((builder) =>
@@ -121,10 +124,13 @@ export class SlashCommand extends BloomCommand {
 								.setDescription('The new interval at which this event should repeat')
 								.setRequired(false)
 								.setChoices(
-									{ name: 'Weekly', value: Interval.WEEKLY },
-									{ name: 'Once every other week', value: Interval.ONCE_EVERY_OTHER_WEEK },
-									{ name: 'Monthly', value: Interval.MONTHLY },
-									{ name: 'Every one before last friday of the month', value: Interval.ONE_BEFORE_LAST_FRIDAY_OF_THE_MONTH }
+									{ name: 'Weekly', value: $Enums.EventInterval.WEEKLY },
+									{ name: 'Once every other week', value: $Enums.EventInterval.ONCE_EVERY_OTHER_WEEK },
+									{ name: 'Monthly', value: $Enums.EventInterval.MONTHLY },
+									{
+										name: 'Every one before last friday of the month',
+										value: $Enums.EventInterval.ONE_BEFORE_LAST_FRIDAY_OF_THE_MONTH
+									}
 								)
 						)
 						.addRoleOption((builder) =>
@@ -238,7 +244,7 @@ export class SlashCommand extends BloomCommand {
 				description,
 				channelId: eventChannel.id,
 				guildId: interaction.guildId,
-				interval: interval as Interval,
+				interval: interval as $Enums.EventInterval,
 				roleToPing: roleToPing?.id,
 				leader: interaction.user.id,
 				instance: {
@@ -277,17 +283,7 @@ export class SlashCommand extends BloomCommand {
 			});
 		}
 
-		const postedMessage = await eventChannel.send({
-			content: event.roleToPing ? roleMention(event.roleToPing) : undefined,
-			embeds: [buildEventEmbed(event as EventData)],
-			components: buildEventComponents(event.id, interaction.user.id),
-			allowedMentions: { roles: event.roleToPing ? [event.roleToPing] : undefined }
-		});
-
-		await this.container.prisma.event.update({
-			where: { id: event.id },
-			data: { instance: { update: { messageId: postedMessage.id } } }
-		});
+		this.container.client.emit(BloombotEvents.PostEmbed, { eventId: event.id, userId: interaction.user.id, guildId: interaction.guildId });
 
 		return interaction.editReply({
 			content: `${BloombotEmojis.GreenTick} Event ${inlineCode(name)} created successfully with ID ${inlineCode(event.id)}.`
@@ -429,7 +425,7 @@ export class SlashCommand extends BloomCommand {
 				description,
 				channelId: resolvedEventChannel.id,
 				guildId: interaction.guildId,
-				interval: interval as Interval,
+				interval: interval as $Enums.EventInterval,
 				roleToPing: roleToPing?.id ?? existingEvent.roleToPing,
 				leader: leader?.id ?? existingEvent.leader,
 				instance: {

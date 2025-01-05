@@ -1,5 +1,5 @@
 -- CreateEnum
-CREATE TYPE "interval" AS ENUM ('weekly', 'once_every_other_week', 'monthly', 'one_before_last_friday_of_the_month');
+CREATE TYPE "event_interval" AS ENUM ('weekly', 'once_every_other_week', 'monthly', 'one_before_last_friday_of_the_month');
 
 -- CreateEnum
 CREATE TYPE "roles" AS ENUM ('all_rounder', 'healer', 'melee_dps', 'magic_ranged_dps', 'phys_ranged_dps', 'tank', 'absence', 'bench', 'late', 'tentative');
@@ -32,7 +32,7 @@ CREATE TABLE "events" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "description" TEXT,
-    "interval" "interval",
+    "interval" "event_interval",
     "leader" TEXT NOT NULL,
     "role_to_ping" TEXT,
     "channel_id" TEXT NOT NULL,

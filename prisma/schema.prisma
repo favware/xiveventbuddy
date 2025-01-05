@@ -7,13 +7,13 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
-enum Interval {
+enum EventInterval {
     WEEKLY                              @map("weekly")
     ONCE_EVERY_OTHER_WEEK               @map("once_every_other_week")
     MONTHLY                             @map("monthly")
     ONE_BEFORE_LAST_FRIDAY_OF_THE_MONTH @map("one_before_last_friday_of_the_month")
 
-    @@map("interval")
+    @@map("event_interval")
 }
 
 enum Roles {
@@ -81,7 +81,7 @@ model Event {
     id          String         @id @default(cuid())
     name        String
     description String?
-    interval    Interval?
+    interval    EventInterval?
     leader      String
     roleToPing  String?        @map("role_to_ping")
     channelId   String         @map("channel_id")
@@ -113,7 +113,7 @@ model Participant {
     discordId       String        @unique @map("discord_id")
     signupOrder     Int           @map("signup_order")
     eventInstanceId String        @map("event_instance_id")
-    eventInstance   EventInstance @relation(fields: [eventInstanceId], references: [id])
+    eventInstance   EventInstance @relation(fields: [eventInstanceId], references: [id], onUpdate: Cascade, onDelete: Cascade)
     createdAt       DateTime      @default(now()) @map("created_at")
     updatedAt       DateTime      @updatedAt @map("updated_at")
 
