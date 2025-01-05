@@ -84,7 +84,7 @@ model Event {
     description     String?
     interval        EventInterval?
     leader          String
-    hasDiscordEvent Boolean?       @map("has_discord_event")
+    discordEventId  String?        @map("discord_event_id")
     roleToPing      String?        @map("role_to_ping")
     channelId       String         @map("channel_id")
     guildId         String         @map("guild_id")

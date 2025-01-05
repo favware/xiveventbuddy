@@ -35,7 +35,7 @@ CREATE TABLE "events" (
     "description" TEXT,
     "interval" "event_interval",
     "leader" TEXT NOT NULL,
-    "has_discord_event" BOOLEAN,
+    "discord_event_id" TEXT,
     "role_to_ping" TEXT,
     "channel_id" TEXT NOT NULL,
     "guild_id" TEXT NOT NULL,
