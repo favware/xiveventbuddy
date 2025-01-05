@@ -83,7 +83,21 @@ export type EventData = Pick<Event, 'id' | 'description' | 'name' | 'roleToPing'
 };
 
 type JobTypeEmojis = 'AllRounder' | 'DPS' | 'Healer' | 'MeleeDPS' | 'MagicRangedDPS' | 'PhysRangedDPS' | 'Tank';
-type EventDataEmojis = 'Absence' | 'Bench' | 'Countdown' | 'Date' | 'Late' | 'Leader' | 'Signups' | 'RemoveParticipation' | 'Tentative' | 'Time';
+type EventDataEmojis =
+	| 'Absence'
+	| 'Bench'
+	| 'Countdown'
+	| 'CountdownExpired'
+	| 'Date'
+	| 'DateExpired'
+	| 'Late'
+	| 'Leader'
+	| 'Signups'
+	| 'SignupsExpired'
+	| 'RemoveParticipation'
+	| 'Tentative'
+	| 'Time'
+	| 'TimeExpired';
 type OtherEmojis = 'GreenTick' | 'RedCross';
 
 export type Emojis = Jobs | JobTypeEmojis | EventDataEmojis | OtherEmojis;

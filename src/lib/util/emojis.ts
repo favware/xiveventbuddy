@@ -40,13 +40,17 @@ export const BloombotEmojis: Record<Emojis, string> = {
 	Absence: formatEmoji('1324558615939649559', false),
 	Bench: formatEmoji('1324558621530521681', false),
 	Countdown: formatEmoji('1324558624634441842', false),
+	CountdownExpired: formatEmoji('1325467294998073396', false),
 	Date: formatEmoji('1324558628207726633', false),
+	DateExpired: formatEmoji('1325467289838948372', false),
 	Late: formatEmoji('1324558634243457117', false),
 	Leader: formatEmoji('1324558635413671987', false),
 	Signups: formatEmoji('1324558651997818953', false),
+	SignupsExpired: formatEmoji('1325467293123215402', false),
 	RemoveParticipation: formatEmoji('1325255133592031272', false),
 	Tentative: formatEmoji('1324558656326467616', false),
 	Time: formatEmoji('1324558657341362247', false),
+	TimeExpired: formatEmoji('1325467291999010826', false),
 
 	// Other
 	RedCross: formatEmoji('1324572748130947143', false),
