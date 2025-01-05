@@ -29,6 +29,7 @@ COPY --chown=node:node tsup.config.ts .
 COPY --chown=node:node src/ src/
 
 RUN yarn install --immutable \
+    && yarn run prisma:generate \
     && yarn run build
 
 FROM base AS runner
@@ -41,6 +42,10 @@ COPY --chown=node:node .env .env
 COPY --chown=node:node --from=builder /usr/src/app/dist dist
 
 RUN yarn workspaces focus --all --production
+
+# Patch .prisma with the built files
+COPY --chown=node:node --from=builder /usr/src/app/node_modules/.prisma node_modules/.prisma
+
 RUN chown node:node /usr/src/app/
 
 USER node
