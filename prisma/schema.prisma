@@ -8,9 +8,9 @@ datasource db {
 }
 
 enum Interval {
-    WEEKLY   @map("weekly")
-    BIWEEKLY @map("biweekly")
-    MONTHLY  @map("monthly")
+    WEEKLY                              @map("weekly")
+    ONCE_EVERY_OTHER_WEEK               @map("once_every_other_week")
+    MONTHLY                             @map("monthly")
     ONE_BEFORE_LAST_FRIDAY_OF_THE_MONTH @map("one_before_last_friday_of_the_month")
 
     @@map("interval")
@@ -85,6 +85,7 @@ model Event {
     leader      String
     roleToPing  String?        @map("role_to_ping")
     channelId   String         @map("channel_id")
+    guildId     String         @map("guild_id")
     createdAt   DateTime       @default(now()) @map("created_at")
     updatedAt   DateTime       @updatedAt @map("updated_at")
     instance    EventInstance?

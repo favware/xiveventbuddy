@@ -7,22 +7,24 @@ import { Listener, UserError } from '@sapphire/framework';
 import { roleMention } from 'discord.js';
 
 export class UserListener extends Listener<typeof BloombotEvents.UpdateEmbed> {
-	public override async run({ eventId, interaction }: UpdateEmbedPayload) {
-		if (interaction.guild) {
-			const eventData = await this.container.prisma.event.findFirstOrThrow({
-				where: {
-					id: eventId
-				},
-				include: {
-					instance: {
-						include: {
-							participants: true
-						}
+	public override async run({ eventId, guildId, userId, shouldDisableEvent = false }: UpdateEmbedPayload) {
+		const eventData = await this.container.prisma.event.findFirstOrThrow({
+			where: {
+				id: eventId
+			},
+			include: {
+				instance: {
+					include: {
+						participants: true
 					}
 				}
-			});
+			}
+		});
 
-			const channelWithMessage = await interaction.guild.channels.fetch(eventData.channelId);
+		const guild = await this.container.client.guilds.fetch(guildId);
+
+		if (guild) {
+			const channelWithMessage = await guild.channels.fetch(eventData.channelId);
 
 			if (channelWithMessage?.isSendable() && eventData.instance?.messageId) {
 				try {
@@ -32,17 +34,20 @@ export class UserListener extends Listener<typeof BloombotEvents.UpdateEmbed> {
 						await postedMessage.edit({
 							content: eventData.roleToPing ? roleMention(eventData.roleToPing) : undefined,
 							embeds: [
-								buildEventEmbed({
-									id: eventData.id,
-									description: eventData.description,
-									name: eventData.name,
-									roleToPing: eventData.roleToPing,
-									leader: eventData.leader,
-									channelId: eventData.channelId,
-									instance: { dateTime: eventData.instance.dateTime, participants: eventData.instance.participants }
-								} as EventData)
+								buildEventEmbed(
+									{
+										id: eventData.id,
+										description: eventData.description,
+										name: eventData.name,
+										roleToPing: eventData.roleToPing,
+										leader: eventData.leader,
+										channelId: eventData.channelId,
+										instance: { dateTime: eventData.instance.dateTime, participants: eventData.instance.participants }
+									} as EventData,
+									shouldDisableEvent
+								)
 							],
-							components: buildEventComponents(eventData.id, interaction.user.id),
+							components: buildEventComponents(eventData.id, userId, shouldDisableEvent),
 							allowedMentions: { roles: eventData.roleToPing ? [eventData.roleToPing] : undefined }
 						});
 					} else {

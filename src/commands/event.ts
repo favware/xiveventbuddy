@@ -57,7 +57,7 @@ export class SlashCommand extends BloomCommand {
 								.setRequired(false)
 								.setChoices(
 									{ name: 'Weekly', value: Interval.WEEKLY },
-									{ name: 'Biweekly', value: Interval.BIWEEKLY },
+									{ name: 'Once every other week', value: Interval.ONCE_EVERY_OTHER_WEEK },
 									{ name: 'Monthly', value: Interval.MONTHLY },
 									{ name: 'Every one before last friday of the month', value: Interval.ONE_BEFORE_LAST_FRIDAY_OF_THE_MONTH }
 								)
@@ -122,7 +122,7 @@ export class SlashCommand extends BloomCommand {
 								.setRequired(false)
 								.setChoices(
 									{ name: 'Weekly', value: Interval.WEEKLY },
-									{ name: 'Biweekly', value: Interval.BIWEEKLY },
+									{ name: 'Once every other week', value: Interval.ONCE_EVERY_OTHER_WEEK },
 									{ name: 'Monthly', value: Interval.MONTHLY },
 									{ name: 'Every one before last friday of the month', value: Interval.ONE_BEFORE_LAST_FRIDAY_OF_THE_MONTH }
 								)
@@ -237,6 +237,7 @@ export class SlashCommand extends BloomCommand {
 				name,
 				description,
 				channelId: eventChannel.id,
+				guildId: interaction.guildId,
 				interval: interval as Interval,
 				roleToPing: roleToPing?.id,
 				leader: interaction.user.id,
@@ -427,6 +428,7 @@ export class SlashCommand extends BloomCommand {
 				name,
 				description,
 				channelId: resolvedEventChannel.id,
+				guildId: interaction.guildId,
 				interval: interval as Interval,
 				roleToPing: roleToPing?.id ?? existingEvent.roleToPing,
 				leader: leader?.id ?? existingEvent.leader,
@@ -455,7 +457,11 @@ export class SlashCommand extends BloomCommand {
 		});
 
 		if (resolvedEventChannel.id === existingEvent.channelId) {
-			this.container.client.emit(BloombotEvents.UpdateEmbed, { eventId: updatedEvent.id, interaction });
+			this.container.client.emit(BloombotEvents.UpdateEmbed, {
+				eventId: updatedEvent.id,
+				userId: interaction.user.id,
+				guildId: interaction.guildId
+			});
 		} else {
 			const existingMessageChannel = await interaction.guild.channels.fetch(existingEvent.channelId);
 

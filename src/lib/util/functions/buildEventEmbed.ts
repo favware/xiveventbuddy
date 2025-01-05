@@ -16,7 +16,7 @@ import {
 } from '#lib/util/functions/participantRoleFilters';
 import { bold, EmbedBuilder, inlineCode, time, TimestampStyles, underline, userMention } from 'discord.js';
 
-export function buildEventEmbed(event: EventData) {
+export function buildEventEmbed(event: EventData, shouldDisableEvent = false) {
 	const builder = new EmbedBuilder();
 
 	const eventDateTime = event.instance.dateTime;
@@ -32,7 +32,7 @@ export function buildEventEmbed(event: EventData) {
 	const healerParticipants = getHealerParticipants(event);
 	const allRounderParticipants = getAllRounderParticipants(event);
 
-	builder.setTitle(event.name).setColor(BrandingColors.Primary);
+	builder.setTitle(event.name).setColor(shouldDisableEvent ? BrandingColors.ExpiredEvent : BrandingColors.Primary);
 
 	if (event.description) {
 		builder.setDescription(event.description.split(/\\{2,4}n/).join('\n'));
@@ -44,21 +44,24 @@ export function buildEventEmbed(event: EventData) {
 			name: leftToRightMark,
 			value: [
 				`${BloombotEmojis.Leader} ${userMention(event.leader)}`,
-				`${BloombotEmojis.Date} ${time(eventDateTime, TimestampStyles.ShortDate)}`
+				`${shouldDisableEvent ? BloombotEmojis.DateExpired : BloombotEmojis.Date} ${time(eventDateTime, TimestampStyles.ShortDate)}`
 			].join('\n')
 		},
 		{
 			inline: true,
 			name: leftToRightMark,
 			value: [
-				`${BloombotEmojis.Signups} ${bold(presentParticipants.length.toString())} (+${benchedParticipants.length + absentParticipants.length + lateParticipants.length + tentativeParticipants.length})`,
-				`${BloombotEmojis.Time} ${underline(time(eventDateTime, TimestampStyles.ShortTime))}`
+				`${shouldDisableEvent ? BloombotEmojis.SignupsExpired : BloombotEmojis.Signups} ${bold(presentParticipants.length.toString())} (+${benchedParticipants.length + absentParticipants.length + lateParticipants.length + tentativeParticipants.length})`,
+				`${shouldDisableEvent ? BloombotEmojis.TimeExpired : BloombotEmojis.Time} ${underline(time(eventDateTime, TimestampStyles.ShortTime))}`
 			].join('\n')
 		},
 		{
 			inline: true,
 			name: leftToRightMark,
-			value: [braillePatternBlank, `${BloombotEmojis.Countdown} ${time(eventDateTime, TimestampStyles.RelativeTime)}`].join('\n')
+			value: [
+				braillePatternBlank,
+				`${shouldDisableEvent ? BloombotEmojis.CountdownExpired : BloombotEmojis.Countdown} ${time(eventDateTime, TimestampStyles.RelativeTime)}`
+			].join('\n')
 		},
 		{
 			inline: true,

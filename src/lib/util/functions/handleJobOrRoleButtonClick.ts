@@ -5,7 +5,7 @@ import { $Enums } from '@prisma/client';
 import { container, UserError } from '@sapphire/framework';
 import { MessageFlags, type ButtonInteraction } from 'discord.js';
 
-export async function handleJobOrRoleButtonClick(interaction: ButtonInteraction, role: $Enums.Roles, job: $Enums.Jobs | null = null) {
+export async function handleJobOrRoleButtonClick(interaction: ButtonInteraction<'cached'>, role: $Enums.Roles, job: $Enums.Jobs | null = null) {
 	await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 
 	const [, eventId, userId] = interaction.customId.split('|');
@@ -16,6 +16,7 @@ export async function handleJobOrRoleButtonClick(interaction: ButtonInteraction,
 		},
 		select: {
 			channelId: true,
+			guildId: true,
 			createdAt: true,
 			description: true,
 			id: true,
@@ -89,6 +90,6 @@ export async function handleJobOrRoleButtonClick(interaction: ButtonInteraction,
 	});
 
 	if (eventData.instance.messageId) {
-		container.client.emit(BloombotEvents.UpdateEmbed, { eventId, interaction });
+		container.client.emit(BloombotEvents.UpdateEmbed, { eventId, userId: interaction.user.id, guildId: interaction.guildId });
 	}
 }

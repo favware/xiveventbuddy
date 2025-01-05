@@ -21,7 +21,8 @@ export enum BloombotEvents {
 }
 
 export const enum BrandingColors {
-	Primary = 0xbb77ea
+	Primary = 0xbb77ea,
+	ExpiredEvent = 0xff0000
 }
 
 export const enum ErrorIdentifiers {
@@ -73,7 +74,9 @@ export const enum CustomIdPrefixes {
 
 export interface UpdateEmbedPayload {
 	eventId: string;
-	interaction: ButtonInteraction<CacheType> | StringSelectMenuInteraction<CacheType> | ChatInputCommand.Interaction<'cached'>;
+	guildId: string;
+	userId: string | null;
+	shouldDisableEvent?: boolean;
 }
 
 export type EventData = Pick<Event, 'id' | 'description' | 'name' | 'roleToPing' | 'leader' | 'channelId'> & {

@@ -33,10 +33,18 @@ const AllRounderOption = new StringSelectMenuOptionBuilder()
 	.setEmoji({ id: '1324558617193746502', name: 'AllRounder' })
 	.setDescription('Select this option if you are an All Rounder.');
 
-export function buildEventComponents(eventId: string, userId: string) {
+export function buildEventComponents(eventId: string, userId: string | null, shouldDisableEvent = false) {
 	const roleSelectMenu = new StringSelectMenuBuilder()
 		.setCustomId(`${CustomIdPrefixes.RoleSelectMenu}|${eventId}|${userId}`)
 		.setOptions(TankOption, MeleeDpsOption, PhysRangeDpsOption, MagicOption, HealerOption, AllRounderOption);
+
+	const firstRow = new ActionRowBuilder<StringSelectMenuBuilder>();
+
+	if (shouldDisableEvent) {
+		roleSelectMenu.setDisabled(true).setPlaceholder('This event is closed');
+		firstRow.setComponents(roleSelectMenu);
+		return [firstRow];
+	}
 
 	const benchButton = new ButtonBuilder()
 		.setCustomId(`${CustomIdPrefixes.RoleBench}|${eventId}|${userId}`)
@@ -64,7 +72,7 @@ export function buildEventComponents(eventId: string, userId: string) {
 		.setLabel('Remove Participation')
 		.setStyle(ButtonStyle.Secondary);
 
-	const firstRow = new ActionRowBuilder<StringSelectMenuBuilder>().setComponents(roleSelectMenu);
+	firstRow.setComponents(roleSelectMenu);
 	const secondRow = new ActionRowBuilder<ButtonBuilder>().setComponents(
 		benchButton,
 		lateButton,
