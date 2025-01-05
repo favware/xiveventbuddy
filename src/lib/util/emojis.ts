@@ -44,7 +44,7 @@ export const BloombotEmojis: Record<Emojis, string> = {
 	Late: formatEmoji('1324558634243457117', false),
 	Leader: formatEmoji('1324558635413671987', false),
 	Signups: formatEmoji('1324558651997818953', false),
-	SpecReset: formatEmoji('1324558653319151690', false),
+	RemoveParticipation: formatEmoji('1325255133592031272', false),
 	Tentative: formatEmoji('1324558656326467616', false),
 	Time: formatEmoji('1324558657341362247', false),
 

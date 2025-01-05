@@ -79,12 +79,13 @@ export function buildEventEmbed(event: EventData) {
 
 	if (tankParticipants.length > 0) {
 		const tankLines = tankParticipants.map(filteredParticipantsNewLines);
+		const tankCount = bold(`(${tankParticipants.length.toString()})`);
 
 		builder.addFields({
 			inline: true,
 			name: leftToRightMark,
 			value: [
-				`${BloombotEmojis.Tank} ${bold(underline(tankParticipants.length.toString()))}`, //
+				`${BloombotEmojis.Tank} ${bold(underline('Tank'))} ${tankCount}`, //
 				...tankLines
 			].join('\n')
 		});
@@ -92,12 +93,13 @@ export function buildEventEmbed(event: EventData) {
 
 	if (meleeDpsParticipants.length > 0) {
 		const meleeDpsLines = meleeDpsParticipants.map(filteredParticipantsNewLines);
+		const meleeDpsCount = bold(`(${meleeDpsParticipants.length.toString()})`);
 
 		builder.addFields({
 			inline: true,
 			name: leftToRightMark,
 			value: [
-				`${BloombotEmojis.MeleeDPS} ${bold(underline(meleeDpsParticipants.length.toString()))}`, //
+				`${BloombotEmojis.MeleeDPS} ${bold(underline('Melee'))} ${meleeDpsCount}`, //
 				...meleeDpsLines
 			].join('\n')
 		});
@@ -105,12 +107,13 @@ export function buildEventEmbed(event: EventData) {
 
 	if (physRangedDpsParticipants.length > 0) {
 		const physRangedDpsLines = physRangedDpsParticipants.map(filteredParticipantsNewLines);
+		const physRangedCount = bold(`(${physRangedDpsParticipants.length.toString()})`);
 
 		builder.addFields({
 			inline: true,
 			name: leftToRightMark,
 			value: [
-				`${BloombotEmojis.PhysRangedDPS} ${bold(underline(physRangedDpsParticipants.length.toString()))}`, //
+				`${BloombotEmojis.PhysRangedDPS} ${bold(underline('Ranged'))} ${physRangedCount}`, //
 				...physRangedDpsLines
 			].join('\n')
 		});
@@ -118,12 +121,13 @@ export function buildEventEmbed(event: EventData) {
 
 	if (magicRangedDpsParticipants.length > 0) {
 		const magicRangedDpsLines = magicRangedDpsParticipants.map(filteredParticipantsNewLines);
+		const magicDpsCount = bold(`(${magicRangedDpsParticipants.length.toString()})`);
 
 		builder.addFields({
 			inline: true,
 			name: leftToRightMark,
 			value: [
-				`${BloombotEmojis.MagicRangedDPS} ${bold(underline(magicRangedDpsParticipants.length.toString()))}`, //
+				`${BloombotEmojis.MagicRangedDPS} ${bold(underline('Magical'))} ${magicDpsCount}`, //
 				...magicRangedDpsLines
 			].join('\n')
 		});
@@ -131,12 +135,13 @@ export function buildEventEmbed(event: EventData) {
 
 	if (healerParticipants.length > 0) {
 		const healerLines = healerParticipants.map(filteredParticipantsNewLines);
+		const healerCount = bold(`(${healerParticipants.length.toString()})`);
 
 		builder.addFields({
 			inline: true,
 			name: leftToRightMark,
 			value: [
-				`${BloombotEmojis.Healer} ${bold(underline(healerParticipants.length.toString()))}`, //
+				`${BloombotEmojis.Healer} ${bold(underline('Healer'))} ${healerCount}`, //
 				...healerLines
 			].join('\n')
 		});
@@ -144,12 +149,13 @@ export function buildEventEmbed(event: EventData) {
 
 	if (allRounderParticipants.length > 0) {
 		const allRounderLines = allRounderParticipants.map(filteredParticipantsNewLines);
+		const allRounderCount = bold(`(${allRounderLines.length.toString()})`);
 
 		builder.addFields({
 			inline: true,
 			name: leftToRightMark,
 			value: [
-				`${BloombotEmojis.AllRounder} ${bold(underline(allRounderParticipants.length.toString()))}`, //
+				`${BloombotEmojis.AllRounder} ${bold(underline('Allrounder'))} ${allRounderCount}`, //
 				...allRounderLines
 			].join('\n')
 		});
@@ -161,7 +167,7 @@ export function buildEventEmbed(event: EventData) {
 		builder.addFields({
 			inline: false,
 			name: leftToRightMark,
-			value: `${BloombotEmojis.Late} (${lateParticipants.length}): ${formattedLateParticipants}`
+			value: `${BloombotEmojis.Late} Late (${lateParticipants.length}): ${formattedLateParticipants}`
 		});
 	}
 
@@ -171,7 +177,7 @@ export function buildEventEmbed(event: EventData) {
 		builder.addFields({
 			inline: false,
 			name: leftToRightMark,
-			value: `${BloombotEmojis.Tentative} (${benchedParticipants.length}): ${formattedBenchedParticipants}`
+			value: `${BloombotEmojis.Bench} Benched (${benchedParticipants.length}): ${formattedBenchedParticipants}`
 		});
 	}
 
@@ -181,7 +187,7 @@ export function buildEventEmbed(event: EventData) {
 		builder.addFields({
 			inline: false,
 			name: leftToRightMark,
-			value: `${BloombotEmojis.Tentative} (${tentativeParticipants.length}): ${formattedTentativeParticipants}`
+			value: `${BloombotEmojis.Tentative} Tentative (${tentativeParticipants.length}): ${formattedTentativeParticipants}`
 		});
 	}
 
@@ -191,7 +197,7 @@ export function buildEventEmbed(event: EventData) {
 		builder.addFields({
 			inline: false,
 			name: leftToRightMark,
-			value: `${BloombotEmojis.Absence} (${absentParticipants.length}): ${formattedAbsentParticipants}`
+			value: `${BloombotEmojis.Absence} Absence (${absentParticipants.length}): ${formattedAbsentParticipants}`
 		});
 	}
 
@@ -204,6 +210,5 @@ function filteredParticipantsNewLines(participant: FilteredParticipant): string 
 }
 
 function formatParticipantsCommaSeparated(participant: FilteredParticipant): string {
-	const emoji = getEmojiForJob(participant.job);
-	return `${emoji} ${inlineCode(participant.signupOrder.toString())} ${bold(userMention(participant.discordId))}`;
+	return `${inlineCode(participant.signupOrder.toString())} ${bold(userMention(participant.discordId))}`;
 }

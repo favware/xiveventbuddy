@@ -107,15 +107,15 @@ model EventInstance {
 }
 
 model Participant {
-    id            String        @id
-    role          Roles
-    job           Jobs
-    discordId     String        @unique @map("discord_id")
-    signupOrder   Int           @map("signup_order")
-    eventId       String        @map("event_id")
-    eventInstance EventInstance @relation(fields: [eventId], references: [id])
-    createdAt     DateTime      @default(now()) @map("created_at")
-    updatedAt     DateTime      @updatedAt @map("updated_at")
+    id              String        @id @default(cuid())
+    role            Roles
+    job             Jobs
+    discordId       String        @unique @map("discord_id")
+    signupOrder     Int           @map("signup_order")
+    eventInstanceId String        @map("event_instance_id")
+    eventInstance   EventInstance @relation(fields: [eventInstanceId], references: [id])
+    createdAt       DateTime      @default(now()) @map("created_at")
+    updatedAt       DateTime      @updatedAt @map("updated_at")
 
     @@map("participants")
 }

@@ -1,6 +1,7 @@
 import { BloomCommand } from '#lib/extensions/BloomComand';
-import { ErrorIdentifiers, type EventData } from '#lib/util/constants';
+import { BloombotEvents, ErrorIdentifiers, type EventData } from '#lib/util/constants';
 import { BloombotEmojis } from '#lib/util/emojis';
+import { buildEventComponents } from '#lib/util/functions/buildEventComponents';
 import { buildEventEmbed } from '#lib/util/functions/buildEventEmbed';
 import { OwnerMentions, Owners } from '#root/config';
 import { Interval } from '@prisma/client';
@@ -253,6 +254,7 @@ export class SlashCommand extends BloomCommand {
 				description: true,
 				roleToPing: true,
 				leader: true,
+				channelId: true,
 				instance: {
 					select: {
 						dateTime: true,
@@ -279,7 +281,7 @@ export class SlashCommand extends BloomCommand {
 		const postedMessage = await eventChannel.send({
 			content: event.roleToPing ? roleMention(event.roleToPing) : undefined,
 			embeds: [buildEventEmbed(event as EventData)],
-			// components: [buildEventComponents(event as EventData)],
+			components: buildEventComponents(event.id, interaction.user.id),
 			allowedMentions: { roles: event.roleToPing ? [event.roleToPing] : undefined }
 		});
 
@@ -347,7 +349,7 @@ export class SlashCommand extends BloomCommand {
 	private async editEvent(interaction: ChatInputCommand.Interaction<'cached'>) {
 		const id = interaction.options.getString('id', true);
 
-		const existingEvent = await this.container.prisma.event.findFirst({
+		const existingEvent = await this.container.prisma.event.findFirstOrThrow({
 			where: {
 				id
 			},
@@ -437,61 +439,25 @@ export class SlashCommand extends BloomCommand {
 				}
 			},
 			select: {
-				id: true,
-				name: true,
-				description: true,
-				roleToPing: true,
-				leader: true,
 				channelId: true,
+				createdAt: true,
+				description: true,
+				id: true,
+				interval: true,
+				leader: true,
+				name: true,
+				roleToPing: true,
+				updatedAt: true,
 				instance: {
-					select: {
-						dateTime: true,
-						messageId: true,
-						participants: {
-							select: {
-								job: true,
-								role: true,
-								signupOrder: true,
-								discordId: true
-							}
-						}
+					include: {
+						participants: true
 					}
 				}
 			}
 		});
 
 		if (resolvedEventChannel.id === existingEvent.channelId) {
-			const postedMessageChannel = await interaction.guild.channels.fetch(updatedEvent.channelId);
-
-			if (postedMessageChannel?.isSendable() && updatedEvent.instance?.messageId) {
-				try {
-					const postedMessage = await postedMessageChannel.messages.fetch(updatedEvent.instance.messageId);
-
-					if (postedMessage) {
-						await postedMessage.edit({
-							content: updatedEvent.roleToPing ? roleMention(updatedEvent.roleToPing) : undefined,
-							embeds: [buildEventEmbed(updatedEvent as EventData)],
-							// components: [buildEventComponents(event as EventData)],
-							allowedMentions: { roles: updatedEvent.roleToPing ? [updatedEvent.roleToPing] : undefined }
-						});
-					} else {
-						throw new UserError({
-							message: `${BloombotEmojis.RedCross} I was unexpectedly unable to posted event message. Contact ${OwnerMentions} for assistance.`,
-							identifier: ErrorIdentifiers.EventEditPostedMessageUndefinedError
-						});
-					}
-				} catch (error) {
-					throw new UserError({
-						message: `${BloombotEmojis.RedCross} I was unexpectedly unable to posted event message. Contact ${OwnerMentions} for assistance.`,
-						identifier: ErrorIdentifiers.EventEditMessageFetchFailedError
-					});
-				}
-			} else {
-				throw new UserError({
-					message: `${BloombotEmojis.RedCross} I was unexpectedly unable to find the channel the event was posted in. Contact ${OwnerMentions} for assistance.`,
-					identifier: ErrorIdentifiers.EventEditMessageChannelNotFoundError
-				});
-			}
+			this.container.client.emit(BloombotEvents.UpdateEmbed, { eventId: updatedEvent.id, interaction });
 		} else {
 			const existingMessageChannel = await interaction.guild.channels.fetch(existingEvent.channelId);
 
@@ -502,7 +468,7 @@ export class SlashCommand extends BloomCommand {
 				const postedMessage = await resolvedEventChannel.send({
 					content: updatedEvent.roleToPing ? roleMention(updatedEvent.roleToPing) : undefined,
 					embeds: [buildEventEmbed(updatedEvent as EventData)],
-					// components: [buildEventComponents(event as EventData)],
+					components: buildEventComponents(updatedEvent.id, interaction.user.id),
 					allowedMentions: { roles: updatedEvent.roleToPing ? [updatedEvent.roleToPing] : undefined }
 				});
 
@@ -521,7 +487,7 @@ export class SlashCommand extends BloomCommand {
 	private async deleteEvent(interaction: ChatInputCommand.Interaction<'cached'>) {
 		const id = interaction.options.getString('id', true);
 
-		const existingEvent = await this.container.prisma.event.findFirst({
+		const existingEvent = await this.container.prisma.event.findFirstOrThrow({
 			where: {
 				id
 			},

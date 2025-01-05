@@ -61,7 +61,7 @@ CREATE TABLE "participants" (
     "job" "jobs" NOT NULL,
     "discord_id" TEXT NOT NULL,
     "signup_order" INTEGER NOT NULL,
-    "event_id" TEXT NOT NULL,
+    "event_instance_id" TEXT NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
 
@@ -84,4 +84,4 @@ CREATE UNIQUE INDEX "participants_discord_id_key" ON "participants"("discord_id"
 ALTER TABLE "event_instances" ADD CONSTRAINT "event_instances_event_id_fkey" FOREIGN KEY ("event_id") REFERENCES "events"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "participants" ADD CONSTRAINT "participants_event_id_fkey" FOREIGN KEY ("event_id") REFERENCES "event_instances"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "participants" ADD CONSTRAINT "participants_event_instance_id_fkey" FOREIGN KEY ("event_instance_id") REFERENCES "event_instances"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

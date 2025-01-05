@@ -1,4 +1,6 @@
 import type { Event, EventInstance, Jobs, Participant } from '@prisma/client';
+import type { ChatInputCommand } from '@sapphire/framework';
+import type { ButtonInteraction, CacheType, StringSelectMenuInteraction } from 'discord.js';
 
 /**
  * Left-to-right mark character.
@@ -12,6 +14,10 @@ export const leftToRightMark = String.fromCharCode(8206);
  */
 export const braillePatternBlank = String.fromCharCode(10240);
 
+export enum BloombotEvents {
+	UpdateEmbed = 'updateEmbed'
+}
+
 export const enum BrandingColors {
 	Primary = 0xbb77ea
 }
@@ -19,17 +25,26 @@ export const enum BrandingColors {
 export const enum ErrorIdentifiers {
 	EventEditMessageFetchFailedError = 'EventEditMessageFetchFailedError',
 	EventEditPostedMessageUndefinedError = 'EventEditPostedMessageUndefinedError',
-	EventEditMessageChannelNotFoundError = 'EventEditMessageChannelNotFoundError'
+	EventEditMessageChannelNotFoundError = 'EventEditMessageChannelNotFoundError',
+	UnableToFindEventForButtonClickError = 'UnableToFindEventForButtonClickError'
 }
 
-export type EventData = Pick<Event, 'id' | 'description' | 'name' | 'roleToPing' | 'leader'> & {
+export interface UpdateEmbedPayload {
+	// eventData: {
+	// 	instance: (EventInstance & { participants: Participant[] }) | null;
+	// } & Event;
+	eventId: string;
+	interaction: ButtonInteraction<CacheType> | StringSelectMenuInteraction<CacheType> | ChatInputCommand.Interaction<'cached'>;
+}
+
+export type EventData = Pick<Event, 'id' | 'description' | 'name' | 'roleToPing' | 'leader' | 'channelId'> & {
 	instance: Pick<EventInstance, 'dateTime'> & {
 		participants: Pick<Participant, 'job' | 'role' | 'discordId' | 'signupOrder'>[];
 	};
 };
 
 type JobTypeEmojis = 'AllRounder' | 'DPS' | 'Healer' | 'MeleeDPS' | 'MagicRangedDPS' | 'PhysRangedDPS' | 'Tank';
-type EventDataEmojis = 'Absence' | 'Bench' | 'Countdown' | 'Date' | 'Late' | 'Leader' | 'Signups' | 'SpecReset' | 'Tentative' | 'Time';
+type EventDataEmojis = 'Absence' | 'Bench' | 'Countdown' | 'Date' | 'Late' | 'Leader' | 'Signups' | 'RemoveParticipation' | 'Tentative' | 'Time';
 type OtherEmojis = 'GreenTick' | 'RedCross';
 
 export type Emojis = Jobs | JobTypeEmojis | EventDataEmojis | OtherEmojis;
