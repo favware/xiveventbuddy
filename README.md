@@ -7,7 +7,6 @@
 **A private event/raid bot for the Nightbloom server, a FFXIV Free Company.**
 
 <a href="https://github.com/favware/Bloombot/blob/main/LICENSE" alt="License"><img src="https://img.shields.io/github/license/favware/Bloombot"/></a>
-<a href="https://twitter.com/Favna_/follow" alt="Twitter Follow"><img src="https://img.shields.io/twitter/follow/favna_?label=Follow%20@Favna_&logo=twitter&colorB=1DA1F2&style=flat-square"/></a>
 
 <a href="https://join.favware.tech" alt="Support Server"><img src="https://discord.com/api/guilds/512303595966824458/embed.png?style=banner2"/></a>
 
