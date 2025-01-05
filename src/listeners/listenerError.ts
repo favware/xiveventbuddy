@@ -1,13 +1,10 @@
 import { Owners } from '#root/config';
 import { generateUnexpectedErrorMessage, ignoredCodes } from '#utils/functions/errorHelpers';
-import { resolveOnErrorCodes } from '#utils/functions/helpers';
 import { Events, Listener, type ListenerErrorPayload, Piece, UserError } from '@sapphire/framework';
-import { envParseString } from '@skyra/env-utilities';
-import { DiscordAPIError, HTTPError, RESTJSONErrorCodes } from 'discord.js';
+import { isNullish } from '@sapphire/utilities';
+import { DiscordAPIError, HTTPError } from 'discord.js';
 
 export class ListenerError extends Listener<typeof Events.ListenerError> {
-	private modBotCommandsChannel = process.env.NODE_ENV === 'development' ? '902281783196921857' : '868830230503100426';
-
 	public async run(error: Error, { piece }: ListenerErrorPayload) {
 		if (typeof error === 'string') return this.stringError(error);
 		if (error instanceof UserError) return this.userError(piece, error);
@@ -60,27 +57,19 @@ export class ListenerError extends Listener<typeof Events.ListenerError> {
 	}
 
 	private async alert(content: string) {
-		const targetGuild = await resolveOnErrorCodes(
-			this.container.client.guilds.fetch(envParseString('COMMAND_GUILD_ID')),
-			RESTJSONErrorCodes.UnknownGuild,
-			RESTJSONErrorCodes.InvalidGuild
-		);
+		const webhook = this.container.webhookError;
+		if (isNullish(webhook)) return;
 
-		if (!targetGuild) return;
-
-		const modBotCommandsChannel = await resolveOnErrorCodes(
-			targetGuild.channels.fetch(this.modBotCommandsChannel),
-			RESTJSONErrorCodes.UnknownChannel
-		);
-
-		if (!modBotCommandsChannel || !modBotCommandsChannel.isTextBased()) return;
-
-		return modBotCommandsChannel.send({
-			content,
-			allowedMentions: {
-				users: Owners
-			}
-		});
+		try {
+			await webhook.send({
+				content,
+				allowedMentions: {
+					users: Owners
+				}
+			});
+		} catch (err) {
+			this.container.client.emit(Events.Error, err as Error);
+		}
 	}
 
 	private getWarnError(error: Error, piece: Piece) {
