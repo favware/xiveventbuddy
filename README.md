@@ -1,8 +1,8 @@
 <div align="center">
 
-<img height="200" src="https://cdn.favware.tech/img/Bloombot-avatar.png" alt="Bloombot"/>
+<img height="200" src="https://cdn.favware.tech/img/nightbloom-logo.png" alt="Bloombot"/>
 
-# [Bloombot]
+# Bloombot
 
 **A private event/raid bot for the Nightbloom server, a FFXIV Free Company.**
 
