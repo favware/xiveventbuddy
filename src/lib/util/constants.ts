@@ -42,25 +42,33 @@ export const enum CustomIdPrefixes {
 	RoleAbsence = 'role-absence',
 	RemoveParticipation = 'remove-participation',
 
+	Bluemage = 'bluemage',
+
 	Astrologian = 'astrologian',
-	Whitemage = 'whitemage',
-	Scholar = 'scholar',
 	Sage = 'sage',
+	Scholar = 'scholar',
+	Whitemage = 'whitemage',
 
 	Blackmage = 'blackmage',
+	Pictomancer = 'pictomancer',
 	Redmage = 'redmage',
 	Summoner = 'summoner',
 
-	Monk = 'monk',
 	Dragoon = 'dragoon',
+	Monk = 'monk',
 	Ninja = 'ninja',
-	Samurai = 'samurai',
 	Reaper = 'reaper',
+	Samurai = 'samurai',
 	Viper = 'viper',
 
 	Bard = 'bard',
+	Dancer = 'dancer',
 	Machinist = 'machinist',
-	Dancer = 'dancer'
+
+	DarkKnight = 'darkknight',
+	Gunbreaker = 'gunbreaker',
+	Paladin = 'paladin',
+	Warrior = 'warrior'
 }
 
 export interface UpdateEmbedPayload {

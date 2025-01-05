@@ -1,6 +1,7 @@
+import { CustomIdPrefixes } from '#lib/util/constants';
 import { BloombotEmojis } from '#lib/util/emojis';
 import { handleJobOrRoleButtonClick } from '#lib/util/functions/handleJobOrRoleButtonClick';
-import { $Enums, CustomIdPrefixes } from '#lib/util/constants';
+import { $Enums } from '@prisma/client';
 import { ApplyOptions } from '@sapphire/decorators';
 import { InteractionHandler, InteractionHandlerTypes } from '@sapphire/framework';
 import { inlineCode, type ButtonInteraction } from 'discord.js';

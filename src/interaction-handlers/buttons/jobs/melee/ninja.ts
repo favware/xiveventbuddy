@@ -1,3 +1,4 @@
+import { CustomIdPrefixes } from '#lib/util/constants';
 import { BloombotEmojis } from '#lib/util/emojis';
 import { handleJobOrRoleButtonClick } from '#lib/util/functions/handleJobOrRoleButtonClick';
 import { $Enums } from '@prisma/client';
@@ -16,7 +17,7 @@ export class ButtonHandler extends InteractionHandler {
 	}
 
 	public override async parse(interaction: ButtonInteraction) {
-		if (!interaction.customId.startsWith('job-ninja')) return this.none();
+		if (!interaction.customId.startsWith(`${CustomIdPrefixes.Job}-${CustomIdPrefixes.Ninja}`)) return this.none();
 
 		await handleJobOrRoleButtonClick(interaction, $Enums.Roles.MeleeDPS, $Enums.Jobs.Ninja);
 
