@@ -24,13 +24,15 @@ export class DisableOldEvents extends ScheduledTask {
 			}
 		});
 
-		const twoHoursAgo = subHours(new Date(), 2);
+		const now = new Date();
 
 		for (const event of events) {
+			const afterDurationOfEvent = subHours(now, event.duration);
+
 			if (event.instance?.dateTime) {
 				const eventInstanceDateTime = event.instance.dateTime;
 
-				if (eventInstanceDateTime <= twoHoursAgo) {
+				if (eventInstanceDateTime <= afterDurationOfEvent) {
 					this.container.client.emit(BloombotEvents.UpdateEmbed, {
 						eventId: event.id,
 						userId: null,
