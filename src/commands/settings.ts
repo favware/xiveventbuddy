@@ -22,6 +22,7 @@ export class SlashCommand extends BloomCommand {
 							input //
 								.setName('role')
 								.setDescription('The role to add to the event managers list')
+								.setRequired(true)
 						)
 				)
 				.addSubcommand((builder) =>
@@ -32,6 +33,7 @@ export class SlashCommand extends BloomCommand {
 							input //
 								.setName('role')
 								.setDescription('The role to remove to the event managers list')
+								.setRequired(true)
 						)
 				)
 
@@ -44,6 +46,7 @@ export class SlashCommand extends BloomCommand {
 							input //
 								.setName('server')
 								.setDescription('The discord ID of the server to add to the list of verified servers')
+								.setRequired(true)
 						)
 				)
 				.addSubcommand((builder) =>
@@ -54,6 +57,7 @@ export class SlashCommand extends BloomCommand {
 							input //
 								.setName('server')
 								.setDescription('The discord ID of the server to remove from the list of verified servers')
+								.setRequired(true)
 						)
 				)
 		);
