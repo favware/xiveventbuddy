@@ -10,6 +10,10 @@ on:
       - '.github/workflows/continuous-deployment.yml'
   workflow_dispatch:
 
+concurrency:
+  group: ${{ github.workspace }}|${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+
 jobs:
   PublishBloombot:
     name: Publish bloombot image to container registries
