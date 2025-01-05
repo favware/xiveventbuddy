@@ -10,13 +10,13 @@ import { MessageFlags, type ButtonInteraction } from 'discord.js';
 	interactionHandlerType: InteractionHandlerTypes.Button
 })
 export class ButtonHandler extends InteractionHandler {
-	public override run(interaction: ButtonInteraction) {
+	public override run(interaction: ButtonInteraction<'cached'>) {
 		return interaction.editReply({
 			content: `${BloombotEmojis.GreenTick} Successfully removed you from the participants list.`
 		});
 	}
 
-	public override async parse(interaction: ButtonInteraction) {
+	public override async parse(interaction: ButtonInteraction<'cached'>) {
 		if (!interaction.customId.startsWith(CustomIdPrefixes.RemoveParticipation)) return this.none();
 
 		await interaction.deferReply({ flags: MessageFlags.Ephemeral });
@@ -40,7 +40,7 @@ export class ButtonHandler extends InteractionHandler {
 		});
 
 		if (eventData.instance.messageId) {
-			this.container.client.emit(BloombotEvents.UpdateEmbed, { eventId, interaction });
+			this.container.client.emit(BloombotEvents.UpdateEmbed, { eventId, userId: interaction.user.id, guildId: interaction.guildId });
 		}
 
 		return this.some();
