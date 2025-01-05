@@ -1,8 +1,18 @@
+import { rootFolder } from '#lib/util/constants';
 import { OwnerMentions, Owners } from '#root/config';
-import { getWarnError } from '#utils/functions/errorHelpers';
-import { ArgumentError, container, Events, UserError, type InteractionHandlerError, type InteractionHandlerParseError } from '@sapphire/framework';
-import { codeBlock } from '@sapphire/utilities';
-import { bold, DiscordAPIError, HTTPError, MessageFlags, RESTJSONErrorCodes, userMention, type Interaction } from 'discord.js';
+import { getErrorLine, getLinkLine, getMethodLine, getStatusLine, getWarnError } from '#utils/functions/errorHelpers';
+import {
+	ArgumentError,
+	container,
+	Events,
+	UserError,
+	type InteractionHandler,
+	type InteractionHandlerError,
+	type InteractionHandlerParseError
+} from '@sapphire/framework';
+import { codeBlock, isNullish } from '@sapphire/utilities';
+import { bold, DiscordAPIError, EmbedBuilder, HTTPError, MessageFlags, RESTJSONErrorCodes, userMention, type Interaction } from 'discord.js';
+import { fileURLToPath } from 'node:url';
 
 const ignoredCodes = [RESTJSONErrorCodes.UnknownChannel, RESTJSONErrorCodes.UnknownMessage];
 
@@ -29,6 +39,9 @@ export async function handleInteractionError(error: Error, { handler, interactio
 	} else {
 		logger.warn(`${getWarnError(interaction)} (${interaction.user.id}) | ${error.constructor.name}`);
 	}
+
+	// Send a detailed message:
+	await sendErrorChannel(interaction, handler, error);
 
 	// Emit where the error was emitted
 	logger.fatal(`[COMMAND] ${handler.location.full}\n${error.stack || error.message}`);
@@ -88,4 +101,37 @@ function alert(interaction: Interaction, content: string) {
 		allowedMentions: { users: [interaction.user.id, ...Owners], roles: [] },
 		flags: MessageFlags.Ephemeral
 	});
+}
+
+async function sendErrorChannel(interaction: Interaction, handler: InteractionHandler, error: Error) {
+	const webhook = container.webhookError;
+	if (isNullish(webhook) || (!interaction.isStringSelectMenu() && !interaction.isButton())) return;
+
+	const interactionReply = await interaction.fetchReply();
+
+	const lines = [getLinkLine(interactionReply), getHandlerLine(handler), getErrorLine(error)];
+
+	// If it's a DiscordAPIError or a HTTPError, add the HTTP path and code lines after the second one.
+	if (error instanceof DiscordAPIError || error instanceof HTTPError) {
+		lines.splice(2, 0, getMethodLine(error), getStatusLine(error));
+	}
+
+	const embed = new EmbedBuilder() //
+		.setDescription(lines.join('\n'))
+		.setColor('Red')
+		.setTimestamp();
+
+	try {
+		await webhook.send({ embeds: [embed] });
+	} catch (err) {
+		container.client.emit(Events.Error, err as Error);
+	}
+}
+
+/**
+ * Formats a handler line.
+ * @param handler The handler to format.
+ */
+function getHandlerLine(handler: InteractionHandler): string {
+	return `**Handler**: ${handler.location.full.slice(fileURLToPath(rootFolder).length)}`;
 }

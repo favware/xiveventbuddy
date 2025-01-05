@@ -1,4 +1,4 @@
-import '#lib/setup';
+import '#lib/setup/all';
 import { CLIENT_OPTIONS } from '#root/config';
 import { SapphireClient } from '@sapphire/framework';
 import { green } from 'colorette';

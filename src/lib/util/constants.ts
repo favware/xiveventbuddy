@@ -2,6 +2,8 @@ import type { Event, EventInstance, Jobs, Participant } from '@prisma/client';
 import type { ChatInputCommand } from '@sapphire/framework';
 import type { ButtonInteraction, CacheType, StringSelectMenuInteraction } from 'discord.js';
 
+export const rootFolder = new URL('../../../', import.meta.url);
+
 /**
  * Left-to-right mark character.
  * @see {@link https://en.wikipedia.org/wiki/Left-to-right_mark}

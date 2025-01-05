@@ -1,16 +1,20 @@
+import { rootFolder } from '#lib/util/constants';
 import { OwnerMentions } from '#root/config';
+import { isMessageInstance } from '@sapphire/discord.js-utilities';
 import {
 	ArgumentError,
 	container,
 	Events,
 	UserError,
 	type ChatInputCommandErrorPayload,
+	type Command,
 	type ContextMenuCommandErrorPayload
 } from '@sapphire/framework';
-import { codeBlock } from '@sapphire/utilities';
+import { codeBlock, isNullish } from '@sapphire/utilities';
 import {
 	bold,
 	DiscordAPIError,
+	EmbedBuilder,
 	hideLinkEmbed,
 	HTTPError,
 	hyperlink,
@@ -22,6 +26,7 @@ import {
 	type BaseInteraction,
 	type CommandInteraction
 } from 'discord.js';
+import { fileURLToPath } from 'node:url';
 
 export const ignoredCodes = [RESTJSONErrorCodes.UnknownChannel, RESTJSONErrorCodes.UnknownMessage];
 
@@ -51,6 +56,9 @@ export async function handleChatInputOrContextMenuCommandError(
 	} else {
 		logger.warn(`${getWarnError(interaction)} (${interaction.user.id}) | ${error.constructor.name}`);
 	}
+
+	// Send a detailed message:
+	await sendErrorChannel(interaction, command, error);
 
 	// Emit where the error was emitted
 	logger.fatal(`[COMMAND] ${command.location.full}\n${error.stack || error.message}`);
@@ -114,12 +122,71 @@ async function alert(interaction: CommandInteraction, content: string) {
 	});
 }
 
+async function sendErrorChannel(interaction: CommandInteraction, command: Command, error: Error) {
+	const webhook = container.webhookError;
+	if (isNullish(webhook)) return;
+
+	const interactionReply = await interaction.fetchReply();
+
+	const lines = [
+		getLinkLine(interactionReply), //
+		getCommandLine(command),
+		getOptionsLine(interaction.options),
+		getErrorLine(error)
+	];
+
+	// If it's a DiscordAPIError or a HTTPError, add the HTTP path and code lines after the second one.
+	if (error instanceof DiscordAPIError || error instanceof HTTPError) {
+		lines.splice(2, 0, getMethodLine(error), getStatusLine(error));
+	}
+
+	const embed = new EmbedBuilder() //
+		.setDescription(lines.join('\n'))
+		.setColor('Red')
+		.setTimestamp();
+
+	try {
+		await webhook.send({ embeds: [embed] });
+	} catch (err) {
+		container.client.emit(Events.Error, err as Error);
+	}
+}
+
+/**
+ * Formats a command line.
+ * @param command The command to format.
+ */
+function getCommandLine(command: Command): string {
+	return `**Command**: ${command.location.full.slice(fileURLToPath(rootFolder).length)}`;
+}
+
+/**
+ * Formats an options line.
+ * @param options The options the user used when running the command.
+ */
+function getOptionsLine(options: CommandInteraction['options']): string {
+	if (options.data.length === 0) return '**Options**: Not Supplied';
+
+	const mappedOptions = [];
+
+	for (const option of options.data) {
+		let { value } = option;
+		if (typeof value === 'string') value = value.trim().replaceAll('`', '῾');
+
+		mappedOptions.push(`[${option.name} ⫸ ${value || '\u200B'}]`);
+	}
+
+	if (mappedOptions.length === 0) return '**Options**: Not Supplied';
+
+	return `**Options**: ${mappedOptions.join('\n')}`;
+}
+
 /**
  * Formats a message url line.
  * @param url The url to format.
  */
 export function getLinkLine(message: APIMessage | Message): string {
-	if (message instanceof Message) {
+	if (isMessageInstance(message)) {
 		return bold(hyperlink('Jump to Message!', hideLinkEmbed(message.url)));
 	}
 
@@ -147,7 +214,11 @@ export function getStatusLine(error: DiscordAPIError | HTTPError): string {
  * @param error The error to format.
  */
 export function getErrorLine(error: Error): string {
-	return `**Error**: ${codeBlock('js', error.stack || error.message)}`;
+	if (error instanceof Error) {
+		return `**Error**: ${codeBlock('js', error.stack || error.message)}`;
+	}
+
+	return `**Error**: ${codeBlock('js', error)}`;
 }
 
 export function getWarnError(interaction: BaseInteraction) {
