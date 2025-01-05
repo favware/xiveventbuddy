@@ -58,7 +58,7 @@ CREATE TABLE "event_instances" (
 CREATE TABLE "participants" (
     "id" TEXT NOT NULL,
     "role" "roles" NOT NULL,
-    "job" "jobs" NOT NULL,
+    "job" "jobs",
     "discord_id" TEXT NOT NULL,
     "signup_order" INTEGER NOT NULL,
     "event_instance_id" TEXT NOT NULL,

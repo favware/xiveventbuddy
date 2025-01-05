@@ -1,5 +1,5 @@
 import { BloombotEmojis } from '#lib/util/emojis';
-import { handleRoleButtonClick } from '#lib/util/functions/handleRoleButtonClick';
+import { handleJobOrRoleButtonClick } from '#lib/util/functions/handleJobOrRoleButtonClick';
 import { $Enums } from '@prisma/client';
 import { ApplyOptions } from '@sapphire/decorators';
 import { InteractionHandler, InteractionHandlerTypes } from '@sapphire/framework';
@@ -8,17 +8,17 @@ import { inlineCode, type ButtonInteraction } from 'discord.js';
 @ApplyOptions<InteractionHandler.Options>({
 	interactionHandlerType: InteractionHandlerTypes.Button
 })
-export class AutocompleteHandler extends InteractionHandler {
+export class ButtonHandler extends InteractionHandler {
 	public override run(interaction: ButtonInteraction) {
 		return interaction.editReply({
-			content: `${BloombotEmojis.GreenTick} Successfully updated your status to ${inlineCode($Enums.Roles.Bench)}.`
+			content: `${BloombotEmojis.GreenTick} Successfully updated your job to ${inlineCode($Enums.Jobs.Dancer)}.`
 		});
 	}
 
 	public override async parse(interaction: ButtonInteraction) {
-		if (!interaction.customId.startsWith('role-bench')) return this.none();
+		if (!interaction.customId.startsWith('job-dancer')) return this.none();
 
-		await handleRoleButtonClick(interaction, $Enums.Jobs.AllRounder, $Enums.Roles.Bench);
+		await handleJobOrRoleButtonClick(interaction, $Enums.Roles.PhysRangedDPS, $Enums.Jobs.Dancer);
 
 		return this.some();
 	}

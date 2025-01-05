@@ -28,13 +28,42 @@ export const enum ErrorIdentifiers {
 	EventEditMessageFetchFailedError = 'EventEditMessageFetchFailedError',
 	EventEditPostedMessageUndefinedError = 'EventEditPostedMessageUndefinedError',
 	EventEditMessageChannelNotFoundError = 'EventEditMessageChannelNotFoundError',
-	UnableToFindEventForButtonClickError = 'UnableToFindEventForButtonClickError'
+	UnableToFindEventForButtonClickError = 'UnableToFindEventForButtonClickError',
+	UnableToFindEventForSelectMenuChoiceError = 'unableToFindEventForSelectMenuChoiceError',
+	UnexpectedRoleSelectMenuChoiceError = 'unexpectedRoleSelectMenuChoiceError'
+}
+
+export const enum CustomIdPrefixes {
+	Job = 'job',
+	RoleSelectMenu = 'role-select-menu',
+	RoleBench = 'role-bench',
+	RoleLate = 'role-late',
+	RoleTentative = 'role-tentative',
+	RoleAbsence = 'role-absence',
+	RemoveParticipation = 'remove-participation',
+
+	Astrologian = 'astrologian',
+	Whitemage = 'whitemage',
+	Scholar = 'scholar',
+	Sage = 'sage',
+
+	Blackmage = 'blackmage',
+	Redmage = 'redmage',
+	Summoner = 'summoner',
+
+	Monk = 'monk',
+	Dragoon = 'dragoon',
+	Ninja = 'ninja',
+	Samurai = 'samurai',
+	Reaper = 'reaper',
+	Viper = 'viper',
+
+	Bard = 'bard',
+	Machinist = 'machinist',
+	Dancer = 'dancer'
 }
 
 export interface UpdateEmbedPayload {
-	// eventData: {
-	// 	instance: (EventInstance & { participants: Participant[] }) | null;
-	// } & Event;
 	eventId: string;
 	interaction: ButtonInteraction<CacheType> | StringSelectMenuInteraction<CacheType> | ChatInputCommand.Interaction<'cached'>;
 }

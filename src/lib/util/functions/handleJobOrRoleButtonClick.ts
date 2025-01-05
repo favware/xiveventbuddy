@@ -5,7 +5,7 @@ import { $Enums } from '@prisma/client';
 import { container, UserError } from '@sapphire/framework';
 import { MessageFlags, type ButtonInteraction } from 'discord.js';
 
-export async function handleRoleButtonClick(interaction: ButtonInteraction, job: $Enums.Jobs, role: $Enums.Roles) {
+export async function handleJobOrRoleButtonClick(interaction: ButtonInteraction, role: $Enums.Roles, job: $Enums.Jobs | null = null) {
 	await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 
 	const [, eventId, userId] = interaction.customId.split('|');

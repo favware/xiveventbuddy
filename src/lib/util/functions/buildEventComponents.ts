@@ -1,3 +1,4 @@
+import { CustomIdPrefixes } from '#lib/util/constants';
 import { $Enums } from '@prisma/client';
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, StringSelectMenuBuilder, StringSelectMenuOptionBuilder } from 'discord.js';
 
@@ -34,31 +35,31 @@ const AllRounderOption = new StringSelectMenuOptionBuilder()
 
 export function buildEventComponents(eventId: string, userId: string) {
 	const roleSelectMenu = new StringSelectMenuBuilder()
-		.setCustomId(`class-select-menu|${eventId}|${userId}`)
+		.setCustomId(`${CustomIdPrefixes.RoleSelectMenu}|${eventId}|${userId}`)
 		.setOptions(TankOption, MeleeDpsOption, PhysRangeDpsOption, MagicOption, HealerOption, AllRounderOption);
 
 	const benchButton = new ButtonBuilder()
-		.setCustomId(`role-bench|${eventId}|${userId}`)
+		.setCustomId(`${CustomIdPrefixes.RoleBench}|${eventId}|${userId}`)
 		.setEmoji({ id: '1324558621530521681', name: 'Bench' })
 		.setLabel('Bench')
 		.setStyle(ButtonStyle.Secondary);
 	const lateButton = new ButtonBuilder()
-		.setCustomId(`role-late|${eventId}|${userId}`)
+		.setCustomId(`${CustomIdPrefixes.RoleLate}|${eventId}|${userId}`)
 		.setEmoji({ id: '1324558634243457117', name: 'Late' })
 		.setLabel('Late')
 		.setStyle(ButtonStyle.Secondary);
 	const tentativeButton = new ButtonBuilder()
-		.setCustomId(`role-tentative|${eventId}|${userId}`)
+		.setCustomId(`${CustomIdPrefixes.RoleTentative}|${eventId}|${userId}`)
 		.setEmoji({ id: '1324558656326467616', name: 'Tentative' })
 		.setLabel('Tentative')
 		.setStyle(ButtonStyle.Secondary);
 	const absenceButton = new ButtonBuilder()
-		.setCustomId(`role-absence|${eventId}|${userId}`)
+		.setCustomId(`${CustomIdPrefixes.RoleAbsence}|${eventId}|${userId}`)
 		.setEmoji({ id: '1324558615939649559', name: 'Absence' })
 		.setLabel('Absence')
 		.setStyle(ButtonStyle.Secondary);
 	const removeParticipationButton = new ButtonBuilder()
-		.setCustomId(`remove-participation|${eventId}|${userId}`)
+		.setCustomId(`${CustomIdPrefixes.RemoveParticipation}|${eventId}|${userId}`)
 		.setEmoji({ id: '1325255133592031272', name: 'RemoveParticipation' })
 		.setLabel('Remove Participation')
 		.setStyle(ButtonStyle.Secondary);

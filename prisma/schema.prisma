@@ -109,7 +109,7 @@ model EventInstance {
 model Participant {
     id              String        @id @default(cuid())
     role            Roles
-    job             Jobs
+    job             Jobs?
     discordId       String        @unique @map("discord_id")
     signupOrder     Int           @map("signup_order")
     eventInstanceId String        @map("event_instance_id")

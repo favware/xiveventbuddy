@@ -1,5 +1,5 @@
 import { BloombotEmojis } from '#lib/util/emojis';
-import { handleRoleButtonClick } from '#lib/util/functions/handleRoleButtonClick';
+import { handleJobOrRoleButtonClick } from '#lib/util/functions/handleJobOrRoleButtonClick';
 import { $Enums } from '@prisma/client';
 import { ApplyOptions } from '@sapphire/decorators';
 import { InteractionHandler, InteractionHandlerTypes } from '@sapphire/framework';
@@ -8,17 +8,17 @@ import { inlineCode, type ButtonInteraction } from 'discord.js';
 @ApplyOptions<InteractionHandler.Options>({
 	interactionHandlerType: InteractionHandlerTypes.Button
 })
-export class AutocompleteHandler extends InteractionHandler {
+export class ButtonHandler extends InteractionHandler {
 	public override run(interaction: ButtonInteraction) {
 		return interaction.editReply({
-			content: `${BloombotEmojis.GreenTick} Successfully updated your status to ${inlineCode($Enums.Roles.Absence)}.`
+			content: `${BloombotEmojis.GreenTick} Successfully updated your job to ${inlineCode($Enums.Jobs.Pictomancer)}.`
 		});
 	}
 
 	public override async parse(interaction: ButtonInteraction) {
-		if (!interaction.customId.startsWith('role-absence')) return this.none();
+		if (!interaction.customId.startsWith('job-pictomancer')) return this.none();
 
-		await handleRoleButtonClick(interaction, $Enums.Jobs.AllRounder, $Enums.Roles.Absence);
+		await handleJobOrRoleButtonClick(interaction, $Enums.Roles.MagicRangedDPS, $Enums.Jobs.Pictomancer);
 
 		return this.some();
 	}
