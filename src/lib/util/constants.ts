@@ -16,7 +16,8 @@ export const braillePatternBlank = String.fromCharCode(10240);
 
 export enum BloombotEvents {
 	UpdateEmbed = 'updateEmbed',
-	PostEmbed = 'postEmbed'
+	PostEmbed = 'postEmbed',
+	CreateServerEvent = 'createServerEvent'
 }
 
 export const enum BrandingColors {
@@ -69,6 +70,12 @@ export const enum CustomIdPrefixes {
 	Gunbreaker = 'gunbreaker',
 	Paladin = 'paladin',
 	Warrior = 'warrior'
+}
+
+export interface CreateServerEventPayload {
+	eventId: string;
+	guildId: string;
+	isReschedule: boolean;
 }
 
 export interface PostEmbedPayload {

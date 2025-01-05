@@ -78,17 +78,19 @@ model VerifiedServers {
 }
 
 model Event {
-    id          String         @id @default(cuid())
-    name        String
-    description String?
-    interval    EventInterval?
-    leader      String
-    roleToPing  String?        @map("role_to_ping")
-    channelId   String         @map("channel_id")
-    guildId     String         @map("guild_id")
-    createdAt   DateTime       @default(now()) @map("created_at")
-    updatedAt   DateTime       @updatedAt @map("updated_at")
-    instance    EventInstance?
+    id              String         @id @default(cuid())
+    name            String
+    duration        Int
+    description     String?
+    interval        EventInterval?
+    leader          String
+    hasDiscordEvent Boolean?       @map("has_discord_event")
+    roleToPing      String?        @map("role_to_ping")
+    channelId       String         @map("channel_id")
+    guildId         String         @map("guild_id")
+    createdAt       DateTime       @default(now()) @map("created_at")
+    updatedAt       DateTime       @updatedAt @map("updated_at")
+    instance        EventInstance?
 
     @@map("events")
 }

@@ -44,6 +44,18 @@ export class SlashCommand extends BloomCommand {
 								.setDescription('The time of the event. Format is HH:MM (24 hour clock). Time is always Light server time (UTC)')
 								.setRequired(true)
 						)
+						.addIntegerOption((builder) =>
+							builder //
+								.setName('duration')
+								.setDescription('The duration of the event in hours')
+								.setChoices(
+									{ name: '1 hour', value: 1 },
+									{ name: '2 hours', value: 2 },
+									{ name: '3 hours', value: 3 },
+									{ name: '4 hours', value: 4 }
+								)
+								.setRequired(true)
+						)
 						.addStringOption((builder) =>
 							builder //
 								.setName('description')
@@ -151,6 +163,18 @@ export class SlashCommand extends BloomCommand {
 								.setDescription('The new event leader for this event.')
 								.setRequired(false)
 						)
+						.addIntegerOption((builder) =>
+							builder //
+								.setName('duration')
+								.setDescription('The duration of the event in hours')
+								.setChoices(
+									{ name: '1 hour', value: 1 },
+									{ name: '2 hours', value: 2 },
+									{ name: '3 hours', value: 3 },
+									{ name: '4 hours', value: 4 }
+								)
+								.setRequired(false)
+						)
 				)
 				.addSubcommand((builder) =>
 					builder //
@@ -237,11 +261,13 @@ export class SlashCommand extends BloomCommand {
 		const description = interaction.options.getString('description', false);
 		const interval = interaction.options.getString('interval', false);
 		const roleToPing = interaction.options.getRole('role-to-ping', false);
+		const eventDuration = interaction.options.getInteger('duration', true);
 
 		const event = await this.container.prisma.event.create({
 			data: {
 				name,
 				description,
+				duration: eventDuration,
 				channelId: eventChannel.id,
 				guildId: interaction.guildId,
 				interval: interval as $Enums.EventInterval,
@@ -284,6 +310,7 @@ export class SlashCommand extends BloomCommand {
 		}
 
 		this.container.client.emit(BloombotEvents.PostEmbed, { eventId: event.id, userId: interaction.user.id, guildId: interaction.guildId });
+		this.container.client.emit(BloombotEvents.CreateServerEvent, { eventId: event.id, guildId: interaction.guildId, isReschedule: false });
 
 		return interaction.editReply({
 			content: `${BloombotEmojis.GreenTick} Event ${inlineCode(name)} created successfully with ID ${inlineCode(event.id)}.`

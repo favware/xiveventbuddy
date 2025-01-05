@@ -31,9 +31,11 @@ CREATE TABLE "verified_servers" (
 CREATE TABLE "events" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
+    "duration" INTEGER NOT NULL,
     "description" TEXT,
     "interval" "event_interval",
     "leader" TEXT NOT NULL,
+    "has_discord_event" BOOLEAN,
     "role_to_ping" TEXT,
     "channel_id" TEXT NOT NULL,
     "guild_id" TEXT NOT NULL,
@@ -85,4 +87,4 @@ CREATE UNIQUE INDEX "participants_discord_id_key" ON "participants"("discord_id"
 ALTER TABLE "event_instances" ADD CONSTRAINT "event_instances_event_id_fkey" FOREIGN KEY ("event_id") REFERENCES "events"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "participants" ADD CONSTRAINT "participants_event_instance_id_fkey" FOREIGN KEY ("event_instance_id") REFERENCES "event_instances"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "participants" ADD CONSTRAINT "participants_event_instance_id_fkey" FOREIGN KEY ("event_instance_id") REFERENCES "event_instances"("id") ON DELETE CASCADE ON UPDATE CASCADE;

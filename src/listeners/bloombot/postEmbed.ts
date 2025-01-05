@@ -4,7 +4,7 @@ import { buildEventEmbed } from '#lib/util/functions/buildEventEmbed';
 import { Listener } from '@sapphire/framework';
 import { roleMention } from 'discord.js';
 
-export class UserListener extends Listener<typeof BloombotEvents.UpdateEmbed> {
+export class UserListener extends Listener<typeof BloombotEvents.PostEmbed> {
 	public override async run({ eventId, userId, guildId }: PostEmbedPayload) {
 		const eventData = await this.container.prisma.event.findFirstOrThrow({
 			where: {
