@@ -52,8 +52,7 @@ export class UserListener extends Listener<typeof BloombotEvents.CreateServerEve
 									startAt: eventData.instance.dateTime.toISOString(),
 									frequency: GuildScheduledEventRecurrenceRuleFrequency.Weekly,
 									interval: eventData.interval === $Enums.EventInterval.WEEKLY ? 1 : 2,
-									byWeekday: [getISODay(eventData.instance.dateTime) - 1],
-									endAt: addHours(eventData.instance.dateTime, eventData.duration)
+									byWeekday: [getISODay(eventData.instance.dateTime) - 1]
 								}
 							}
 						: {})
