@@ -3,7 +3,8 @@ process.env.NODE_ENV ??= 'development';
 
 import { LogLevel } from '@sapphire/framework';
 import { cast } from '@sapphire/utilities';
-import { envParseString } from '@skyra/env-utilities';
+import type { RedisOptions } from 'bullmq';
+import { envParseInteger, envParseString } from '@skyra/env-utilities';
 import { ActivityType, GatewayIntentBits, userMention, type ActivitiesOptions, type ClientOptions, type WebhookClientData } from 'discord.js';
 
 export const Owners = ['268792781713965056'];
@@ -31,6 +32,14 @@ function parsePresenceActivity(): ActivitiesOptions[] {
 	];
 }
 
+export function parseRedisOption(): Pick<RedisOptions, 'port' | 'password' | 'host'> {
+	return {
+		port: envParseInteger('REDIS_PORT'),
+		password: envParseString('REDIS_PASSWORD'),
+		host: envParseString('REDIS_HOST')
+	};
+}
+
 export const WEBHOOK_ERROR = parseWebhookError();
 
 export const CLIENT_OPTIONS: ClientOptions = {
@@ -38,5 +47,13 @@ export const CLIENT_OPTIONS: ClientOptions = {
 	allowedMentions: { users: [], roles: [] },
 	presence: { activities: parsePresenceActivity() },
 	loadDefaultErrorListeners: false,
-	logger: { level: envParseString('NODE_ENV') === 'production' ? LogLevel.Info : LogLevel.Debug }
+	logger: { level: envParseString('NODE_ENV') === 'production' ? LogLevel.Info : LogLevel.Debug },
+	tasks: {
+		bull: {
+			connection: {
+				...parseRedisOption(),
+				db: envParseInteger('REDIS_TASK_DB')
+			}
+		}
+	}
 };

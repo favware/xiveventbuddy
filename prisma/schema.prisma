@@ -8,11 +8,10 @@ datasource db {
 }
 
 enum Interval {
-    DAILY    @map("daily")
     WEEKLY   @map("weekly")
     BIWEEKLY @map("biweekly")
     MONTHLY  @map("monthly")
-    YEARLY   @map("yearly")
+    ONE_BEFORE_LAST_FRIDAY_OF_THE_MONTH @map("one_before_last_friday_of_the_month")
 
     @@map("interval")
 }

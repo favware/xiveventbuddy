@@ -1,4 +1,18 @@
 services:
+  redis:
+    command: 'redis-server --requirepass redis'
+    container_name: bloombot-redis
+    image: 'redis:alpine'
+    networks:
+      - bloombot
+    ports:
+      - '6379:6379'
+    restart: always
+    logging:
+      options:
+        max-size: '20m'
+        max-file: '3'
+
   postgres:
     container_name: postgres
     image: postgres:17-alpine

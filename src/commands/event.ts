@@ -56,11 +56,10 @@ export class SlashCommand extends BloomCommand {
 								.setDescription('The interval at which this event should repeat')
 								.setRequired(false)
 								.setChoices(
-									{ name: 'Daily', value: Interval.DAILY },
 									{ name: 'Weekly', value: Interval.WEEKLY },
 									{ name: 'Biweekly', value: Interval.BIWEEKLY },
 									{ name: 'Monthly', value: Interval.MONTHLY },
-									{ name: 'Yearly', value: Interval.YEARLY }
+									{ name: 'Every one before last friday of the month', value: Interval.ONE_BEFORE_LAST_FRIDAY_OF_THE_MONTH }
 								)
 						)
 						.addRoleOption((builder) =>
@@ -122,11 +121,10 @@ export class SlashCommand extends BloomCommand {
 								.setDescription('The new interval at which this event should repeat')
 								.setRequired(false)
 								.setChoices(
-									{ name: 'Daily', value: Interval.DAILY },
 									{ name: 'Weekly', value: Interval.WEEKLY },
 									{ name: 'Biweekly', value: Interval.BIWEEKLY },
 									{ name: 'Monthly', value: Interval.MONTHLY },
-									{ name: 'Yearly', value: Interval.YEARLY }
+									{ name: 'Every one before last friday of the month', value: Interval.ONE_BEFORE_LAST_FRIDAY_OF_THE_MONTH }
 								)
 						)
 						.addRoleOption((builder) =>

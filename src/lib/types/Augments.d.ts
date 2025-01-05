@@ -1,7 +1,7 @@
 import type { prismaType } from '#lib/setup/prisma';
 import type { BloombotEvents, UpdateEmbedPayload } from '#lib/util/constants';
 import type { Nullish } from '@sapphire/utilities';
-import type { BooleanString } from '@skyra/env-utilities';
+import type { BooleanString, IntegerString } from '@skyra/env-utilities';
 import type { Events, WebhookClient } from 'discord.js';
 
 declare module '@sapphire/pieces' {
@@ -30,6 +30,11 @@ declare module '@skyra/env-utilities' {
 		CLIENT_VERSION: string;
 		CLIENT_PRESENCE_NAME: string;
 		CLIENT_PRESENCE_TYPE: string;
+
+		REDIS_PORT: IntegerString;
+		REDIS_PASSWORD: string;
+		REDIS_HOST: string;
+		REDIS_TASK_DB: IntegerString;
 
 		WEBHOOK_ERROR_ENABLED: BooleanString;
 		WEBHOOK_ERROR_ID: string;
