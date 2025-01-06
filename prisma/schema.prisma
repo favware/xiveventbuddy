@@ -78,19 +78,19 @@ model VerifiedServers {
 }
 
 model Event {
-    id              String         @id @default(cuid())
-    name            String
-    duration        Int
-    description     String?
-    interval        EventInterval?
-    leader          String
-    discordEventId  String?        @map("discord_event_id")
-    roleToPing      String?        @map("role_to_ping")
-    channelId       String         @map("channel_id")
-    guildId         String         @map("guild_id")
-    createdAt       DateTime       @default(now()) @map("created_at")
-    updatedAt       DateTime       @updatedAt @map("updated_at")
-    instance        EventInstance?
+    id             String         @id @default(cuid())
+    name           String
+    duration       Int
+    description    String?
+    interval       EventInterval?
+    leader         String
+    discordEventId String?        @map("discord_event_id")
+    roleToPing     String?        @map("role_to_ping")
+    channelId      String         @map("channel_id")
+    guildId        String         @map("guild_id")
+    createdAt      DateTime       @default(now()) @map("created_at")
+    updatedAt      DateTime       @updatedAt @map("updated_at")
+    instance       EventInstance?
 
     @@map("events")
 }
@@ -112,12 +112,13 @@ model Participant {
     id              String        @id @default(cuid())
     role            Roles
     job             Jobs?
-    discordId       String        @unique @map("discord_id")
+    discordId       String        @map("discord_id")
     signupOrder     Int           @map("signup_order")
     eventInstanceId String        @map("event_instance_id")
     eventInstance   EventInstance @relation(fields: [eventInstanceId], references: [id], onUpdate: Cascade, onDelete: Cascade)
     createdAt       DateTime      @default(now()) @map("created_at")
     updatedAt       DateTime      @updatedAt @map("updated_at")
 
+    @@unique([eventInstanceId, discordId])
     @@map("participants")
 }
