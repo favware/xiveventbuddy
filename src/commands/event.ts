@@ -3,6 +3,7 @@ import { BloombotEvents, ErrorIdentifiers, type EventData } from '#lib/util/cons
 import { BloombotEmojis } from '#lib/util/emojis';
 import { buildEventComponents } from '#lib/util/functions/buildEventComponents';
 import { buildEventEmbed } from '#lib/util/functions/buildEventEmbed';
+import { resolveOnErrorCodes } from '#lib/util/functions/resolveOnErrorCodes';
 import { OwnerMentions, Owners } from '#root/config';
 import { $Enums } from '@prisma/client';
 import { ApplyOptions } from '@sapphire/decorators';
@@ -575,7 +576,7 @@ export class SlashCommand extends BloomCommand {
 			});
 
 			if (existingEvent.discordEventId) {
-				await interaction.guild.scheduledEvents.delete(existingEvent.discordEventId);
+				resolveOnErrorCodes(interaction.guild.scheduledEvents.delete(existingEvent.discordEventId));
 			}
 
 			return interaction.editReply({
