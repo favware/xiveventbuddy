@@ -35,7 +35,6 @@ export class DisableOldEvents extends ScheduledTask {
 				if (eventInstanceDateTime <= afterDurationOfEvent) {
 					this.container.client.emit(BloombotEvents.UpdateEmbed, {
 						eventId: event.id,
-						userId: null,
 						guildId: event.guildId,
 						shouldDisableEvent: true
 					});

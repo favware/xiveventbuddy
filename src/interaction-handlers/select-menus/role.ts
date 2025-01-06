@@ -1,11 +1,11 @@
-import { ErrorIdentifiers, CustomIdPrefixes } from '#lib/util/constants';
+import { CustomIdPrefixes, ErrorIdentifiers } from '#lib/util/constants';
 import { BloombotEmojis } from '#lib/util/emojis';
 import { getFullEventData } from '#lib/util/functions/getFullEventData';
-import { getTankJobButtons } from '#lib/util/job-buttons/tank';
 import { getHealerJobButtons } from '#lib/util/job-buttons/healer';
 import { getMagicDpsJobButtons } from '#lib/util/job-buttons/magicdps';
 import { getMeleeDpsJobButtons } from '#lib/util/job-buttons/meleedps';
 import { getPhysRangedDpsJobButtons } from '#lib/util/job-buttons/physrangeddps';
+import { getTankJobButtons } from '#lib/util/job-buttons/tank';
 import { OwnerMentions } from '#root/config';
 import { $Enums } from '@prisma/client';
 import { ApplyOptions } from '@sapphire/decorators';
@@ -55,7 +55,7 @@ export class StringSelectMenuHandler extends InteractionHandler {
 
 		await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 
-		const [, eventId, userId] = interaction.customId.split('|');
+		const [, eventId] = interaction.customId.split('|');
 
 		const eventData = await getFullEventData(eventId);
 
@@ -66,34 +66,27 @@ export class StringSelectMenuHandler extends InteractionHandler {
 			});
 		}
 
-		const maxSignupOrder = await this.container.prisma.participant
-			.findMany({
-				where: {
-					eventInstanceId: eventData.instance.eventId
-				},
-				select: {
-					signupOrder: true
-				}
-			})
-			.then((participants) => participants.map((participant) => participant.signupOrder))
-			.then((signupOrders) => {
-				if (signupOrders.length === 0) return 0;
-				return Math.max(...signupOrders);
-			});
+		const result: { max_signup_order: number | null }[] = await this.container.prisma.$queryRaw/* sql */ `
+				SELECT MAX(participants.signup_order) AS max_signup_order
+				FROM participants
+				WHERE event_instance_id = ${eventData.instance.id}
+		`;
 
 		const selectedRole = interaction.values[0] as $Enums.Roles;
 
 		await this.container.prisma.participant.upsert({
 			where: {
-				eventInstanceId: eventData.instance.id,
-				discordId: userId
+				eventInstanceId_discordId: {
+					eventInstanceId: eventData.instance.id,
+					discordId: interaction.user.id
+				}
 			},
 			create: {
 				eventInstanceId: eventData.instance.id,
-				discordId: userId,
+				discordId: interaction.user.id,
 				job: null,
 				role: selectedRole,
-				signupOrder: maxSignupOrder + 1
+				signupOrder: (result.at(0)?.max_signup_order ?? 0) + 1
 			},
 			update: {
 				job: null,
@@ -101,6 +94,6 @@ export class StringSelectMenuHandler extends InteractionHandler {
 			}
 		});
 
-		return this.some({ selectedRole, eventId, userId });
+		return this.some({ selectedRole, eventId });
 	}
 }

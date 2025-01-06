@@ -7,7 +7,7 @@ import { Listener, UserError } from '@sapphire/framework';
 import { roleMention } from 'discord.js';
 
 export class UserListener extends Listener<typeof BloombotEvents.UpdateEmbed> {
-	public override async run({ eventId, guildId, userId, shouldDisableEvent = false }: UpdateEmbedPayload) {
+	public override async run({ eventId, guildId, shouldDisableEvent = false }: UpdateEmbedPayload) {
 		const eventData = await this.container.prisma.event.findFirstOrThrow({
 			where: {
 				id: eventId
@@ -47,7 +47,7 @@ export class UserListener extends Listener<typeof BloombotEvents.UpdateEmbed> {
 									shouldDisableEvent
 								)
 							],
-							components: buildEventComponents(eventData.id, userId ?? eventData.leader, shouldDisableEvent),
+							components: buildEventComponents(eventData.id, shouldDisableEvent),
 							allowedMentions: { roles: eventData.roleToPing ? [eventData.roleToPing] : undefined }
 						});
 					} else {

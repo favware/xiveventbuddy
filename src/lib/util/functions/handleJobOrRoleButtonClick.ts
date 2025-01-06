@@ -8,7 +8,7 @@ import { MessageFlags, type ButtonInteraction } from 'discord.js';
 export async function handleJobOrRoleButtonClick(interaction: ButtonInteraction<'cached'>, role: $Enums.Roles, job: $Enums.Jobs | null = null) {
 	await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 
-	const [, eventId, userId] = interaction.customId.split('|');
+	const [, eventId] = interaction.customId.split('|');
 
 	const eventData = await container.prisma.event.findFirstOrThrow({
 		where: {
@@ -56,32 +56,25 @@ export async function handleJobOrRoleButtonClick(interaction: ButtonInteraction<
 		});
 	}
 
-	const maxSignupOrder = await container.prisma.participant
-		.findMany({
-			where: {
-				eventInstanceId: eventData.instance.eventId
-			},
-			select: {
-				signupOrder: true
-			}
-		})
-		.then((participants) => participants.map((participant) => participant.signupOrder))
-		.then((signupOrders) => {
-			if (signupOrders.length === 0) return 0;
-			return Math.max(...signupOrders);
-		});
+	const result: { max_signup_order: number | null }[] = await container.prisma.$queryRaw/* sql */ `
+			SELECT MAX(participants.signup_order) AS max_signup_order
+			FROM participants
+			WHERE event_instance_id = ${eventData.instance.id}
+	`;
 
 	await container.prisma.participant.upsert({
 		where: {
-			eventInstanceId: eventData.instance.id,
-			discordId: userId
+			eventInstanceId_discordId: {
+				eventInstanceId: eventData.instance.id,
+				discordId: interaction.user.id
+			}
 		},
 		create: {
 			eventInstanceId: eventData.instance.id,
-			discordId: userId,
+			discordId: interaction.user.id,
 			job,
 			role,
-			signupOrder: maxSignupOrder + 1
+			signupOrder: (result.at(0)?.max_signup_order ?? 0) + 1
 		},
 		update: {
 			job,
@@ -90,6 +83,6 @@ export async function handleJobOrRoleButtonClick(interaction: ButtonInteraction<
 	});
 
 	if (eventData.instance.messageId) {
-		container.client.emit(BloombotEvents.UpdateEmbed, { eventId, userId: interaction.user.id, guildId: interaction.guildId });
+		container.client.emit(BloombotEvents.UpdateEmbed, { eventId, guildId: interaction.guildId });
 	}
 }

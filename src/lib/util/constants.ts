@@ -81,13 +81,11 @@ export interface CreateServerEventPayload {
 export interface PostEmbedPayload {
 	eventId: string;
 	guildId: string;
-	userId: string | null;
 }
 
 export interface UpdateEmbedPayload {
 	eventId: string;
 	guildId: string;
-	userId: string | null;
 	shouldDisableEvent?: boolean;
 }
 

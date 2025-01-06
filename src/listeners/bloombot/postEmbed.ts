@@ -5,7 +5,7 @@ import { Listener } from '@sapphire/framework';
 import { roleMention } from 'discord.js';
 
 export class UserListener extends Listener<typeof BloombotEvents.PostEmbed> {
-	public override async run({ eventId, userId, guildId }: PostEmbedPayload) {
+	public override async run({ eventId, guildId }: PostEmbedPayload) {
 		const eventData = await this.container.prisma.event.findFirstOrThrow({
 			where: {
 				id: eventId
@@ -28,7 +28,7 @@ export class UserListener extends Listener<typeof BloombotEvents.PostEmbed> {
 				const postedMessage = await eventChannel.send({
 					content: eventData.roleToPing ? roleMention(eventData.roleToPing) : undefined,
 					embeds: [buildEventEmbed(eventData as EventData)],
-					components: buildEventComponents(eventId, userId ?? eventData.leader),
+					components: buildEventComponents(eventId),
 					allowedMentions: { roles: eventData.roleToPing ? [eventData.roleToPing] : undefined }
 				});
 

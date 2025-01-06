@@ -33,9 +33,9 @@ const AllRounderOption = new StringSelectMenuOptionBuilder()
 	.setEmoji({ id: '1324558617193746502', name: 'AllRounder' })
 	.setDescription('Select this option if you are an All Rounder.');
 
-export function buildEventComponents(eventId: string, userId: string, shouldDisableEvent = false) {
+export function buildEventComponents(eventId: string, shouldDisableEvent = false) {
 	const roleSelectMenu = new StringSelectMenuBuilder()
-		.setCustomId(`${CustomIdPrefixes.RoleSelectMenu}|${eventId}|${userId}`)
+		.setCustomId(`${CustomIdPrefixes.RoleSelectMenu}|${eventId}`)
 		.setOptions(TankOption, MeleeDpsOption, PhysRangeDpsOption, MagicOption, HealerOption, AllRounderOption);
 
 	const firstRow = new ActionRowBuilder<StringSelectMenuBuilder>();
@@ -47,27 +47,27 @@ export function buildEventComponents(eventId: string, userId: string, shouldDisa
 	}
 
 	const benchButton = new ButtonBuilder()
-		.setCustomId(`${CustomIdPrefixes.RoleBench}|${eventId}|${userId}`)
+		.setCustomId(`${CustomIdPrefixes.RoleBench}|${eventId}`)
 		.setEmoji({ id: '1324558621530521681', name: 'Bench' })
 		.setLabel('Bench')
 		.setStyle(ButtonStyle.Secondary);
 	const lateButton = new ButtonBuilder()
-		.setCustomId(`${CustomIdPrefixes.RoleLate}|${eventId}|${userId}`)
+		.setCustomId(`${CustomIdPrefixes.RoleLate}|${eventId}`)
 		.setEmoji({ id: '1324558634243457117', name: 'Late' })
 		.setLabel('Late')
 		.setStyle(ButtonStyle.Secondary);
 	const tentativeButton = new ButtonBuilder()
-		.setCustomId(`${CustomIdPrefixes.RoleTentative}|${eventId}|${userId}`)
+		.setCustomId(`${CustomIdPrefixes.RoleTentative}|${eventId}`)
 		.setEmoji({ id: '1324558656326467616', name: 'Tentative' })
 		.setLabel('Tentative')
 		.setStyle(ButtonStyle.Secondary);
 	const absenceButton = new ButtonBuilder()
-		.setCustomId(`${CustomIdPrefixes.RoleAbsence}|${eventId}|${userId}`)
+		.setCustomId(`${CustomIdPrefixes.RoleAbsence}|${eventId}`)
 		.setEmoji({ id: '1324558615939649559', name: 'Absence' })
 		.setLabel('Absence')
 		.setStyle(ButtonStyle.Secondary);
 	const removeParticipationButton = new ButtonBuilder()
-		.setCustomId(`${CustomIdPrefixes.RemoveParticipation}|${eventId}|${userId}`)
+		.setCustomId(`${CustomIdPrefixes.RemoveParticipation}|${eventId}`)
 		.setEmoji({ id: '1325255133592031272', name: 'RemoveParticipation' })
 		.setLabel('Remove Participation')
 		.setStyle(ButtonStyle.Secondary);

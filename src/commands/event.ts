@@ -309,7 +309,7 @@ export class SlashCommand extends BloomCommand {
 			});
 		}
 
-		this.container.client.emit(BloombotEvents.PostEmbed, { eventId: event.id, userId: interaction.user.id, guildId: interaction.guildId });
+		this.container.client.emit(BloombotEvents.PostEmbed, { eventId: event.id, guildId: interaction.guildId });
 		this.container.client.emit(BloombotEvents.CreateServerEvent, { eventId: event.id, guildId: interaction.guildId, isReschedule: false });
 
 		return interaction.editReply({
@@ -482,7 +482,6 @@ export class SlashCommand extends BloomCommand {
 		if (resolvedEventChannel.id === existingEvent.channelId) {
 			this.container.client.emit(BloombotEvents.UpdateEmbed, {
 				eventId: updatedEvent.id,
-				userId: interaction.user.id,
 				guildId: interaction.guildId
 			});
 		} else {
@@ -495,7 +494,7 @@ export class SlashCommand extends BloomCommand {
 				const postedMessage = await resolvedEventChannel.send({
 					content: updatedEvent.roleToPing ? roleMention(updatedEvent.roleToPing) : undefined,
 					embeds: [buildEventEmbed(updatedEvent as EventData)],
-					components: buildEventComponents(updatedEvent.id, interaction.user.id),
+					components: buildEventComponents(updatedEvent.id),
 					allowedMentions: { roles: updatedEvent.roleToPing ? [updatedEvent.roleToPing] : undefined }
 				});
 

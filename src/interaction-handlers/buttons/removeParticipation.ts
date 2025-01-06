@@ -21,7 +21,7 @@ export class ButtonHandler extends InteractionHandler {
 
 		await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 
-		const [, eventId, userId] = interaction.customId.split('|');
+		const [, eventId] = interaction.customId.split('|');
 
 		const eventData = await getFullEventData(eventId);
 
@@ -34,13 +34,15 @@ export class ButtonHandler extends InteractionHandler {
 
 		await this.container.prisma.participant.delete({
 			where: {
-				eventInstanceId: eventData.instance.id,
-				discordId: userId
+				eventInstanceId_discordId: {
+					eventInstanceId: eventData.instance.id,
+					discordId: interaction.user.id
+				}
 			}
 		});
 
 		if (eventData.instance.messageId) {
-			this.container.client.emit(BloombotEvents.UpdateEmbed, { eventId, userId: interaction.user.id, guildId: interaction.guildId });
+			this.container.client.emit(BloombotEvents.UpdateEmbed, { eventId, guildId: interaction.guildId });
 		}
 
 		return this.some();
