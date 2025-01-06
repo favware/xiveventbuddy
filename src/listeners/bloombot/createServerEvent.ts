@@ -44,6 +44,7 @@ export class UserListener extends Listener<typeof BloombotEvents.CreateServerEve
 					scheduledEndTime: addHours(eventData.instance.dateTime, eventData.duration),
 					description: eventData.description ?? undefined,
 					reason: `Event created by ${leaderUser.user.username}`,
+					image: eventData.bannerImage,
 
 					...(eventData.interval &&
 					(eventData.interval === $Enums.EventInterval.WEEKLY || eventData.interval === $Enums.EventInterval.ONCE_EVERY_OTHER_WEEK)

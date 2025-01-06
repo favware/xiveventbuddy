@@ -80,14 +80,15 @@ model VerifiedServers {
 model Event {
     id             String         @id @default(cuid())
     name           String
-    duration       Int
+    bannerImage    String?
+    channelId      String         @map("channel_id")
     description    String?
+    discordEventId String?        @map("discord_event_id")
+    duration       Int
+    guildId        String         @map("guild_id")
     interval       EventInterval?
     leader         String
-    discordEventId String?        @map("discord_event_id")
     roleToPing     String?        @map("role_to_ping")
-    channelId      String         @map("channel_id")
-    guildId        String         @map("guild_id")
     createdAt      DateTime       @default(now()) @map("created_at")
     updatedAt      DateTime       @updatedAt @map("updated_at")
     instance       EventInstance?
@@ -97,27 +98,27 @@ model Event {
 
 model EventInstance {
     id           String        @id @default(cuid())
-    event        Event         @relation(fields: [eventId], references: [id], onUpdate: Cascade, onDelete: Cascade)
-    eventId      String        @unique @map("event_id")
-    messageId    String?       @map("message_id")
     dateTime     DateTime      @map("date_time")
-    participants Participant[]
+    messageId    String?       @map("message_id")
     createdAt    DateTime      @default(now()) @map("created_at")
     updatedAt    DateTime      @updatedAt @map("updated_at")
+    event        Event         @relation(fields: [eventId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+    eventId      String        @unique @map("event_id")
+    participants Participant[]
 
     @@map("event_instances")
 }
 
 model Participant {
     id              String        @id @default(cuid())
-    role            Roles
-    job             Jobs?
     discordId       String        @map("discord_id")
+    job             Jobs?
+    role            Roles
     signupOrder     Int           @map("signup_order")
-    eventInstanceId String        @map("event_instance_id")
-    eventInstance   EventInstance @relation(fields: [eventInstanceId], references: [id], onUpdate: Cascade, onDelete: Cascade)
     createdAt       DateTime      @default(now()) @map("created_at")
     updatedAt       DateTime      @updatedAt @map("updated_at")
+    eventInstanceId String        @map("event_instance_id")
+    eventInstance   EventInstance @relation(fields: [eventInstanceId], references: [id], onUpdate: Cascade, onDelete: Cascade)
 
     @@unique([eventInstanceId, discordId])
     @@map("participants")

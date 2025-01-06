@@ -8,7 +8,7 @@ import { OwnerMentions, Owners } from '#root/config';
 import { $Enums } from '@prisma/client';
 import { ApplyOptions } from '@sapphire/decorators';
 import { UserError, type ApplicationCommandRegistry, type Awaitable, type ChatInputCommand } from '@sapphire/framework';
-import { filterNullish } from '@sapphire/utilities';
+import { filterNullish, isNullishOrZero } from '@sapphire/utilities';
 import { format } from 'date-fns/format';
 import { heading, inlineCode, MessageFlags, roleMention, time, TimestampStyles, unorderedList } from 'discord.js';
 
@@ -90,6 +90,18 @@ export class SlashCommand extends BloomCommand {
 								.setDescription('The channel in which the event should posted, if omitted the current channel is used.')
 								.setRequired(false)
 						)
+						.addUserOption((builder) =>
+							builder //
+								.setName('leader')
+								.setDescription('The event leader for this event, defaults to yourself if not provided.')
+								.setRequired(false)
+						)
+						.addAttachmentOption((builder) =>
+							builder //
+								.setName('banner-image')
+								.setDescription('The banner image, shown below the event embed and in the Discord server event banner.')
+								.setRequired(false)
+						)
 				)
 				.addSubcommand((builder) =>
 					builder //
@@ -123,6 +135,18 @@ export class SlashCommand extends BloomCommand {
 							builder //
 								.setName('time')
 								.setDescription('The new time of the event. Format is HH:MM (24 hour clock). Time is always Light server time (UTC)')
+								.setRequired(false)
+						)
+						.addIntegerOption((builder) =>
+							builder //
+								.setName('duration')
+								.setDescription('The duration of the event in hours')
+								.setChoices(
+									{ name: '1 hour', value: 1 },
+									{ name: '2 hours', value: 2 },
+									{ name: '3 hours', value: 3 },
+									{ name: '4 hours', value: 4 }
+								)
 								.setRequired(false)
 						)
 						.addStringOption((builder) =>
@@ -164,16 +188,10 @@ export class SlashCommand extends BloomCommand {
 								.setDescription('The new event leader for this event.')
 								.setRequired(false)
 						)
-						.addIntegerOption((builder) =>
+						.addAttachmentOption((builder) =>
 							builder //
-								.setName('duration')
-								.setDescription('The duration of the event in hours')
-								.setChoices(
-									{ name: '1 hour', value: 1 },
-									{ name: '2 hours', value: 2 },
-									{ name: '3 hours', value: 3 },
-									{ name: '4 hours', value: 4 }
-								)
+								.setName('banner-image')
+								.setDescription('The banner image, shown below the event embed and in the Discord server event banner.')
 								.setRequired(false)
 						)
 				)
@@ -207,26 +225,6 @@ export class SlashCommand extends BloomCommand {
 			case 'delete':
 				return this.deleteEvent(interaction);
 		}
-	}
-
-	private validateStringDate(stringDate: string): { dateUnixTimestamp: number; dateIsInvalid: boolean } {
-		const [day, month, year] = stringDate.includes('-') ? stringDate.split('-') : stringDate.split('/');
-		const dateUnixTimestamp = Date.parse(`${year}-${month}-${day}`);
-		const dateIsInvalid = isNaN(dateUnixTimestamp);
-
-		return { dateUnixTimestamp, dateIsInvalid };
-	}
-
-	private setEventTimeAndTimezone(dateUnixTimestamp: number, stringTime: string): Date {
-		const [hours, minutes] = stringTime.split(':').map(Number);
-		const eventDate = new Date(dateUnixTimestamp);
-		eventDate.setUTCHours(hours, minutes, 0, 0);
-
-		const ukTimezoneOffset = new Date().getTimezoneOffset() - eventDate.getTimezoneOffset();
-
-		eventDate.setMinutes(eventDate.getMinutes() + ukTimezoneOffset);
-
-		return eventDate;
 	}
 
 	private async createEvent(interaction: ChatInputCommand.Interaction<'cached'>) {
@@ -263,7 +261,7 @@ export class SlashCommand extends BloomCommand {
 		const interval = interaction.options.getString('interval', false);
 		const roleToPing = interaction.options.getRole('role-to-ping', false);
 		const eventDuration = interaction.options.getInteger('duration', true);
-
+		const leader = interaction.options.getUser('leader', false);
 		const event = await this.container.prisma.event.create({
 			data: {
 				name,
@@ -273,7 +271,8 @@ export class SlashCommand extends BloomCommand {
 				guildId: interaction.guildId,
 				interval: interval as $Enums.EventInterval,
 				roleToPing: roleToPing?.id,
-				leader: interaction.user.id,
+				leader: leader?.id ?? interaction.user.id,
+				bannerImage: this.getBannerImageUrl(interaction),
 				instance: {
 					create: {
 						dateTime: eventDate
@@ -379,11 +378,12 @@ export class SlashCommand extends BloomCommand {
 			select: {
 				id: true,
 				name: true,
-				description: true,
-				roleToPing: true,
+				bannerImage: true,
 				channelId: true,
+				description: true,
 				interval: true,
 				leader: true,
+				roleToPing: true,
 				instance: {
 					select: {
 						dateTime: true,
@@ -456,6 +456,7 @@ export class SlashCommand extends BloomCommand {
 				interval: interval as $Enums.EventInterval,
 				roleToPing: roleToPing?.id ?? existingEvent.roleToPing,
 				leader: leader?.id ?? existingEvent.leader,
+				bannerImage: this.getBannerImageUrl(interaction) ?? existingEvent.bannerImage,
 				instance: {
 					update: {
 						dateTime: eventDate
@@ -463,14 +464,15 @@ export class SlashCommand extends BloomCommand {
 				}
 			},
 			select: {
-				channelId: true,
-				createdAt: true,
-				description: true,
 				id: true,
+				name: true,
+				bannerImage: true,
+				channelId: true,
+				description: true,
 				interval: true,
 				leader: true,
-				name: true,
 				roleToPing: true,
+				createdAt: true,
 				updatedAt: true,
 				instance: {
 					include: {
@@ -576,7 +578,7 @@ export class SlashCommand extends BloomCommand {
 			});
 
 			if (existingEvent.discordEventId) {
-				resolveOnErrorCodes(interaction.guild.scheduledEvents.delete(existingEvent.discordEventId));
+				await resolveOnErrorCodes(interaction.guild.scheduledEvents.delete(existingEvent.discordEventId));
 			}
 
 			return interaction.editReply({
@@ -587,5 +589,50 @@ export class SlashCommand extends BloomCommand {
 				content: `${BloombotEmojis.RedCross} Failed to delete the event from the database. Contact ${OwnerMentions} for assistance.`
 			});
 		}
+	}
+
+	private validateStringDate(stringDate: string): { dateUnixTimestamp: number; dateIsInvalid: boolean } {
+		const [day, month, year] = stringDate.includes('-') ? stringDate.split('-') : stringDate.split('/');
+		const dateUnixTimestamp = Date.parse(`${year}-${month}-${day}`);
+		const dateIsInvalid = isNaN(dateUnixTimestamp);
+
+		return { dateUnixTimestamp, dateIsInvalid };
+	}
+
+	private setEventTimeAndTimezone(dateUnixTimestamp: number, stringTime: string): Date {
+		const [hours, minutes] = stringTime.split(':').map(Number);
+		const eventDate = new Date(dateUnixTimestamp);
+		eventDate.setUTCHours(hours, minutes, 0, 0);
+
+		const ukTimezoneOffset = new Date().getTimezoneOffset() - eventDate.getTimezoneOffset();
+
+		eventDate.setMinutes(eventDate.getMinutes() + ukTimezoneOffset);
+
+		return eventDate;
+	}
+
+	private getBannerImageUrl(interaction: ChatInputCommand.Interaction<'cached'>): string | null {
+		const file = interaction.options.getAttachment('banner-image', false);
+
+		if (!file || isNullishOrZero(file.width) || isNullishOrZero(file.height)) return null;
+
+		const width = file.width!;
+		const height = file.height!;
+
+		if (width <= 128 && height <= 128) return file.url;
+
+		const url = new URL(file.url);
+		if (width === height) {
+			url.searchParams.append('width', '128');
+			url.searchParams.append('height', '128');
+		} else if (width > height) {
+			url.searchParams.append('width', '128');
+			url.searchParams.append('height', Math.ceil((height * 128) / width).toString());
+		} else {
+			url.searchParams.append('width', Math.ceil((width * 128) / height).toString());
+			url.searchParams.append('height', '128');
+		}
+
+		return url.href;
 	}
 }

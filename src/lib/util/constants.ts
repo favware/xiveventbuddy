@@ -89,7 +89,7 @@ export interface UpdateEmbedPayload {
 	shouldDisableEvent?: boolean;
 }
 
-export type EventData = Pick<Event, 'id' | 'description' | 'name' | 'roleToPing' | 'leader' | 'channelId'> & {
+export type EventData = Pick<Event, 'id' | 'description' | 'name' | 'roleToPing' | 'leader' | 'channelId' | 'bannerImage'> & {
 	instance: Pick<EventInstance, 'dateTime'> & {
 		participants: Pick<Participant, 'job' | 'role' | 'discordId' | 'signupOrder'>[];
 	};

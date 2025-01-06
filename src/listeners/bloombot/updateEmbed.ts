@@ -37,11 +37,12 @@ export class UserListener extends Listener<typeof BloombotEvents.UpdateEmbed> {
 								buildEventEmbed(
 									{
 										id: eventData.id,
-										description: eventData.description,
 										name: eventData.name,
-										roleToPing: eventData.roleToPing,
-										leader: eventData.leader,
+										bannerImage: eventData.bannerImage,
 										channelId: eventData.channelId,
+										description: eventData.description,
+										leader: eventData.leader,
+										roleToPing: eventData.roleToPing,
 										instance: { dateTime: eventData.instance.dateTime, participants: eventData.instance.participants }
 									} as EventData,
 									shouldDisableEvent
