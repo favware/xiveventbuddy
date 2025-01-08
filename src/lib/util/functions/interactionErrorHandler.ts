@@ -92,13 +92,13 @@ function alert(interaction: Interaction, content: string) {
 	if (interaction.replied || interaction.deferred) {
 		return interaction.editReply({
 			content,
-			allowedMentions: { users: [interaction.user.id, ...Owners], roles: [] }
+			allowedMentions: { users: [...new Set([interaction.user.id, ...Owners])], roles: [] }
 		});
 	}
 
 	return interaction.reply({
 		content,
-		allowedMentions: { users: [interaction.user.id, ...Owners], roles: [] },
+		allowedMentions: { users: [...new Set([interaction.user.id, ...Owners])], roles: [] },
 		flags: MessageFlags.Ephemeral
 	});
 }
