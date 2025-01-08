@@ -10,6 +10,7 @@ import { OwnerMentions } from '#root/config';
 import { $Enums } from '@prisma/client';
 import { ApplyOptions } from '@sapphire/decorators';
 import { InteractionHandler, InteractionHandlerTypes, UserError } from '@sapphire/framework';
+import { isNullishOrEmpty } from '@sapphire/utilities';
 import { inlineCode, MessageFlags, type ActionRowBuilder, type ButtonBuilder, type StringSelectMenuInteraction } from 'discord.js';
 
 export type RoleParseResult = InteractionHandler.ParseResult<StringSelectMenuHandler>;
@@ -19,7 +20,7 @@ export type RoleParseResult = InteractionHandler.ParseResult<StringSelectMenuHan
 })
 export class StringSelectMenuHandler extends InteractionHandler {
 	public override run(interaction: StringSelectMenuInteraction, result: InteractionHandler.ParseResult<this>) {
-		let components: ActionRowBuilder<ButtonBuilder>[];
+		let components: ActionRowBuilder<ButtonBuilder>[] | null;
 
 		switch (result.selectedRole) {
 			case $Enums.Roles.Tank:
@@ -37,11 +38,20 @@ export class StringSelectMenuHandler extends InteractionHandler {
 			case $Enums.Roles.Healer:
 				components = getHealerJobButtons(result);
 				break;
+			case $Enums.Roles.AllRounder:
+				components = null;
+				break;
 			default:
 				throw new UserError({
 					message: `${BloombotEmojis.RedCross} I received an unexpected role from the select menu of selecting your role. Contact ${OwnerMentions} for assistance.`,
 					identifier: ErrorIdentifiers.UnexpectedRoleSelectMenuChoiceError
 				});
+		}
+
+		if (isNullishOrEmpty(components)) {
+			return interaction.editReply({
+				content: `${BloombotEmojis.GreenTick} Successfully updated your role to ${inlineCode(result.selectedRole)}.`
+			});
 		}
 
 		return interaction.editReply({
@@ -84,12 +94,12 @@ export class StringSelectMenuHandler extends InteractionHandler {
 			create: {
 				eventInstanceId: eventData.instance.id,
 				discordId: interaction.user.id,
-				job: null,
+				job: selectedRole === $Enums.Roles.AllRounder ? $Enums.Jobs.AllRounder : null,
 				role: selectedRole,
 				signupOrder: (result.at(0)?.max_signup_order ?? 0) + 1
 			},
 			update: {
-				job: null,
+				job: selectedRole === $Enums.Roles.AllRounder ? $Enums.Jobs.AllRounder : null,
 				role: selectedRole
 			}
 		});
