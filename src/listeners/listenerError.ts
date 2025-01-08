@@ -63,9 +63,7 @@ export class ListenerError extends Listener<typeof Events.ListenerError> {
 		try {
 			await webhook.send({
 				content,
-				allowedMentions: {
-					users: Owners
-				}
+				allowedMentions: { users: Owners }
 			});
 		} catch (err) {
 			this.container.client.emit(Events.Error, err as Error);
