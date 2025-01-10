@@ -9,8 +9,18 @@ import { $Enums } from '@prisma/client';
 import { ApplyOptions } from '@sapphire/decorators';
 import { UserError, type ApplicationCommandRegistry, type Awaitable, type ChatInputCommand } from '@sapphire/framework';
 import { filterNullish, isNullishOrZero } from '@sapphire/utilities';
-import { format } from 'date-fns/format';
-import { ApplicationIntegrationType, heading, inlineCode, MessageFlags, roleMention, time, TimestampStyles, unorderedList } from 'discord.js';
+import { format } from 'date-fns';
+import {
+	ApplicationIntegrationType,
+	heading,
+	inlineCode,
+	MessageFlags,
+	PermissionFlagsBits,
+	roleMention,
+	time,
+	TimestampStyles,
+	unorderedList
+} from 'discord.js';
 
 @ApplyOptions<ChatInputCommand.Options>({
 	description: 'Manage the Nightbloom events'
@@ -254,6 +264,17 @@ export class SlashCommand extends BloomCommand {
 		if (!eventChannel?.isSendable()) {
 			return interaction.editReply({
 				content: `${BloombotEmojis.RedCross} The channel you provided is invalid.`
+			});
+		}
+
+		if (
+			interaction.guild.members.me &&
+			!eventChannel
+				.permissionsFor(interaction.guild.members.me)
+				?.has([PermissionFlagsBits.SendMessages, PermissionFlagsBits.ViewChannel, PermissionFlagsBits.EmbedLinks])
+		) {
+			return interaction.editReply({
+				content: `${BloombotEmojis.RedCross} I do not have permission to send messages in the specified channel.`
 			});
 		}
 
