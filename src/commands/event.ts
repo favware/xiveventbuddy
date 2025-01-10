@@ -274,7 +274,7 @@ export class SlashCommand extends BloomCommand {
 				?.has([PermissionFlagsBits.SendMessages, PermissionFlagsBits.ViewChannel, PermissionFlagsBits.EmbedLinks])
 		) {
 			return interaction.editReply({
-				content: `${BloombotEmojis.RedCross} I do not have permission to send messages in the specified channel.`
+				content: `${BloombotEmojis.RedCross} I do not have permission to send messages in the specified channel. I need at least the ${inlineCode('View Channel')}, ${inlineCode('Send Messages')}, and ${inlineCode('Embed Links')} permissions.`
 			});
 		}
 
