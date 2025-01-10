@@ -10,7 +10,7 @@ import { ApplyOptions } from '@sapphire/decorators';
 import { UserError, type ApplicationCommandRegistry, type Awaitable, type ChatInputCommand } from '@sapphire/framework';
 import { filterNullish, isNullishOrZero } from '@sapphire/utilities';
 import { format } from 'date-fns/format';
-import { heading, inlineCode, MessageFlags, roleMention, time, TimestampStyles, unorderedList } from 'discord.js';
+import { ApplicationIntegrationType, heading, inlineCode, MessageFlags, roleMention, time, TimestampStyles, unorderedList } from 'discord.js';
 
 @ApplyOptions<ChatInputCommand.Options>({
 	description: 'Manage the Nightbloom events'
@@ -23,6 +23,7 @@ export class SlashCommand extends BloomCommand {
 			command //
 				.setName(this.name)
 				.setDescription(this.description)
+				.setIntegrationTypes(ApplicationIntegrationType.GuildInstall)
 				.addSubcommand((builder) =>
 					builder
 						.setName('create')

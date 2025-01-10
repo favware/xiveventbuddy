@@ -2,7 +2,7 @@ import { BloomCommand } from '#lib/extensions/BloomComand';
 import { BloombotEmojis } from '#lib/util/emojis';
 import { ApplyOptions } from '@sapphire/decorators';
 import type { ApplicationCommandRegistry, Awaitable, ChatInputCommand } from '@sapphire/framework';
-import { inlineCode, MessageFlags, roleMention } from 'discord.js';
+import { ApplicationIntegrationType, inlineCode, MessageFlags, roleMention } from 'discord.js';
 
 @ApplyOptions<ChatInputCommand.Options>({
 	description: 'Change the settings of the bot'
@@ -13,6 +13,7 @@ export class SlashCommand extends BloomCommand {
 			command //
 				.setName(this.name)
 				.setDescription(this.description)
+				.setIntegrationTypes(ApplicationIntegrationType.GuildInstall)
 				//  Event managers
 				.addSubcommand((builder) =>
 					builder //
