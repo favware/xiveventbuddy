@@ -5,10 +5,13 @@ import { createBanner } from '@skyra/start-banner';
 import { blue, gray, green, magenta, magentaBright, white, yellow } from 'colorette';
 import figlet from 'figlet';
 import { vice } from 'gradient-string';
+import { readFileSync } from 'node:fs';
 
 @ApplyOptions<Listener.Options>({ once: true })
 export class UserListener extends Listener<typeof Events.ClientReady> {
 	private readonly style = this.isDev ? yellow : blue;
+
+	private readonly packageJson = JSON.parse(readFileSync(new URL('../../package.json', import.meta.url), { encoding: 'utf-8' }));
 
 	public run() {
 		this.printBanner();
@@ -29,7 +32,7 @@ export class UserListener extends Listener<typeof Events.ClientReady> {
 			createBanner({
 				name: [vice.multiline(figlet.textSync('Bloombot'))],
 				extra: [
-					blc(envParseString('CLIENT_VERSION')), //
+					blc(this.packageJson?.version ?? '1.0.0'), //
 					`[${success}] Gateway`,
 					this.isDev ? ` ${blc('<')}${llc('/')}${blc('>')} ${llc('DEVELOPMENT MODE')}` : ''
 				]
