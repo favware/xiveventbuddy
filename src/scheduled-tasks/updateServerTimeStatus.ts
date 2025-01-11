@@ -4,7 +4,7 @@ import { ScheduledTask } from '@sapphire/plugin-scheduled-tasks';
 import { Status } from 'discord.js';
 
 @ApplyOptions<ScheduledTask.Options>({
-	pattern: '*/1 * * * *',
+	pattern: '* * * * *',
 	customJobOptions: {
 		removeOnComplete: true
 	}
