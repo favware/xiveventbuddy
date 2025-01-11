@@ -4,7 +4,7 @@ import { ScheduledTask } from '@sapphire/plugin-scheduled-tasks';
 import { Status } from 'discord.js';
 
 @ApplyOptions<ScheduledTask.Options>({
-	pattern: '* * * * *',
+	pattern: '*/1 * * * *',
 	customJobOptions: {
 		removeOnComplete: true
 	}
@@ -16,6 +16,6 @@ export class UpdateServerTimeInStatus extends ScheduledTask {
 			return;
 		}
 
-		return this.container.client.user.setActivity(getPresenceActivity);
+		return this.container.client.user.setActivity(getPresenceActivity());
 	}
 }
