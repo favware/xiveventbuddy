@@ -1,6 +1,6 @@
 {
 	"name": "bloombot",
-	"version": "1.0.0",
+	"version": "1.1.0",
 	"description": "A private bot for the Nightbloom FC Discord server.",
 	"author": "Jeroen Claassens <support@favware.tech>",
 	"license": "Apache-2.0",

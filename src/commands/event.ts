@@ -53,7 +53,7 @@ export class SlashCommand extends BloomCommand {
 						.addStringOption((builder) =>
 							builder //
 								.setName('time')
-								.setDescription('The time of the event. Format is HH:MM (24 hour clock). Time is always Light server time (UTC)')
+								.setDescription('The time of the event. Format is HH:mm (24 hour clock). Time is always Light server time (UTC)')
 								.setRequired(true)
 						)
 						.addIntegerOption((builder) =>
@@ -145,7 +145,7 @@ export class SlashCommand extends BloomCommand {
 						.addStringOption((builder) =>
 							builder //
 								.setName('time')
-								.setDescription('The new time of the event. Format is HH:MM (24 hour clock). Time is always Light server time (UTC)')
+								.setDescription('The new time of the event. Format is HH:mm (24 hour clock). Time is always Light server time (UTC)')
 								.setRequired(false)
 						)
 						.addIntegerOption((builder) =>
@@ -251,11 +251,11 @@ export class SlashCommand extends BloomCommand {
 
 		if (!this.timeRegex.test(stringTime)) {
 			return interaction.editReply({
-				content: `${BloombotEmojis.RedCross} The time you provided is invalid, it has to be in the format of ${inlineCode('HH:MM')}.`
+				content: `${BloombotEmojis.RedCross} The time you provided is invalid, it has to be in the format of ${inlineCode('HH:mm')}.`
 			});
 		}
 
-		const eventDate = this.setEventTimeAndTimezone(dateUnixTimestamp, stringTime);
+		const eventDate = this.setTimeAndTimezone(dateUnixTimestamp, stringTime);
 
 		const channel = interaction.options.getChannel('channel', false);
 
@@ -441,14 +441,14 @@ export class SlashCommand extends BloomCommand {
 
 		if (stringTime && !this.timeRegex.test(stringTime)) {
 			return interaction.editReply({
-				content: `${BloombotEmojis.RedCross} The time you provided is invalid, it has to be in the format of ${inlineCode('HH:MM')}.`
+				content: `${BloombotEmojis.RedCross} The time you provided is invalid, it has to be in the format of ${inlineCode('HH:mm')}.`
 			});
 		}
 
 		dateUnixTimestamp = dateUnixTimestamp ?? existingEvent.instance.dateTime.getTime();
 		stringTime = stringTime ?? format(existingEvent.instance.dateTime, 'HH:mm');
 
-		const eventDate = this.setEventTimeAndTimezone(dateUnixTimestamp, stringTime);
+		const eventDate = this.setTimeAndTimezone(dateUnixTimestamp, stringTime);
 
 		const name = interaction.options.getString('name', false) ?? existingEvent.name;
 		const description = interaction.options.getString('description', false) ?? existingEvent.description;
@@ -621,18 +621,6 @@ export class SlashCommand extends BloomCommand {
 		return { dateUnixTimestamp, dateIsInvalid };
 	}
 
-	private setEventTimeAndTimezone(dateUnixTimestamp: number, stringTime: string): Date {
-		const [hours, minutes] = stringTime.split(':').map(Number);
-		const eventDate = new Date(dateUnixTimestamp);
-		eventDate.setUTCHours(hours, minutes, 0, 0);
-
-		const ukTimezoneOffset = new Date().getTimezoneOffset() - eventDate.getTimezoneOffset();
-
-		eventDate.setMinutes(eventDate.getMinutes() + ukTimezoneOffset);
-
-		return eventDate;
-	}
-
 	private getBannerImageUrl(interaction: ChatInputCommand.Interaction<'cached'>): string | null {
 		const file = interaction.options.getAttachment('banner-image', false);
 
@@ -656,5 +644,17 @@ export class SlashCommand extends BloomCommand {
 		}
 
 		return url.href;
+	}
+
+	private setTimeAndTimezone(dateUnixTimestamp: number, stringTime: string): Date {
+		const [hours, minutes] = stringTime.split(':').map(Number);
+		const eventDate = new Date(dateUnixTimestamp);
+		eventDate.setUTCHours(hours, minutes, 0, 0);
+
+		const ukTimezoneOffset = new Date().getTimezoneOffset() - eventDate.getTimezoneOffset();
+
+		eventDate.setMinutes(eventDate.getMinutes() + ukTimezoneOffset);
+
+		return eventDate;
 	}
 }
