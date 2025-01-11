@@ -2,14 +2,12 @@ import type { ChatInputCommandDeniedPayload, ContextMenuCommandDeniedPayload, Us
 import { MessageFlags } from 'discord.js';
 
 export function handleChatInputOrContextMenuCommandDenied(
-	{ context, message: content }: UserError,
+	{ message }: UserError,
 
 	{ interaction }: ChatInputCommandDeniedPayload | ContextMenuCommandDeniedPayload
 ) {
-	if (Reflect.get(Object(context), 'silent')) return;
-
 	return interaction.reply({
-		content,
+		content: message,
 		allowedMentions: { users: [interaction.user.id], roles: [] },
 		flags: MessageFlags.Ephemeral
 	});
