@@ -19,7 +19,7 @@ export class ButtonHandler extends InteractionHandler {
 	public override async parse(interaction: ButtonInteraction<'cached'>) {
 		if (!interaction.customId.startsWith(`${CustomIdPrefixes.Job}-${CustomIdPrefixes.Bluemage}-t`)) return this.none();
 
-		await handleJobOrRoleButtonClick(interaction, $Enums.Roles.MagicRangedDPS, $Enums.Jobs.BlueMage);
+		await handleJobOrRoleButtonClick(interaction, $Enums.Roles.Tank, $Enums.Jobs.BlueMage);
 
 		return this.some();
 	}
