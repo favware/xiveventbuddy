@@ -8,17 +8,20 @@ import type { ApplicationCommandOptionChoiceData, AutocompleteInteraction } from
 	interactionHandlerType: InteractionHandlerTypes.Autocomplete
 })
 export class AutocompleteHandler extends InteractionHandler {
-	public override async run(interaction: AutocompleteInteraction, result: InteractionHandler.ParseResult<this>) {
+	public override async run(interaction: AutocompleteInteraction<'cached'>, result: InteractionHandler.ParseResult<this>) {
 		return interaction.respond(result);
 	}
 
-	public override async parse(interaction: AutocompleteInteraction) {
+	public override async parse(interaction: AutocompleteInteraction<'cached'>) {
 		if (interaction.commandName !== 'event') return this.none();
 
 		const focusedOption = interaction.options.getFocused(true);
 
 		if (focusedOption.name === 'id') {
 			const allEvents = await this.container.prisma.event.findMany({
+				where: {
+					guildId: interaction.guildId
+				},
 				select: {
 					id: true,
 					name: true

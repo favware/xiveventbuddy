@@ -341,6 +341,11 @@ export class SlashCommand extends BloomCommand {
 
 	private async listEvents(interaction: ChatInputCommand.Interaction<'cached'>) {
 		const eventInstances = await this.container.prisma.eventInstance.findMany({
+			where: {
+				event: {
+					guildId: interaction.guildId
+				}
+			},
 			select: {
 				id: true,
 				dateTime: true,
