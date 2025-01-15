@@ -45,8 +45,6 @@ export class ListenerError extends Listener<typeof Events.ListenerError> {
 	}
 
 	private async userError(piece: Piece, error: UserError) {
-		if (Reflect.get(Object(error.context), 'silent')) return;
-
 		this.container.logger.error(`[LISTENER] ${piece.location.full}\n${error.stack || error.message}`);
 
 		try {

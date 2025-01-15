@@ -10,7 +10,7 @@ export async function handleJobOrRoleButtonClick(interaction: ButtonInteraction<
 
 	const [, eventId] = interaction.customId.split('|');
 
-	const eventData = await container.prisma.event.findFirstOrThrow({
+	const eventData = await container.prisma.event.findFirst({
 		where: {
 			id: eventId
 		},

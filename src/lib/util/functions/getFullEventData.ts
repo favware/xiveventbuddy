@@ -1,7 +1,7 @@
 import { container } from '@sapphire/framework';
 
 export function getFullEventData(eventId: string) {
-	return container.prisma.event.findFirstOrThrow({
+	return container.prisma.event.findFirst({
 		where: {
 			id: eventId
 		},

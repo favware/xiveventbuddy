@@ -28,6 +28,7 @@ export const enum BrandingColors {
 export const enum ErrorIdentifiers {
 	EventEditMessageFetchFailedError = 'EventEditMessageFetchFailedError',
 	EventEditPostedMessageUndefinedError = 'EventEditPostedMessageUndefinedError',
+	EventEditIdNotFound = 'EventEditIdNotFound',
 	EventEditMessageChannelNotFoundError = 'EventEditMessageChannelNotFoundError',
 	UnableToFindEventForButtonClickError = 'UnableToFindEventForButtonClickError',
 	UnableToFindEventForSelectMenuChoiceError = 'unableToFindEventForSelectMenuChoiceError',

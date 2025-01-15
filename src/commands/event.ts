@@ -398,7 +398,7 @@ export class SlashCommand extends BloomCommand {
 	private async editEvent(interaction: ChatInputCommand.Interaction<'cached'>) {
 		const id = interaction.options.getString('id', true);
 
-		const existingEvent = await this.container.prisma.event.findFirstOrThrow({
+		const existingEvent = await this.container.prisma.event.findFirst({
 			where: {
 				id
 			},
@@ -421,8 +421,9 @@ export class SlashCommand extends BloomCommand {
 		});
 
 		if (!existingEvent?.instance) {
-			return interaction.editReply({
-				content: `${BloombotEmojis.RedCross} No event found with ID ${inlineCode(id)}.`
+			throw new UserError({
+				message: `${BloombotEmojis.RedCross} No event found with ID ${inlineCode(id)}.`,
+				identifier: ErrorIdentifiers.EventEditIdNotFound
 			});
 		}
 
@@ -543,7 +544,7 @@ export class SlashCommand extends BloomCommand {
 	private async deleteEvent(interaction: ChatInputCommand.Interaction<'cached'>) {
 		const id = interaction.options.getString('id', true);
 
-		const existingEvent = await this.container.prisma.event.findFirstOrThrow({
+		const existingEvent = await this.container.prisma.event.findFirst({
 			where: {
 				id
 			},
