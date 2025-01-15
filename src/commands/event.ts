@@ -1,13 +1,15 @@
 import { BloomCommand } from '#lib/extensions/BloomComand';
 import { BloombotEvents, ErrorIdentifiers, type EventData } from '#lib/util/constants';
 import { BloombotEmojis } from '#lib/util/emojis';
+import { buildEventAttachment } from '#lib/util/functions/buildEventAttachment';
 import { buildEventComponents } from '#lib/util/functions/buildEventComponents';
 import { buildEventEmbed } from '#lib/util/functions/buildEventEmbed';
 import { resolveOnErrorCodes } from '#lib/util/functions/resolveOnErrorCodes';
 import { OwnerMentions, Owners } from '#root/config';
 import { $Enums } from '@prisma/client';
 import { ApplyOptions } from '@sapphire/decorators';
-import { UserError, type ApplicationCommandRegistry, type Awaitable, type ChatInputCommand } from '@sapphire/framework';
+import { fetch, FetchResultTypes } from '@sapphire/fetch';
+import { Result, UserError, type ApplicationCommandRegistry, type Awaitable, type ChatInputCommand } from '@sapphire/framework';
 import { filterNullish, isNullishOrZero } from '@sapphire/utilities';
 import { format } from 'date-fns';
 import {
@@ -294,7 +296,7 @@ export class SlashCommand extends BloomCommand {
 				interval: interval as $Enums.EventInterval,
 				roleToPing: roleToPing?.id,
 				leader: leader?.id ?? interaction.user.id,
-				bannerImage: this.getBannerImageUrl(interaction),
+				bannerImage: await this.getBannerImage(interaction),
 				instance: {
 					create: {
 						dateTime: eventDate
@@ -484,7 +486,7 @@ export class SlashCommand extends BloomCommand {
 				interval: interval as $Enums.EventInterval,
 				roleToPing: roleToPing?.id ?? existingEvent.roleToPing,
 				leader: leader?.id ?? existingEvent.leader,
-				bannerImage: this.getBannerImageUrl(interaction) ?? existingEvent.bannerImage,
+				bannerImage: (await this.getBannerImage(interaction)) ?? existingEvent.bannerImage,
 				instance: {
 					update: {
 						dateTime: eventDate
@@ -526,6 +528,7 @@ export class SlashCommand extends BloomCommand {
 					content: updatedEvent.roleToPing ? roleMention(updatedEvent.roleToPing) : undefined,
 					embeds: [buildEventEmbed(updatedEvent as EventData)],
 					components: buildEventComponents(updatedEvent.id),
+					files: buildEventAttachment(updatedEvent as EventData),
 					allowedMentions: { roles: updatedEvent.roleToPing ? [updatedEvent.roleToPing] : undefined }
 				});
 
@@ -627,13 +630,12 @@ export class SlashCommand extends BloomCommand {
 		return { dateUnixTimestamp, dateIsInvalid };
 	}
 
-	private getBannerImageUrl(interaction: ChatInputCommand.Interaction<'cached'>): string | null {
+	private async getBannerImage(interaction: ChatInputCommand.Interaction<'cached'>): Promise<string | null> {
 		const file = interaction.options.getAttachment('banner-image', false);
 
 		if (!file || isNullishOrZero(file.width) || isNullishOrZero(file.height)) return null;
 
-		const width = file.width!;
-		const height = file.height!;
+		const { width, height } = file;
 
 		if (width <= 128 && height <= 128) return file.url;
 
@@ -649,7 +651,12 @@ export class SlashCommand extends BloomCommand {
 			url.searchParams.append('height', '128');
 		}
 
-		return url.href;
+		const downloadedImage = await Result.fromAsync(fetch(url, FetchResultTypes.Buffer));
+
+		return downloadedImage.match({
+			ok: (value) => value.toString('base64'),
+			err: () => null
+		});
 	}
 
 	private setTimeAndTimezone(dateUnixTimestamp: number, stringTime: string): Date {

@@ -32,13 +32,14 @@ export function buildEventEmbed(event: EventData, shouldDisableEvent = false) {
 	const healerParticipants = getHealerParticipants(event);
 	const allRounderParticipants = getAllRounderParticipants(event);
 
-	builder
-		.setTitle(event.name)
-		.setColor(shouldDisableEvent ? BrandingColors.ExpiredEvent : BrandingColors.Primary)
-		.setImage(event.bannerImage);
+	builder.setTitle(event.name).setColor(shouldDisableEvent ? BrandingColors.ExpiredEvent : BrandingColors.Primary);
 
 	if (event.description) {
 		builder.setDescription(event.description.split(/\\{2,4}n/).join('\n'));
+	}
+
+	if (event.bannerImage) {
+		builder.setImage('attachment://banner.png');
 	}
 
 	builder.addFields(

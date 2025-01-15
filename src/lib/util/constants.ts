@@ -32,7 +32,8 @@ export const enum ErrorIdentifiers {
 	EventEditMessageChannelNotFoundError = 'EventEditMessageChannelNotFoundError',
 	UnableToFindEventForButtonClickError = 'UnableToFindEventForButtonClickError',
 	UnableToFindEventForSelectMenuChoiceError = 'unableToFindEventForSelectMenuChoiceError',
-	UnexpectedRoleSelectMenuChoiceError = 'unexpectedRoleSelectMenuChoiceError'
+	UnexpectedRoleSelectMenuChoiceError = 'unexpectedRoleSelectMenuChoiceError',
+	EventBannerImageDownloadError = 'EventBannerImageDownloadError'
 }
 
 export const enum CustomIdPrefixes {

@@ -1,8 +1,9 @@
 import { BloombotEvents, type EventData, type PostEmbedPayload } from '#lib/util/constants';
+import { buildEventAttachment } from '#lib/util/functions/buildEventAttachment';
 import { buildEventComponents } from '#lib/util/functions/buildEventComponents';
 import { buildEventEmbed } from '#lib/util/functions/buildEventEmbed';
 import { Listener } from '@sapphire/framework';
-import { roleMention } from 'discord.js';
+import { AttachmentBuilder, roleMention } from 'discord.js';
 
 export class UserListener extends Listener<typeof BloombotEvents.PostEmbed> {
 	public override async run({ eventId, guildId }: PostEmbedPayload) {
@@ -29,6 +30,7 @@ export class UserListener extends Listener<typeof BloombotEvents.PostEmbed> {
 					content: eventData.roleToPing ? roleMention(eventData.roleToPing) : undefined,
 					embeds: [buildEventEmbed(eventData as EventData)],
 					components: buildEventComponents(eventId),
+					files: buildEventAttachment(eventData as EventData),
 					allowedMentions: { roles: eventData.roleToPing ? [eventData.roleToPing] : undefined }
 				});
 

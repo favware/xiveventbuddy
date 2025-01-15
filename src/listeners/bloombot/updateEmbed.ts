@@ -1,10 +1,11 @@
 import { BloombotEvents, ErrorIdentifiers, type EventData, type UpdateEmbedPayload } from '#lib/util/constants';
 import { BloombotEmojis } from '#lib/util/emojis';
+import { buildEventAttachment } from '#lib/util/functions/buildEventAttachment';
 import { buildEventComponents } from '#lib/util/functions/buildEventComponents';
 import { buildEventEmbed } from '#lib/util/functions/buildEventEmbed';
 import { OwnerMentions } from '#root/config';
 import { Listener, UserError } from '@sapphire/framework';
-import { roleMention } from 'discord.js';
+import { AttachmentBuilder, roleMention } from 'discord.js';
 
 export class UserListener extends Listener<typeof BloombotEvents.UpdateEmbed> {
 	public override async run({ eventId, guildId, shouldDisableEvent = false }: UpdateEmbedPayload) {
@@ -49,6 +50,7 @@ export class UserListener extends Listener<typeof BloombotEvents.UpdateEmbed> {
 								)
 							],
 							components: buildEventComponents(eventData.id, shouldDisableEvent),
+							files: buildEventAttachment(eventData as EventData),
 							allowedMentions: { roles: eventData.roleToPing ? [eventData.roleToPing] : undefined }
 						});
 					} else {
