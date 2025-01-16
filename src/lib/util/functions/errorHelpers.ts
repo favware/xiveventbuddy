@@ -18,13 +18,13 @@ import {
 	hideLinkEmbed,
 	HTTPError,
 	hyperlink,
-	Message,
 	MessageFlags,
 	RESTJSONErrorCodes,
 	userMention,
 	type APIMessage,
 	type BaseInteraction,
-	type CommandInteraction
+	type CommandInteraction,
+	type Message
 } from 'discord.js';
 import { fileURLToPath } from 'node:url';
 
@@ -36,7 +36,7 @@ export async function handleChatInputOrContextMenuCommandError(
 ) {
 	// If the error was a string or an UserError, send it to the user:
 	if (typeof error === 'string') return stringError(interaction, error);
-	if (error instanceof ArgumentError) return argumentError(interaction, error);
+	if (error instanceof ArgumentError) return userError(interaction, error);
 	if (error instanceof UserError) return userError(interaction, error);
 
 	const { client, logger } = container;
@@ -61,11 +61,11 @@ export async function handleChatInputOrContextMenuCommandError(
 	await sendErrorChannel(interaction, command, error);
 
 	// Emit where the error was emitted
-	logger.fatal(`[COMMAND] ${command.location.full}\n${error.stack || error.message}`);
+	logger.fatal(`[COMMAND] ${command.location.full}\n${error.stack ?? error.message}`);
 	try {
 		await alert(interaction, generateUnexpectedErrorMessage(error));
-	} catch (err) {
-		client.emit(Events.Error, err as Error);
+	} catch (error) {
+		client.emit(Events.Error, error as Error);
 	}
 
 	return undefined;
@@ -81,30 +81,12 @@ export function generateUnexpectedErrorMessage(error: Error) {
 	].join('\n');
 }
 
-function stringError(interaction: CommandInteraction, error: string) {
+async function stringError(interaction: CommandInteraction, error: string) {
 	return alert(interaction, `Dear ${userMention(interaction.user.id)}, ${error}`);
 }
 
-function argumentError(interaction: CommandInteraction, error: ArgumentError<unknown>) {
-	return alert(
-		interaction,
-		error.message ||
-			`An error occurred that I was not able to identify. Please try again. If the issue keeps showing up, you can get in touch with the developers by joining my support server through ${hideLinkEmbed(
-				'https://discord.gg/sapphiredev'
-			)}`
-	);
-}
-
-function userError(interaction: CommandInteraction, error: UserError) {
-	if (Reflect.get(Object(error.context), 'silent')) return;
-
-	return alert(
-		interaction,
-		error.message ||
-			`An error occurred that I was not able to identify. Please try again. If the issue keeps showing up, you can get in touch with the developers by joining my support server through ${hideLinkEmbed(
-				'https://discord.gg/sapphiredev'
-			)}`
-	);
+async function userError(interaction: CommandInteraction, error: UserError) {
+	return alert(interaction, error.message || `An error occurred that I was not able to identify. Contact ${OwnerMentions} for assistance.`);
 }
 
 async function alert(interaction: CommandInteraction, content: string) {
@@ -147,14 +129,15 @@ async function sendErrorChannel(interaction: CommandInteraction, command: Comman
 
 	try {
 		await webhook.send({ embeds: [embed] });
-	} catch (err) {
-		container.client.emit(Events.Error, err as Error);
+	} catch (error_) {
+		container.client.emit(Events.Error, error_ as Error);
 	}
 }
 
 /**
  * Formats a command line.
- * @param command The command to format.
+ *
+ * @param command - The command to format.
  */
 function getCommandLine(command: Command): string {
 	return `**Command**: ${command.location.full.slice(fileURLToPath(rootFolder).length)}`;
@@ -162,7 +145,8 @@ function getCommandLine(command: Command): string {
 
 /**
  * Formats an options line.
- * @param options The options the user used when running the command.
+ *
+ * @param options - The options the user used when running the command.
  */
 function getOptionsLine(options: CommandInteraction['options']): string {
 	if (options.data.length === 0) return '**Options**: Not Supplied';
@@ -173,7 +157,7 @@ function getOptionsLine(options: CommandInteraction['options']): string {
 		let { value } = option;
 		if (typeof value === 'string') value = value.trim().replaceAll('`', '῾');
 
-		mappedOptions.push(`[${option.name} ⫸ ${value || '\u200B'}]`);
+		mappedOptions.push(`[${option.name} ⫸ ${value ?? '\u200B'}]`);
 	}
 
 	if (mappedOptions.length === 0) return '**Options**: Not Supplied';
@@ -183,7 +167,8 @@ function getOptionsLine(options: CommandInteraction['options']): string {
 
 /**
  * Formats a message url line.
- * @param url The url to format.
+ *
+ * @param message - The message to format.
  */
 export function getLinkLine(message: APIMessage | Message): string {
 	if (isMessageInstance(message)) {
@@ -195,7 +180,8 @@ export function getLinkLine(message: APIMessage | Message): string {
 
 /**
  * Formats an error method line.
- * @param error The error to format.
+ *
+ * @param error - The error to format.
  */
 export function getMethodLine(error: DiscordAPIError | HTTPError): string {
 	return `**Path**: ${error.method.toUpperCase()}`;
@@ -203,7 +189,8 @@ export function getMethodLine(error: DiscordAPIError | HTTPError): string {
 
 /**
  * Formats an error status line.
- * @param error The error to format.
+ *
+ * @param error - The error to format.
  */
 export function getStatusLine(error: DiscordAPIError | HTTPError): string {
 	return `**Status**: ${error.status}`;
@@ -211,11 +198,12 @@ export function getStatusLine(error: DiscordAPIError | HTTPError): string {
 
 /**
  * Formats an error codeblock.
- * @param error The error to format.
+ *
+ * @param error - The error to format.
  */
 export function getErrorLine(error: Error): string {
 	if (error instanceof Error) {
-		return `**Error**: ${codeBlock('js', error.stack || error.message)}`;
+		return `**Error**: ${codeBlock('js', error.stack ?? error.message)}`;
 	}
 
 	return `**Error**: ${codeBlock('js', error)}`;

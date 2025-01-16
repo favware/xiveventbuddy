@@ -10,7 +10,7 @@ import { MessageFlags, type ButtonInteraction } from 'discord.js';
 	interactionHandlerType: InteractionHandlerTypes.Button
 })
 export class ButtonHandler extends InteractionHandler {
-	public override run(interaction: ButtonInteraction<'cached'>) {
+	public override async run(interaction: ButtonInteraction<'cached'>) {
 		return interaction.editReply({
 			content: `${BloombotEmojis.GreenTick} Successfully removed you from the participants list.`
 		});

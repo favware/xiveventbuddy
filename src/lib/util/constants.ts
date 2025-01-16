@@ -4,20 +4,22 @@ export const rootFolder = new URL('../../../', import.meta.url);
 
 /**
  * Left-to-right mark character.
+ *
  * @see {@link https://en.wikipedia.org/wiki/Left-to-right_mark}
  */
-export const leftToRightMark = String.fromCharCode(8206);
+export const leftToRightMark = String.fromCodePoint(8_206);
 
 /**
  * Braille pattern blank character
+ *
  * @see {@link https://en.wikipedia.org/wiki/Braille_Patterns}
  */
-export const braillePatternBlank = String.fromCharCode(10240);
+export const braillePatternBlank = String.fromCodePoint(10_240);
 
 export enum BloombotEvents {
-	UpdateEmbed = 'updateEmbed',
+	CreateServerEvent = 'createServerEvent',
 	PostEmbed = 'postEmbed',
-	CreateServerEvent = 'createServerEvent'
+	UpdateEmbed = 'updateEmbed'
 }
 
 export const enum BrandingColors {
@@ -26,16 +28,17 @@ export const enum BrandingColors {
 }
 
 export const enum ErrorIdentifiers {
-	EventEditMessageFetchFailedError = 'EventEditMessageFetchFailedError',
-	EventEditPostedMessageUndefinedError = 'EventEditPostedMessageUndefinedError',
+	EventBannerImageDownloadError = 'EventBannerImageDownloadError',
 	EventEditIdNotFound = 'EventEditIdNotFound',
 	EventEditMessageChannelNotFoundError = 'EventEditMessageChannelNotFoundError',
+	EventEditMessageFetchFailedError = 'EventEditMessageFetchFailedError',
+	EventEditPostedMessageUndefinedError = 'EventEditPostedMessageUndefinedError',
 	UnableToFindEventForButtonClickError = 'UnableToFindEventForButtonClickError',
 	UnableToFindEventForSelectMenuChoiceError = 'unableToFindEventForSelectMenuChoiceError',
-	UnexpectedRoleSelectMenuChoiceError = 'unexpectedRoleSelectMenuChoiceError',
-	EventBannerImageDownloadError = 'EventBannerImageDownloadError'
+	UnexpectedRoleSelectMenuChoiceError = 'unexpectedRoleSelectMenuChoiceError'
 }
 
+/* eslint-disable typescript-sort-keys/string-enum */
 export const enum CustomIdPrefixes {
 	Job = 'job',
 	RoleSelectMenu = 'role-select-menu',
@@ -73,6 +76,7 @@ export const enum CustomIdPrefixes {
 	Paladin = 'paladin',
 	Warrior = 'warrior'
 }
+/* eslint-enable typescript-sort-keys/string-enum */
 
 export interface CreateServerEventPayload {
 	eventId: string;
@@ -91,13 +95,13 @@ export interface UpdateEmbedPayload {
 	shouldDisableEvent?: boolean;
 }
 
-export type EventData = Pick<Event, 'id' | 'description' | 'name' | 'roleToPing' | 'leader' | 'channelId' | 'bannerImage'> & {
+export type EventData = Pick<Event, 'bannerImage' | 'channelId' | 'description' | 'id' | 'leader' | 'name' | 'roleToPing'> & {
 	instance: Pick<EventInstance, 'dateTime'> & {
-		participants: Pick<Participant, 'job' | 'role' | 'discordId' | 'signupOrder'>[];
+		participants: Pick<Participant, 'discordId' | 'job' | 'role' | 'signupOrder'>[];
 	};
 };
 
-type JobTypeEmojis = 'AllRounder' | 'DPS' | 'Healer' | 'MeleeDPS' | 'MagicRangedDPS' | 'PhysRangedDPS' | 'Tank';
+type JobTypeEmojis = 'AllRounder' | 'DPS' | 'Healer' | 'MagicRangedDPS' | 'MeleeDPS' | 'PhysRangedDPS' | 'Tank';
 type EventDataEmojis =
 	| 'Absence'
 	| 'Bench'
@@ -107,12 +111,12 @@ type EventDataEmojis =
 	| 'DateExpired'
 	| 'Late'
 	| 'Leader'
+	| 'RemoveParticipation'
 	| 'Signups'
 	| 'SignupsExpired'
-	| 'RemoveParticipation'
 	| 'Tentative'
 	| 'Time'
 	| 'TimeExpired';
 type OtherEmojis = 'GreenTick' | 'RedCross';
 
-export type Emojis = Jobs | JobTypeEmojis | EventDataEmojis | OtherEmojis;
+export type Emojis = EventDataEmojis | Jobs | JobTypeEmojis | OtherEmojis;

@@ -1,6 +1,6 @@
+/* eslint-disable import-x/first */
 // Unless explicitly defined, set NODE_ENV as development:
 process.env.NODE_ENV ??= 'development';
-
 import { getPresenceActivity } from '#lib/util/functions/getPresenceActivity';
 import { LogLevel } from '@sapphire/framework';
 import { envParseInteger, envParseString } from '@skyra/env-utilities';
@@ -20,7 +20,7 @@ function parseWebhookError(): WebhookClientData | null {
 	};
 }
 
-export function parseRedisOption(): Pick<RedisOptions, 'port' | 'password' | 'host'> {
+export function parseRedisOption(): Pick<RedisOptions, 'host' | 'password' | 'port'> {
 	return {
 		port: envParseInteger('REDIS_PORT'),
 		password: envParseString('REDIS_PASSWORD'),

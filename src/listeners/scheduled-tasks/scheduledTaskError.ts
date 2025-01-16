@@ -38,14 +38,15 @@ export class UserListener extends Listener<typeof ScheduledTaskEvents.ScheduledT
 
 		try {
 			await webhook.send({ embeds: [embed] });
-		} catch (err) {
+		} catch {
 			// noop
 		}
 	}
 
 	/**
 	 * Formats a task line.
-	 * @param task The task to format.
+	 *
+	 * @param task - The task to format.
 	 */
 	private getTaskLine(task: ScheduledTask): string {
 		return `**Task**: ${task.name}`;

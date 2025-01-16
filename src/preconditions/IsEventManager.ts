@@ -10,7 +10,7 @@ export class UserPrecondition extends Precondition {
 			return this.error({ message: `${BloombotEmojis.RedCross} No event managers found in the database` });
 		}
 
-		const manager = managers.some((m) => interaction.member.roles.cache.has(m.discordId));
+		const manager = managers.some((manager) => interaction.member.roles.cache.has(manager.discordId));
 
 		if (!manager) {
 			return this.error({ message: `${BloombotEmojis.RedCross} You are not an event manager` });

@@ -1,7 +1,7 @@
 import { BloombotEvents, ErrorIdentifiers } from '#lib/util/constants';
 import { BloombotEmojis } from '#lib/util/emojis';
 import { OwnerMentions } from '#root/config';
-import { $Enums } from '@prisma/client';
+import type { $Enums } from '@prisma/client';
 import { container, UserError } from '@sapphire/framework';
 import { MessageFlags, type ButtonInteraction } from 'discord.js';
 

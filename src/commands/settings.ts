@@ -69,8 +69,8 @@ export class SlashCommand extends BloomCommand {
 
 		const subcommand = interaction.options.getSubcommand(true) as
 			| 'add-manager-role'
-			| 'remove-manager-role'
 			| 'add-verified-server'
+			| 'remove-manager-role'
 			| 'remove-verified-server';
 
 		switch (subcommand) {

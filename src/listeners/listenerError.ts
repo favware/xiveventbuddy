@@ -1,6 +1,6 @@
 import { Owners } from '#root/config';
 import { generateUnexpectedErrorMessage, ignoredCodes } from '#utils/functions/errorHelpers';
-import { Events, Listener, type ListenerErrorPayload, Piece, UserError } from '@sapphire/framework';
+import { Events, Listener, type ListenerErrorPayload, type Piece, UserError } from '@sapphire/framework';
 import { isNullish } from '@sapphire/utilities';
 import { DiscordAPIError, HTTPError } from 'discord.js';
 
@@ -30,27 +30,27 @@ export class ListenerError extends Listener<typeof Events.ListenerError> {
 		}
 
 		// Emit where the error was emitted
-		logger.fatal(`[LISTENER] ${piece.location.full}\n${error.stack || error.message}`);
+		logger.fatal(`[LISTENER] ${piece.location.full}\n${error.stack ?? error.message}`);
 		try {
 			await this.alert(generateUnexpectedErrorMessage(error));
-		} catch (err) {
-			client.emit(Events.Error, err as Error);
+		} catch (error) {
+			client.emit(Events.Error, error as Error);
 		}
 
 		return undefined;
 	}
 
-	private stringError(stringError: string) {
+	private async stringError(stringError: string) {
 		return this.alert(stringError);
 	}
 
 	private async userError(piece: Piece, error: UserError) {
-		this.container.logger.error(`[LISTENER] ${piece.location.full}\n${error.stack || error.message}`);
+		this.container.logger.error(`[LISTENER] ${piece.location.full}\n${error.stack ?? error.message}`);
 
 		try {
 			await this.alert(generateUnexpectedErrorMessage(error));
-		} catch (err) {
-			this.container.client.emit(Events.Error, err as Error);
+		} catch (error) {
+			this.container.client.emit(Events.Error, error as Error);
 		}
 	}
 
@@ -63,8 +63,8 @@ export class ListenerError extends Listener<typeof Events.ListenerError> {
 				content,
 				allowedMentions: { users: Owners }
 			});
-		} catch (err) {
-			this.container.client.emit(Events.Error, err as Error);
+		} catch (error) {
+			this.container.client.emit(Events.Error, error as Error);
 		}
 	}
 

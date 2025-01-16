@@ -11,7 +11,7 @@ import { readFileSync } from 'node:fs';
 export class UserListener extends Listener<typeof Events.ClientReady> {
 	private readonly style = this.isDev ? yellow : blue;
 
-	private readonly packageJson = JSON.parse(readFileSync(new URL('../../package.json', import.meta.url), { encoding: 'utf-8' }));
+	private readonly packageJson = JSON.parse(readFileSync(new URL('../../package.json', import.meta.url), { encoding: 'utf8' }));
 
 	public run() {
 		this.printBanner();

@@ -1,4 +1,4 @@
-import { BloombotEvents, type CreateServerEventPayload } from '#lib/util/constants';
+import type { BloombotEvents, CreateServerEventPayload } from '#lib/util/constants';
 import { $Enums } from '@prisma/client';
 import { Listener } from '@sapphire/framework';
 import { addHours, getISODay } from 'date-fns';

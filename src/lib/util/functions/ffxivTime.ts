@@ -1,8 +1,8 @@
 function getEorzeaTime(timeNow: Date) {
 	const localEpoch = timeNow.getTime();
-	const epoch = localEpoch * (3600.0 / 175.0);
-	const minutes = Math.floor((epoch / (1000 * 60)) % 60);
-	const hours = Math.floor((epoch / (1000 * 60 * 60)) % 24);
+	const epoch = localEpoch * (3_600 / 175);
+	const minutes = Math.floor((epoch / (1_000 * 60)) % 60);
+	const hours = Math.floor((epoch / (1_000 * 60 * 60)) % 24);
 	return { hours, minutes };
 }
 

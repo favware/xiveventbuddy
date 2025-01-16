@@ -1,14 +1,14 @@
 import type { EventData } from '#lib/util/constants';
 import { $Enums, type Participant } from '@prisma/client';
 
-export type FilteredParticipant = Pick<Participant, 'role' | 'job' | 'discordId' | 'signupOrder'>;
+export type FilteredParticipant = Pick<Participant, 'discordId' | 'job' | 'role' | 'signupOrder'>;
 
 export function getBenchedParticipants(event: EventData): FilteredParticipant[] {
 	return event.instance.participants.filter((participant) => participant.role === 'Bench');
 }
 
 export function getPresentParticipants(event: EventData): FilteredParticipant[] {
-	const excludedRoles: Array<$Enums.Roles> = [$Enums.Roles.Absence, $Enums.Roles.Bench, $Enums.Roles.Late, $Enums.Roles.Tentative];
+	const excludedRoles: $Enums.Roles[] = [$Enums.Roles.Absence, $Enums.Roles.Bench, $Enums.Roles.Late, $Enums.Roles.Tentative];
 	return event.instance.participants.filter((participant) => !excludedRoles.includes(participant.role));
 }
 

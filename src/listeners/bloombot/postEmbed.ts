@@ -1,9 +1,9 @@
-import { BloombotEvents, type EventData, type PostEmbedPayload } from '#lib/util/constants';
+import type { BloombotEvents, EventData, PostEmbedPayload } from '#lib/util/constants';
 import { buildEventAttachment } from '#lib/util/functions/buildEventAttachment';
 import { buildEventComponents } from '#lib/util/functions/buildEventComponents';
 import { buildEventEmbed } from '#lib/util/functions/buildEventEmbed';
 import { Listener } from '@sapphire/framework';
-import { AttachmentBuilder, roleMention } from 'discord.js';
+import { roleMention } from 'discord.js';
 
 export class UserListener extends Listener<typeof BloombotEvents.PostEmbed> {
 	public override async run({ eventId, guildId }: PostEmbedPayload) {

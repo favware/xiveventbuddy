@@ -1,4 +1,4 @@
-import { Events, Listener, LogLevel, type Logger } from '@sapphire/framework';
+import { type Events, Listener, LogLevel, type Logger } from '@sapphire/framework';
 
 export class UserListener extends Listener<typeof Events.Error> {
 	public override run(error: Error) {

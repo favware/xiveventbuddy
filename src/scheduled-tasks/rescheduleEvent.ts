@@ -55,12 +55,14 @@ export class RescheduleEventTask extends ScheduledTask {
 						newDateTime = addMonths(dateTime, 1);
 						shouldReschedule = true;
 					}
+
 					break;
 				case $Enums.EventInterval.ONE_BEFORE_LAST_FRIDAY_OF_THE_MONTH:
 					if (isFirstDayOfMonth(now)) {
 						newDateTime = this.getOneBeforeLastFriday(addMonths(dateTime, 1));
 						shouldReschedule = true;
 					}
+
 					break;
 			}
 

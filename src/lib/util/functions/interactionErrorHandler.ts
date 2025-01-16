@@ -19,7 +19,7 @@ const ignoredCodes = [RESTJSONErrorCodes.UnknownChannel, RESTJSONErrorCodes.Unkn
 export async function handleInteractionError(error: Error, { handler, interaction }: InteractionHandlerError | InteractionHandlerParseError) {
 	// If the error was a string or an UserError, send it to the user:
 	if (typeof error === 'string') return stringError(interaction, error);
-	if (error instanceof ArgumentError) return argumentError(interaction, error);
+	if (error instanceof ArgumentError) return userError(interaction, error);
 	if (error instanceof UserError) return userError(interaction, error);
 
 	const { client, logger } = container;
@@ -44,11 +44,11 @@ export async function handleInteractionError(error: Error, { handler, interactio
 	await sendErrorChannel(interaction, handler, error);
 
 	// Emit where the error was emitted
-	logger.fatal(`[COMMAND] ${handler.location.full}\n${error.stack || error.message}`);
+	logger.fatal(`[COMMAND] ${handler.location.full}\n${error.stack ?? error.message}`);
 	try {
 		await alert(interaction, generateUnexpectedErrorMessage(error));
-	} catch (err) {
-		client.emit(Events.Error, err as Error);
+	} catch (error) {
+		client.emit(Events.Error, error as Error);
 	}
 
 	return undefined;
@@ -64,29 +64,15 @@ function generateUnexpectedErrorMessage(error: Error) {
 	].join('\n');
 }
 
-function stringError(interaction: Interaction, error: string) {
+async function stringError(interaction: Interaction, error: string) {
 	return alert(interaction, `Dear ${userMention(interaction.user.id)}, ${error}`);
 }
 
-function argumentError(interaction: Interaction, error: ArgumentError<unknown>) {
-	return alert(
-		interaction,
-		error.message ??
-			`An error occurred that I was not able to identify. Please try again. If the issue keeps showing up, you should notify ${OwnerMentions}`
-	);
+async function userError(interaction: Interaction, error: UserError) {
+	return alert(interaction, error.message ?? `An error occurred that I was not able to identify. Contact ${OwnerMentions} for assistance.`);
 }
 
-function userError(interaction: Interaction, error: UserError) {
-	if (Reflect.get(Object(error.context), 'silent')) return;
-
-	return alert(
-		interaction,
-		error.message ??
-			`An error occurred that I was not able to identify. Please try again. If the issue keeps showing up, you should notify ${OwnerMentions}`
-	);
-}
-
-function alert(interaction: Interaction, content: string) {
+async function alert(interaction: Interaction, content: string) {
 	if (!interaction.isStringSelectMenu() && !interaction.isButton()) return;
 
 	if (interaction.replied || interaction.deferred) {
@@ -123,14 +109,15 @@ async function sendErrorChannel(interaction: Interaction, handler: InteractionHa
 
 	try {
 		await webhook.send({ embeds: [embed] });
-	} catch (err) {
-		container.client.emit(Events.Error, err as Error);
+	} catch (error) {
+		container.client.emit(Events.Error, error as Error);
 	}
 }
 
 /**
  * Formats a handler line.
- * @param handler The handler to format.
+ *
+ * @param handler - The handler to format.
  */
 function getHandlerLine(handler: InteractionHandler): string {
 	return `**Handler**: ${handler.location.full.slice(fileURLToPath(rootFolder).length)}`;

@@ -4,7 +4,7 @@ import type { APIUser, Guild, User } from 'discord.js';
 
 export function handleChatInputOrContextMenuCommandSuccess(payload: ChatInputCommandSuccessPayload | ContextMenuCommandSuccessPayload) {
 	const { author, commandName, sentAt, shard, runtime } = getSuccessLoggerData(payload);
-	return container.logger.debug(`${shard} - ${commandName} ${author} ${sentAt} (${runtime})`);
+	container.logger.debug(`${shard} - ${commandName} ${author} ${sentAt} (${runtime})`);
 }
 
 function getShardInfo(id: number) {
@@ -15,7 +15,7 @@ function getCommandInfo(command: Command) {
 	return cyan(command.name);
 }
 
-function getAuthorInfo(author: User | APIUser) {
+function getAuthorInfo(author: APIUser | User) {
 	return `${author.username}[${cyan(author.id)}]`;
 }
 
@@ -24,9 +24,9 @@ function getGuildInfo(guild: Guild) {
 }
 
 function getDuration(duration: number) {
-	if (duration >= 1000) return `${(duration / 1000).toFixed(2)}s`;
+	if (duration >= 1_000) return `${(duration / 1_000).toFixed(2)}s`;
 	if (duration >= 1) return `${duration.toFixed(2)}ms`;
-	return `${(duration * 1000).toFixed(2)}μs`;
+	return `${(duration * 1_000).toFixed(2)}μs`;
 }
 
 function getSuccessLoggerData({ interaction, command, duration }: ChatInputCommandSuccessPayload | ContextMenuCommandSuccessPayload) {

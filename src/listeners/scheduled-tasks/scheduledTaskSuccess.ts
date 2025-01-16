@@ -14,8 +14,8 @@ export class UserListener extends Listener<typeof ScheduledTaskEvents.ScheduledT
 	}
 
 	private formatDuration(duration: number) {
-		if (duration >= 1000) return `${(duration / 1000).toFixed(2)}s`;
+		if (duration >= 1_000) return `${(duration / 1_000).toFixed(2)}s`;
 		if (duration >= 1) return `${duration.toFixed(2)}ms`;
-		return `${(duration * 1000).toFixed(2)}μs`;
+		return `${(duration * 1_000).toFixed(2)}μs`;
 	}
 }

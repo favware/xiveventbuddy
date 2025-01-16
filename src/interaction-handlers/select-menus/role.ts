@@ -19,7 +19,7 @@ export type RoleParseResult = InteractionHandler.ParseResult<StringSelectMenuHan
 	interactionHandlerType: InteractionHandlerTypes.SelectMenu
 })
 export class StringSelectMenuHandler extends InteractionHandler {
-	public override run(interaction: StringSelectMenuInteraction<'cached'>, result: InteractionHandler.ParseResult<this>) {
+	public override async run(interaction: StringSelectMenuInteraction<'cached'>, result: InteractionHandler.ParseResult<this>) {
 		let components: ActionRowBuilder<ButtonBuilder>[] | null;
 
 		switch (result.selectedRole) {
@@ -41,7 +41,10 @@ export class StringSelectMenuHandler extends InteractionHandler {
 			case $Enums.Roles.AllRounder:
 				components = null;
 				break;
-			default:
+			case $Enums.Roles.Late:
+			case $Enums.Roles.Tentative:
+			case $Enums.Roles.Absence:
+			case $Enums.Roles.Bench:
 				throw new UserError({
 					message: `${BloombotEmojis.RedCross} I received an unexpected role from the select menu of selecting your role. Contact ${OwnerMentions} for assistance.`,
 					identifier: ErrorIdentifiers.UnexpectedRoleSelectMenuChoiceError

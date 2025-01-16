@@ -1,5 +1,5 @@
 import { handleChatInputOrContextMenuCommandSuccess } from '#utils/functions/successHelper';
-import { Events, Listener, LogLevel, type ChatInputCommandSuccessPayload } from '@sapphire/framework';
+import { Listener, LogLevel, type ChatInputCommandSuccessPayload, type Events } from '@sapphire/framework';
 import type { Logger } from '@sapphire/plugin-logger';
 
 export class ChatInputCommandSuccess extends Listener<typeof Events.ChatInputCommandSuccess> {

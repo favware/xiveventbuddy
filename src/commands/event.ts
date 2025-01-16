@@ -28,7 +28,7 @@ import {
 	description: 'Manage the Nightbloom events'
 })
 export class SlashCommand extends BloomCommand {
-	private readonly timeRegex = /^(0\d|1\d|2[0-4]):[0-5]\d$/;
+	private readonly timeRegex = /^(?:0\d|1\d|2[0-4]):[0-5]\d$/;
 
 	public override registerApplicationCommands(registry: ApplicationCommandRegistry): Awaitable<void> {
 		registry.registerChatInputCommand((command) =>
@@ -226,7 +226,7 @@ export class SlashCommand extends BloomCommand {
 	public override async chatInputRun(interaction: ChatInputCommand.Interaction<'cached'>) {
 		await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 
-		const subcommand = interaction.options.getSubcommand(true) as 'create' | 'list' | 'edit' | 'delete';
+		const subcommand = interaction.options.getSubcommand(true) as 'create' | 'delete' | 'edit' | 'list';
 
 		switch (subcommand) {
 			case 'create':
@@ -431,7 +431,7 @@ export class SlashCommand extends BloomCommand {
 
 		const stringDate = interaction.options.getString('date', false);
 		let dateUnixTimestamp: number | null = null;
-		let dateIsInvalid: boolean = false;
+		let dateIsInvalid = false;
 
 		if (stringDate) {
 			const validatedStringDate = this.validateStringDate(stringDate);
@@ -588,7 +588,7 @@ export class SlashCommand extends BloomCommand {
 						identifier: ErrorIdentifiers.EventEditPostedMessageUndefinedError
 					});
 				}
-			} catch (error) {
+			} catch {
 				throw new UserError({
 					message: `${BloombotEmojis.RedCross} I was unexpectedly unable to posted event message. Contact ${OwnerMentions} for assistance.`,
 					identifier: ErrorIdentifiers.EventEditMessageFetchFailedError
@@ -612,20 +612,20 @@ export class SlashCommand extends BloomCommand {
 				await resolveOnErrorCodes(interaction.guild.scheduledEvents.delete(existingEvent.discordEventId));
 			}
 
-			return interaction.editReply({
+			return await interaction.editReply({
 				content: `${BloombotEmojis.GreenTick} Event with ID ${inlineCode(id)} successfully deleted.`
 			});
-		} catch (error) {
+		} catch {
 			return interaction.editReply({
 				content: `${BloombotEmojis.RedCross} Failed to delete the event from the database. Contact ${OwnerMentions} for assistance.`
 			});
 		}
 	}
 
-	private validateStringDate(stringDate: string): { dateUnixTimestamp: number; dateIsInvalid: boolean } {
+	private validateStringDate(stringDate: string): { dateIsInvalid: boolean; dateUnixTimestamp: number } {
 		const [day, month, year] = stringDate.includes('-') ? stringDate.split('-') : stringDate.split('/');
 		const dateUnixTimestamp = Date.parse(`${year}-${month}-${day}`);
-		const dateIsInvalid = isNaN(dateUnixTimestamp);
+		const dateIsInvalid = Number.isNaN(dateUnixTimestamp);
 
 		return { dateUnixTimestamp, dateIsInvalid };
 	}

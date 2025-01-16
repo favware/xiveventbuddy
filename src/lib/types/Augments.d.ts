@@ -7,15 +7,17 @@ import type { Events, WebhookClient } from 'discord.js';
 declare module '@sapphire/pieces' {
 	interface Container {
 		prisma: prismaType;
-		/** The webhook to use for the error event. */
-		webhookError: WebhookClient | Nullish;
+		/**
+		 * The webhook to use for the error event.
+		 */
+		webhookError: Nullish | WebhookClient;
 	}
 }
 
 declare module '@sapphire/framework' {
 	interface Preconditions {
-		VerifiedServer: never;
 		IsEventManager: never;
+		VerifiedServer: never;
 	}
 
 	interface SapphireClient {
@@ -30,17 +32,17 @@ declare module '@skyra/env-utilities' {
 	interface Env {
 		CLIENT_VERSION: string;
 
-		REDIS_PORT: IntegerString;
-		REDIS_PASSWORD: string;
-		REDIS_HOST: string;
-		REDIS_TASK_DB: IntegerString;
-
-		WEBHOOK_ERROR_ENABLED: BooleanString;
-		WEBHOOK_ERROR_ID: string;
-		WEBHOOK_ERROR_TOKEN: string;
-
-		DISCORD_TOKEN: string;
-
 		DATABASE_URL: string;
+		DISCORD_TOKEN: string;
+		REDIS_HOST: string;
+		REDIS_PASSWORD: string;
+
+		REDIS_PORT: IntegerString;
+		REDIS_TASK_DB: IntegerString;
+		WEBHOOK_ERROR_ENABLED: BooleanString;
+
+		WEBHOOK_ERROR_ID: string;
+
+		WEBHOOK_ERROR_TOKEN: string;
 	}
 }
