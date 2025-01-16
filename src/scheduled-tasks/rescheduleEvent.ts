@@ -2,7 +2,7 @@ import { BloombotEvents } from '#lib/util/constants';
 import { $Enums } from '@prisma/client';
 import { ApplyOptions } from '@sapphire/decorators';
 import { ScheduledTask } from '@sapphire/plugin-scheduled-tasks';
-import { addDays, addMonths, differenceInHours, getDay, isBefore, isFirstDayOfMonth, lastDayOfMonth, subDays } from 'date-fns';
+import { addDays, addHours, addMonths, differenceInHours, getDay, isBefore, isFirstDayOfMonth, lastDayOfMonth, subDays } from 'date-fns';
 import { Status } from 'discord.js';
 
 @ApplyOptions<ScheduledTask.Options>({
@@ -31,36 +31,36 @@ export class RescheduleEventTask extends ScheduledTask {
 		});
 
 		const now = new Date();
-		const fiveDays = 5 * 24;
 		const sevenDays = 7 * 24;
 
 		for (const event of events) {
 			if (!event.instance) continue;
 
-			const { dateTime } = event.instance;
+			const { duration } = event;
+			const { dateTime, isActive } = event.instance;
 			let shouldReschedule = false;
 			let newDateTime = dateTime;
 
 			switch (event.interval) {
 				case $Enums.EventInterval.WEEKLY:
-					shouldReschedule = differenceInHours(addDays(dateTime, 7), now) <= fiveDays;
+					shouldReschedule = differenceInHours(addDays(dateTime, 7), now) <= sevenDays && addHours(dateTime, duration) < now && !isActive;
 					newDateTime = addDays(dateTime, 7);
 					break;
 				case $Enums.EventInterval.ONCE_EVERY_OTHER_WEEK:
-					shouldReschedule = differenceInHours(addDays(dateTime, 14), now) <= sevenDays;
+					shouldReschedule = differenceInHours(addDays(dateTime, 14), now) <= sevenDays && addHours(dateTime, duration) < now && !isActive;
 					newDateTime = addDays(dateTime, 14);
 					break;
 				case $Enums.EventInterval.MONTHLY:
 					if (isFirstDayOfMonth(now)) {
 						newDateTime = addMonths(dateTime, 1);
-						shouldReschedule = true;
+						shouldReschedule = !isActive;
 					}
 
 					break;
 				case $Enums.EventInterval.ONE_BEFORE_LAST_FRIDAY_OF_THE_MONTH:
 					if (isFirstDayOfMonth(now)) {
 						newDateTime = this.getOneBeforeLastFriday(addMonths(dateTime, 1));
-						shouldReschedule = true;
+						shouldReschedule = !isActive;
 					}
 
 					break;

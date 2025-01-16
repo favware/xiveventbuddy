@@ -33,6 +33,15 @@ export class DisableOldEvents extends ScheduledTask {
 				const eventInstanceDateTime = event.instance.dateTime;
 
 				if (eventInstanceDateTime <= afterDurationOfEvent) {
+					this.container.prisma.eventInstance.update({
+						where: {
+							id: event.instance.id
+						},
+						data: {
+							isActive: false
+						}
+					});
+
 					this.container.client.emit(BloombotEvents.UpdateEmbed, {
 						eventId: event.id,
 						guildId: event.guildId,

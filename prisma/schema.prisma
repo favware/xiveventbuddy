@@ -100,6 +100,7 @@ model EventInstance {
     id           String        @id @default(cuid())
     dateTime     DateTime      @map("date_time")
     messageId    String?       @map("message_id")
+    isActive     Boolean       @default(true) @map("is_active")
     createdAt    DateTime      @default(now()) @map("created_at")
     updatedAt    DateTime      @updatedAt @map("updated_at")
     event        Event         @relation(fields: [eventId], references: [id], onUpdate: Cascade, onDelete: Cascade)
