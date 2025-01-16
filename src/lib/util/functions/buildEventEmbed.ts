@@ -55,7 +55,7 @@ export function buildEventEmbed(event: EventData, shouldDisableEvent = false) {
 			inline: true,
 			name: leftToRightMark,
 			value: [
-				`${shouldDisableEvent ? BloombotEmojis.SignupsExpired : BloombotEmojis.Signups} ${bold(presentParticipants.length.toString())} (+${benchedParticipants.length + absentParticipants.length + lateParticipants.length + tentativeParticipants.length})`,
+				`${shouldDisableEvent ? BloombotEmojis.SignupsExpired : BloombotEmojis.Signups} ${bold(presentParticipants.length.toString())} (+${benchedParticipants.length + lateParticipants.length + tentativeParticipants.length})`,
 				`${shouldDisableEvent ? BloombotEmojis.TimeExpired : BloombotEmojis.Time} ${underline(time(eventDateTime, TimestampStyles.ShortTime))}`
 			].join('\n')
 		},
