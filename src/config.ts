@@ -35,7 +35,7 @@ export const CLIENT_OPTIONS: ClientOptions = {
 	allowedMentions: { users: [], roles: [] },
 	presence: { activities: [getPresenceActivity()] },
 	loadDefaultErrorListeners: false,
-	logger: { level: envParseString('NODE_ENV') === 'production' ? LogLevel.Info : LogLevel.Debug },
+	logger: { level: LogLevel.Debug },
 	tasks: {
 		bull: {
 			connection: {
