@@ -37,7 +37,7 @@ export class RescheduleEventTask extends ScheduledTask {
 			if (!event.instance) continue;
 
 			const { duration } = event;
-			const { dateTime, isActive } = event.instance;
+			const { dateTime } = event.instance;
 			let shouldReschedule = false;
 			let newDateTime = dateTime;
 
@@ -53,14 +53,12 @@ export class RescheduleEventTask extends ScheduledTask {
 				case $Enums.EventInterval.MONTHLY:
 					if (isFirstDayOfMonth(now)) {
 						newDateTime = addMonths(dateTime, 1);
-						shouldReschedule = !isActive;
 					}
 
 					break;
 				case $Enums.EventInterval.ONE_BEFORE_LAST_FRIDAY_OF_THE_MONTH:
 					if (isFirstDayOfMonth(now)) {
 						newDateTime = this.getOneBeforeLastFriday(addMonths(dateTime, 1));
-						shouldReschedule = !isActive;
 					}
 
 					break;
