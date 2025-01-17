@@ -80,7 +80,7 @@ model VerifiedServers {
 model Event {
     id             String         @id @default(cuid())
     name           String
-    bannerImage    String?
+    bannerImage    String?        @map("banner_image")
     channelId      String         @map("channel_id")
     description    String?
     discordEventId String?        @map("discord_event_id")
@@ -100,7 +100,6 @@ model EventInstance {
     id           String        @id @default(cuid())
     dateTime     DateTime      @map("date_time")
     messageId    String?       @map("message_id")
-    isActive     Boolean       @default(true) @map("is_active")
     createdAt    DateTime      @default(now()) @map("created_at")
     updatedAt    DateTime      @updatedAt @map("updated_at")
     event        Event         @relation(fields: [eventId], references: [id], onUpdate: Cascade, onDelete: Cascade)
