@@ -40,7 +40,7 @@
 		"@skyra/jaro-winkler": "^1.1.1",
 		"@skyra/start-banner": "^2.0.1",
 		"bufferutil": "^4.0.9",
-		"bullmq": "^5.39.1",
+		"bullmq": "^5.39.2",
 		"colorette": "^2.0.20",
 		"date-fns": "^4.1.0",
 		"discord.js": "patch:discord.js@npm%3A14.17.2#~/.yarn/patches/discord.js-npm-14.17.2-2c6ecf1c86.patch",
