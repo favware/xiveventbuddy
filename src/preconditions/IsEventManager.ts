@@ -1,6 +1,6 @@
 import { BloombotEmojis } from '#lib/util/emojis';
 import { Precondition } from '@sapphire/framework';
-import { Owners } from '#config';
+import { Owners } from '#root/config';
 import type { ChatInputCommandInteraction } from 'discord.js';
 
 export class UserPrecondition extends Precondition {
