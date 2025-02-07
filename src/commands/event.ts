@@ -579,26 +579,10 @@ export class SlashCommand extends BloomCommand {
 		if (resolvedEventChannel.isSendable()) {
 			try {
 				const postedMessage = await resolvedEventChannel.messages.fetch(existingEvent.instance.messageId!);
-
-				if (postedMessage) {
-					await postedMessage.delete();
-				} else {
-					throw new UserError({
-						message: `${BloombotEmojis.RedCross} I was unexpectedly unable to posted event message. Contact ${OwnerMentions} for assistance.`,
-						identifier: ErrorIdentifiers.EventEditPostedMessageUndefinedError
-					});
-				}
+				await postedMessage?.delete();
 			} catch {
-				throw new UserError({
-					message: `${BloombotEmojis.RedCross} I was unexpectedly unable to posted event message. Contact ${OwnerMentions} for assistance.`,
-					identifier: ErrorIdentifiers.EventEditMessageFetchFailedError
-				});
+				// do nothing
 			}
-		} else {
-			throw new UserError({
-				message: `${BloombotEmojis.RedCross} I was unexpectedly unable to find the channel the event was posted in. Contact ${OwnerMentions} for assistance.`,
-				identifier: ErrorIdentifiers.EventEditMessageChannelNotFoundError
-			});
 		}
 
 		try {
