@@ -24,6 +24,7 @@ import {
 	unorderedList
 } from 'discord.js';
 
+
 @ApplyOptions<ChatInputCommand.Options>({
 	description: 'Manage the Nightbloom events'
 })
@@ -569,16 +570,9 @@ export class SlashCommand extends BloomCommand {
 		}
 
 		const resolvedEventChannel = interaction.guild.channels.cache.get(existingEvent.channelId);
-
-		if (!resolvedEventChannel) {
-			return interaction.editReply({
-				content: `${BloombotEmojis.RedCross} The channel the event was posted could not be found, was it maybe deleted?.`
-			});
-		}
-
-		if (resolvedEventChannel.isSendable()) {
+		if (resolvedEventChannel?.isSendable() && existingEvent.instance.messageId) {
 			try {
-				const postedMessage = await resolvedEventChannel.messages.fetch(existingEvent.instance.messageId!);
+				const postedMessage = await resolvedEventChannel.messages.fetch(existingEvent.instance.messageId);
 				await postedMessage?.delete();
 			} catch {
 				// do nothing
