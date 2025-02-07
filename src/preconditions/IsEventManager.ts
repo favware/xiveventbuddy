@@ -1,7 +1,3 @@
-
-
-
-
 import { BloombotEmojis } from '#lib/util/emojis';
 import { Precondition } from '@sapphire/framework';
 import { Owners } from '#config';
