@@ -24,7 +24,6 @@ import {
 	unorderedList
 } from 'discord.js';
 
-
 @ApplyOptions<ChatInputCommand.Options>({
 	description: 'Manage the Nightbloom events'
 })
@@ -411,6 +410,7 @@ export class SlashCommand extends BloomCommand {
 				bannerImage: true,
 				channelId: true,
 				description: true,
+				discordEventId: true,
 				interval: true,
 				leader: true,
 				roleToPing: true,
@@ -488,6 +488,7 @@ export class SlashCommand extends BloomCommand {
 				roleToPing: roleToPing?.id ?? existingEvent.roleToPing,
 				leader: leader?.id ?? existingEvent.leader,
 				bannerImage: (await this.getBannerImage(interaction)) ?? existingEvent.bannerImage,
+				discordEventId: existingEvent.discordEventId,
 				instance: {
 					update: {
 						dateTime: eventDate
@@ -500,6 +501,7 @@ export class SlashCommand extends BloomCommand {
 				bannerImage: true,
 				channelId: true,
 				description: true,
+				discordEventId: true,
 				interval: true,
 				leader: true,
 				roleToPing: true,
@@ -511,6 +513,11 @@ export class SlashCommand extends BloomCommand {
 					}
 				}
 			}
+		});
+
+		this.container.client.emit(BloombotEvents.UpdateServerEvent, {
+			eventId: updatedEvent.id,
+			guildId: interaction.guildId
 		});
 
 		if (resolvedEventChannel.id === existingEvent.channelId) {

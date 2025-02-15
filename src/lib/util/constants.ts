@@ -19,7 +19,8 @@ export const braillePatternBlank = String.fromCodePoint(10_240);
 export enum BloombotEvents {
 	CreateServerEvent = 'createServerEvent',
 	PostEmbed = 'postEmbed',
-	UpdateEmbed = 'updateEmbed'
+	UpdateEmbed = 'updateEmbed',
+	UpdateServerEvent = 'updateServerEvent'
 }
 
 export const enum BrandingColors {
@@ -78,20 +79,22 @@ export const enum CustomIdPrefixes {
 }
 /* eslint-enable typescript-sort-keys/string-enum */
 
-export interface CreateServerEventPayload {
+interface EventIdGuildIdPayload {
+	eventId: string;
+	guildId: string;
+}
+
+export interface CreateServerEventPayload extends EventIdGuildIdPayload {
 	eventId: string;
 	guildId: string;
 	isReschedule: boolean;
 }
 
-export interface PostEmbedPayload {
-	eventId: string;
-	guildId: string;
-}
+export type UpdateServerEventPayload = EventIdGuildIdPayload;
 
-export interface UpdateEmbedPayload {
-	eventId: string;
-	guildId: string;
+export type PostEmbedPayload = EventIdGuildIdPayload;
+
+export interface UpdateEmbedPayload extends EventIdGuildIdPayload {
 	shouldDisableEvent?: boolean;
 }
 
