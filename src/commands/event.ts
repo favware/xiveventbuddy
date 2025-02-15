@@ -411,6 +411,7 @@ export class SlashCommand extends BloomCommand {
 				channelId: true,
 				description: true,
 				discordEventId: true,
+				duration: true,
 				interval: true,
 				leader: true,
 				roleToPing: true,
@@ -463,6 +464,7 @@ export class SlashCommand extends BloomCommand {
 		const description = interaction.options.getString('description', false) ?? existingEvent.description;
 		const interval = interaction.options.getString('interval', false) ?? existingEvent.interval;
 		const channel = interaction.options.getChannel('channel', false);
+		const eventDuration = interaction.options.getInteger('duration', true);
 		const roleToPing = interaction.options.getRole('role-to-ping', false);
 		const leader = interaction.options.getUser('leader', false);
 
@@ -489,6 +491,7 @@ export class SlashCommand extends BloomCommand {
 				leader: leader?.id ?? existingEvent.leader,
 				bannerImage: (await this.getBannerImage(interaction)) ?? existingEvent.bannerImage,
 				discordEventId: existingEvent.discordEventId,
+				duration: eventDuration ?? existingEvent.duration,
 				instance: {
 					update: {
 						dateTime: eventDate
