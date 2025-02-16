@@ -4300,7 +4300,7 @@ __metadata:
     "@typescript-eslint/eslint-plugin": "npm:^8.20.0"
     "@typescript-eslint/parser": "npm:^8.20.0"
     bufferutil: "npm:^4.0.9"
-    bullmq: "npm:^5.41.0"
+    bullmq: "npm:^5.41.1"
     colorette: "npm:^2.0.20"
     date-fns: "npm:^4.1.0"
     discord.js: "patch:discord.js@npm%3A14.17.2#~/.yarn/patches/discord.js-npm-14.17.2-2c6ecf1c86.patch"
@@ -4412,9 +4412,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"bullmq@npm:^5.41.0":
-  version: 5.41.0
-  resolution: "bullmq@npm:5.41.0"
+"bullmq@npm:^5.41.1":
+  version: 5.41.1
+  resolution: "bullmq@npm:5.41.1"
   dependencies:
     cron-parser: "npm:^4.9.0"
     ioredis: "npm:^5.4.1"
@@ -4423,7 +4423,7 @@ __metadata:
     semver: "npm:^7.5.4"
     tslib: "npm:^2.0.0"
     uuid: "npm:^9.0.0"
-  checksum: 10/1dcf447cd47cbf42afc444a672bbe26340e6a34adfb7dab58df01a08b3c10425a0b42673dbc09d0f1dabec198b2000c9313067c613631738bfe35423b658b358
+  checksum: 10/919d984295508e7c8f01e698ed9d2b78a19ec9cbfe0c0180f6183615d09736c32e330f9bba77390d4f0475ab6a519b28710c53f27fd5ab9091e9f1456b3717a5
   languageName: node
   linkType: hard
 
