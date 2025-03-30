@@ -23,6 +23,7 @@ export function getFullEventData(eventId: string) {
 					createdAt: true,
 					updatedAt: true,
 					dateTime: true,
+					discordEventId: true,
 					participants: {
 						select: {
 							createdAt: true,

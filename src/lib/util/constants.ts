@@ -85,6 +85,7 @@ interface EventIdGuildIdPayload {
 }
 
 export interface CreateServerEventPayload extends EventIdGuildIdPayload {
+	discordEventId: string | null;
 	eventId: string;
 	guildId: string;
 	isReschedule: boolean;

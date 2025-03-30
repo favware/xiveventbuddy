@@ -79,7 +79,12 @@ export class RescheduleEventTask extends ScheduledTask {
 				});
 
 				this.container.client.emit(BloombotEvents.PostEmbed, { eventId: event.id, guildId: event.guildId });
-				this.container.client.emit(BloombotEvents.CreateServerEvent, { eventId: event.id, guildId: event.guildId, isReschedule: true });
+				this.container.client.emit(BloombotEvents.CreateServerEvent, {
+					eventId: event.id,
+					guildId: event.guildId,
+					isReschedule: true,
+					discordEventId: event.instance.discordEventId
+				});
 			}
 		}
 	}

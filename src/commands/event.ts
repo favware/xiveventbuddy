@@ -334,7 +334,12 @@ export class SlashCommand extends BloomCommand {
 		}
 
 		this.container.client.emit(BloombotEvents.PostEmbed, { eventId: event.id, guildId: interaction.guildId });
-		this.container.client.emit(BloombotEvents.CreateServerEvent, { eventId: event.id, guildId: interaction.guildId, isReschedule: false });
+		this.container.client.emit(BloombotEvents.CreateServerEvent, {
+			eventId: event.id,
+			guildId: interaction.guildId,
+			isReschedule: false,
+			discordEventId: null
+		});
 
 		return interaction.editReply({
 			content: `${BloombotEmojis.GreenTick} Event ${inlineCode(name)} created successfully with ID ${inlineCode(event.id)}.`
@@ -410,7 +415,6 @@ export class SlashCommand extends BloomCommand {
 				bannerImage: true,
 				channelId: true,
 				description: true,
-				discordEventId: true,
 				duration: true,
 				interval: true,
 				leader: true,
@@ -418,7 +422,8 @@ export class SlashCommand extends BloomCommand {
 				instance: {
 					select: {
 						dateTime: true,
-						messageId: true
+						messageId: true,
+						discordEventId: true
 					}
 				}
 			}
@@ -490,11 +495,11 @@ export class SlashCommand extends BloomCommand {
 				roleToPing: roleToPing?.id ?? existingEvent.roleToPing,
 				leader: leader?.id ?? existingEvent.leader,
 				bannerImage: (await this.getBannerImage(interaction)) ?? existingEvent.bannerImage,
-				discordEventId: existingEvent.discordEventId,
 				duration: eventDuration ?? existingEvent.duration,
 				instance: {
 					update: {
-						dateTime: eventDate
+						dateTime: eventDate,
+						discordEventId: existingEvent.instance.discordEventId
 					}
 				}
 			},
@@ -504,7 +509,6 @@ export class SlashCommand extends BloomCommand {
 				bannerImage: true,
 				channelId: true,
 				description: true,
-				discordEventId: true,
 				interval: true,
 				leader: true,
 				roleToPing: true,
@@ -564,10 +568,10 @@ export class SlashCommand extends BloomCommand {
 			},
 			select: {
 				channelId: true,
-				discordEventId: true,
 				instance: {
 					select: {
-						messageId: true
+						messageId: true,
+						discordEventId: true
 					}
 				}
 			}
@@ -596,8 +600,8 @@ export class SlashCommand extends BloomCommand {
 				}
 			});
 
-			if (existingEvent.discordEventId) {
-				await resolveOnErrorCodes(interaction.guild.scheduledEvents.delete(existingEvent.discordEventId));
+			if (existingEvent.instance.discordEventId) {
+				await resolveOnErrorCodes(interaction.guild.scheduledEvents.delete(existingEvent.instance.discordEventId));
 			}
 
 			return await interaction.editReply({

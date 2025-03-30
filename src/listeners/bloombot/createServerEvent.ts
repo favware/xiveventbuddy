@@ -5,7 +5,7 @@ import { addHours, getISODay } from 'date-fns';
 import { GuildScheduledEventEntityType, GuildScheduledEventPrivacyLevel, GuildScheduledEventRecurrenceRuleFrequency } from 'discord.js';
 
 export class UserListener extends Listener<typeof BloombotEvents.CreateServerEvent> {
-	public override async run({ eventId, guildId, isReschedule }: CreateServerEventPayload) {
+	public override async run({ eventId, guildId, isReschedule, discordEventId }: CreateServerEventPayload) {
 		const eventData = await this.container.prisma.event.findFirstOrThrow({
 			where: {
 				id: eventId
@@ -19,14 +19,27 @@ export class UserListener extends Listener<typeof BloombotEvents.CreateServerEve
 			}
 		});
 
-		// If we're rescheduling an event that already had a discord event, we don't want to create a new one.
-		if (isReschedule && eventData.discordEventId) {
-			return;
-		}
-
 		if (eventData.instance) {
+			// If the instance already has a discord event id, we don't want to create a new one.
+			if (eventData.instance.discordEventId) {
+				return;
+			}
+
 			// If the provided event datetime is in the past, do not create a Discord server event as that will not be possible.
 			if (eventData.instance.dateTime < new Date()) {
+				return;
+			}
+
+			if (
+				isReschedule &&
+				discordEventId &&
+				eventData.interval &&
+				(eventData.interval === $Enums.EventInterval.WEEKLY || eventData.interval === $Enums.EventInterval.ONCE_EVERY_OTHER_WEEK)
+			) {
+				await this.container.prisma.event.update({
+					where: { id: eventId },
+					data: { instance: { update: { discordEventId } } }
+				});
 				return;
 			}
 
@@ -59,15 +72,10 @@ export class UserListener extends Listener<typeof BloombotEvents.CreateServerEve
 						: {})
 				});
 
-				if (
-					eventData.interval &&
-					(eventData.interval === $Enums.EventInterval.WEEKLY || eventData.interval === $Enums.EventInterval.ONCE_EVERY_OTHER_WEEK)
-				) {
-					await this.container.prisma.event.update({
-						where: { id: eventId },
-						data: { discordEventId: response.id }
-					});
-				}
+				await this.container.prisma.event.update({
+					where: { id: eventId },
+					data: { instance: { update: { discordEventId: response.id } } }
+				});
 			}
 		}
 	}

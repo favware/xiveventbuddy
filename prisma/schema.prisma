@@ -83,7 +83,6 @@ model Event {
     bannerImage    String?        @map("banner_image")
     channelId      String         @map("channel_id")
     description    String?
-    discordEventId String?        @map("discord_event_id")
     duration       Int
     guildId        String         @map("guild_id")
     interval       EventInterval?
@@ -97,14 +96,15 @@ model Event {
 }
 
 model EventInstance {
-    id           String        @id @default(cuid())
-    dateTime     DateTime      @map("date_time")
-    messageId    String?       @map("message_id")
-    createdAt    DateTime      @default(now()) @map("created_at")
-    updatedAt    DateTime      @updatedAt @map("updated_at")
-    event        Event         @relation(fields: [eventId], references: [id], onUpdate: Cascade, onDelete: Cascade)
-    eventId      String        @unique @map("event_id")
-    participants Participant[]
+    id             String        @id @default(cuid())
+    dateTime       DateTime      @map("date_time")
+    messageId      String?       @map("message_id")
+    createdAt      DateTime      @default(now()) @map("created_at")
+    updatedAt      DateTime      @updatedAt @map("updated_at")
+    event          Event         @relation(fields: [eventId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+    eventId        String        @unique @map("event_id")
+    discordEventId String?       @map("discord_event_id")
+    participants   Participant[]
 
     @@map("event_instances")
 }
