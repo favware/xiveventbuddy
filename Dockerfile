@@ -8,7 +8,7 @@ ENV FORCE_COLOR=true
 
 RUN apt-get update && \
     apt-get upgrade -y --no-install-recommends && \
-    apt-get install -y --no-install-recommends build-essential python3 dumb-init && \
+    apt-get install -y --no-install-recommends build-essential dumb-init python3 && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* && \
     apt-get autoremove
