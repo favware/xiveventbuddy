@@ -654,12 +654,19 @@ export class SlashCommand extends BloomCommand {
 	private setTimeAndTimezone(dateUnixTimestamp: number, stringTime: string): Date {
 		const [hours, minutes] = stringTime.split(':').map(Number);
 		const eventDate = new Date(dateUnixTimestamp);
-		eventDate.setUTCHours(hours, minutes, 0, 0);
+		const isDstObserved = eventDate.getTimezoneOffset() < this.stdTimezoneOffset(eventDate);
+		eventDate.setUTCHours(isDstObserved ? hours - 1 : hours, minutes, 0, 0);
 
 		const ukTimezoneOffset = new Date().getTimezoneOffset() - eventDate.getTimezoneOffset();
 
 		eventDate.setMinutes(eventDate.getMinutes() + ukTimezoneOffset);
 
 		return eventDate;
+	}
+
+	private stdTimezoneOffset(today: Date) {
+		const jan = new Date(today.getFullYear(), 0, 1);
+		const jul = new Date(today.getFullYear(), 6, 1);
+		return Math.max(jan.getTimezoneOffset(), jul.getTimezoneOffset());
 	}
 }
