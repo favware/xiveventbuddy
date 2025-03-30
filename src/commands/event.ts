@@ -464,7 +464,7 @@ export class SlashCommand extends BloomCommand {
 		const description = interaction.options.getString('description', false) ?? existingEvent.description;
 		const interval = interaction.options.getString('interval', false) ?? existingEvent.interval;
 		const channel = interaction.options.getChannel('channel', false);
-		const eventDuration = interaction.options.getInteger('duration', true);
+		const eventDuration = interaction.options.getInteger('duration', false);
 		const roleToPing = interaction.options.getRole('role-to-ping', false);
 		const leader = interaction.options.getUser('leader', false);
 
