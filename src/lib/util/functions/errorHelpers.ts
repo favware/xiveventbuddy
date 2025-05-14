@@ -71,14 +71,20 @@ export async function handleChatInputOrContextMenuCommandError(
 	return undefined;
 }
 
-export function generateUnexpectedErrorMessage(error: Error) {
-	return [
+export function generateUnexpectedErrorMessage(error: Error | UserError) {
+	const body = [
 		`I found an unexpected error, please report the steps you have taken to ${OwnerMentions}!`,
 		'',
 		'',
 		bold('This is the stacktrace, please send this along with your report:'),
 		codeBlock('js', error.stack!)
-	].join('\n');
+	];
+
+	if (error instanceof UserError && error.context) {
+		body.splice(3, 0, bold('This error had additional relevant context:'), codeBlock('json', JSON.stringify(error.context, null, 2)), '', '');
+	}
+
+	return body.join('\n');
 }
 
 async function stringError(interaction: CommandInteraction, error: string) {

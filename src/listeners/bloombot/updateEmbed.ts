@@ -55,14 +55,33 @@ export class UserListener extends Listener<typeof BloombotEvents.UpdateEmbed> {
 						});
 					} else {
 						throw new UserError({
-							message: `${BloombotEmojis.RedCross} I was unexpectedly unable to posted event message. Contact ${OwnerMentions} for assistance.`,
-							identifier: ErrorIdentifiers.EventEditPostedMessageUndefinedError
+							message: `${BloombotEmojis.RedCross} I was unexpectedly unable to update the event message. Contact ${OwnerMentions} for assistance.`,
+							identifier: ErrorIdentifiers.EventEditPostedMessageUndefinedError,
+							context: {
+								eventId,
+								guildId,
+								channelWithMessage,
+								eventData,
+								additionalInformation: 'Posted message could not be found when fetching it'
+							}
 						});
 					}
-				} catch {
+				} catch (error) {
+					// If it's already a UserError, just re-throw it as it is likely the error from the else statement
+					if (error instanceof UserError) {
+						throw error;
+					}
+
 					throw new UserError({
-						message: `${BloombotEmojis.RedCross} I was unexpectedly unable to posted event message. Contact ${OwnerMentions} for assistance.`,
-						identifier: ErrorIdentifiers.EventEditMessageFetchFailedError
+						message: `${BloombotEmojis.RedCross} I was unexpectedly unable to update the event message. Contact ${OwnerMentions} for assistance.`,
+						identifier: ErrorIdentifiers.EventEditMessageFetchFailedError,
+						context: {
+							eventId,
+							guildId,
+							channelWithMessage,
+							eventData,
+							error
+						}
 					});
 				}
 			} else {

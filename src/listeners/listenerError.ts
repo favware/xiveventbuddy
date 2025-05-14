@@ -1,8 +1,9 @@
+import { BloombotEmojis } from '#lib/util/emojis';
 import { Owners } from '#root/config';
 import { generateUnexpectedErrorMessage, ignoredCodes } from '#utils/functions/errorHelpers';
 import { Events, Listener, type ListenerErrorPayload, type Piece, UserError } from '@sapphire/framework';
 import { isNullish } from '@sapphire/utilities';
-import { DiscordAPIError, HTTPError } from 'discord.js';
+import { DiscordAPIError, HTTPError, type WebhookMessageCreateOptions } from 'discord.js';
 
 export class ListenerError extends Listener<typeof Events.ListenerError> {
 	public async run(error: Error, { piece }: ListenerErrorPayload) {
@@ -58,11 +59,21 @@ export class ListenerError extends Listener<typeof Events.ListenerError> {
 		const webhook = this.container.webhookError;
 		if (isNullish(webhook)) return;
 
+		const payload: WebhookMessageCreateOptions = {
+			allowedMentions: { users: Owners }
+		};
+
+		if (content.length > 2_000) {
+			const file = Buffer.from(content, 'utf8');
+			const filename = `error-log.txt`;
+			payload.content = `${BloombotEmojis.GreenTick} The message content was too long to send. Here is a file with the content.`;
+			payload.files = [{ attachment: file, name: filename }];
+		} else {
+			payload.content = content;
+		}
+
 		try {
-			await webhook.send({
-				content,
-				allowedMentions: { users: Owners }
-			});
+			await webhook.send(payload);
 		} catch (error) {
 			this.container.client.emit(Events.Error, error as Error);
 		}
