@@ -397,6 +397,16 @@ export class SlashCommand extends BloomCommand {
 
 		const messageContent = [eventListHeader, eventList].join('\n');
 
+		if (messageContent.length > 2_000) {
+			const file = Buffer.from(messageContent, 'utf8');
+			const filename = `event-list-${interaction.user.id}.txt`;
+
+			return interaction.editReply({
+				content: `${BloombotEmojis.GreenTick} The event list is too long to send in a single message. Here is a file with the event list.`,
+				files: [{ attachment: file, name: filename }]
+			});
+		}
+
 		return interaction.editReply({
 			content: messageContent
 		});
