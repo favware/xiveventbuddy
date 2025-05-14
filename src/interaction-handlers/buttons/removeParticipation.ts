@@ -10,10 +10,8 @@ import { MessageFlags, type ButtonInteraction } from 'discord.js';
 	interactionHandlerType: InteractionHandlerTypes.Button
 })
 export class ButtonHandler extends InteractionHandler {
-	public override async run(interaction: ButtonInteraction<'cached'>) {
-		return interaction.editReply({
-			content: `${BloombotEmojis.GreenTick} Successfully removed you from the participants list.`
-		});
+	public override async run(interaction: ButtonInteraction<'cached'>, content: InteractionHandler.ParseResult<this>) {
+		return interaction.editReply({ content });
 	}
 
 	public override async parse(interaction: ButtonInteraction<'cached'>) {
@@ -32,6 +30,19 @@ export class ButtonHandler extends InteractionHandler {
 			});
 		}
 
+		const participantExists = await this.container.prisma.participant.findUnique({
+			where: {
+				eventInstanceId_discordId: {
+					eventInstanceId: eventData.instance.id,
+					discordId: interaction.user.id
+				}
+			}
+		});
+
+		if (!participantExists) {
+			return this.some(`${BloombotEmojis.RedCross} You have not yet signed up for participation.`);
+		}
+
 		await this.container.prisma.participant.delete({
 			where: {
 				eventInstanceId_discordId: {
@@ -45,6 +56,6 @@ export class ButtonHandler extends InteractionHandler {
 			this.container.client.emit(BloombotEvents.UpdateEmbed, { eventId, guildId: interaction.guildId });
 		}
 
-		return this.some();
+		return this.some(`${BloombotEmojis.GreenTick} Successfully removed you from the participants list.`);
 	}
 }
