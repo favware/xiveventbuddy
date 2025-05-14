@@ -363,6 +363,9 @@ export class SlashCommand extends BloomCommand {
 						roleToPing: true
 					}
 				}
+			},
+			orderBy: {
+				dateTime: 'desc'
 			}
 		});
 
