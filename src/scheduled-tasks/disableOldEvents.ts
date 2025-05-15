@@ -1,4 +1,4 @@
-import { BloombotEvents } from '#lib/util/constants';
+import { BloombotEvents, UpdateEmbedPayloadOrigin } from '#lib/util/constants';
 import { ApplyOptions } from '@sapphire/decorators';
 import { ScheduledTask } from '@sapphire/plugin-scheduled-tasks';
 import { subHours } from 'date-fns';
@@ -36,7 +36,8 @@ export class DisableOldEvents extends ScheduledTask {
 					this.container.client.emit(BloombotEvents.UpdateEmbed, {
 						eventId: event.id,
 						guildId: event.guildId,
-						shouldDisableEvent: true
+						shouldDisableEvent: true,
+						origin: UpdateEmbedPayloadOrigin.DisableOldEventScheduledTask
 					});
 				}
 			}

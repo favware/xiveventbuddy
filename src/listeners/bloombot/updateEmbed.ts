@@ -8,7 +8,7 @@ import { Listener, UserError } from '@sapphire/framework';
 import { roleMention } from 'discord.js';
 
 export class UserListener extends Listener<typeof BloombotEvents.UpdateEmbed> {
-	public override async run({ eventId, guildId, shouldDisableEvent = false }: UpdateEmbedPayload) {
+	public override async run({ eventId, guildId, origin, shouldDisableEvent = false }: UpdateEmbedPayload) {
 		const eventData = await this.container.prisma.event.findFirstOrThrow({
 			where: {
 				id: eventId
@@ -58,6 +58,7 @@ export class UserListener extends Listener<typeof BloombotEvents.UpdateEmbed> {
 							message: `${BloombotEmojis.RedCross} I was unexpectedly unable to update the event message. Contact ${OwnerMentions} for assistance.`,
 							identifier: ErrorIdentifiers.EventEditPostedMessageUndefinedError,
 							context: {
+								origin,
 								eventId,
 								guildId,
 								channelWithMessage,
@@ -76,6 +77,7 @@ export class UserListener extends Listener<typeof BloombotEvents.UpdateEmbed> {
 						message: `${BloombotEmojis.RedCross} I was unexpectedly unable to update the event message. Contact ${OwnerMentions} for assistance.`,
 						identifier: ErrorIdentifiers.EventEditMessageFetchFailedError,
 						context: {
+							origin,
 							eventId,
 							guildId,
 							channelWithMessage,

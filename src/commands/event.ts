@@ -1,5 +1,5 @@
 import { BloomCommand } from '#lib/extensions/BloomComand';
-import { BloombotEvents, ErrorIdentifiers, type EventData } from '#lib/util/constants';
+import { BloombotEvents, ErrorIdentifiers, UpdateEmbedPayloadOrigin, type EventData } from '#lib/util/constants';
 import { BloombotEmojis } from '#lib/util/emojis';
 import { buildEventAttachment } from '#lib/util/functions/buildEventAttachment';
 import { buildEventComponents } from '#lib/util/functions/buildEventComponents';
@@ -543,7 +543,8 @@ export class SlashCommand extends BloomCommand {
 		if (resolvedEventChannel.id === existingEvent.channelId) {
 			this.container.client.emit(BloombotEvents.UpdateEmbed, {
 				eventId: updatedEvent.id,
-				guildId: interaction.guildId
+				guildId: interaction.guildId,
+				origin: UpdateEmbedPayloadOrigin.EditEventCommand
 			});
 		} else {
 			const existingMessageChannel = await interaction.guild.channels.fetch(existingEvent.channelId);

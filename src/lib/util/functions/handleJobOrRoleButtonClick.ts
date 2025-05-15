@@ -1,4 +1,4 @@
-import { BloombotEvents, ErrorIdentifiers } from '#lib/util/constants';
+import { BloombotEvents, ErrorIdentifiers, UpdateEmbedPayloadOrigin } from '#lib/util/constants';
 import { BloombotEmojis } from '#lib/util/emojis';
 import { OwnerMentions } from '#root/config';
 import type { $Enums } from '@prisma/client';
@@ -83,6 +83,10 @@ export async function handleJobOrRoleButtonClick(interaction: ButtonInteraction<
 	});
 
 	if (eventData.instance.messageId) {
-		container.client.emit(BloombotEvents.UpdateEmbed, { eventId, guildId: interaction.guildId });
+		container.client.emit(BloombotEvents.UpdateEmbed, {
+			eventId,
+			guildId: interaction.guildId,
+			origin: UpdateEmbedPayloadOrigin.JobOrRoleButtonClick
+		});
 	}
 }

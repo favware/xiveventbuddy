@@ -96,7 +96,16 @@ export type UpdateServerEventPayload = EventIdGuildIdPayload;
 export type PostEmbedPayload = EventIdGuildIdPayload;
 
 export interface UpdateEmbedPayload extends EventIdGuildIdPayload {
+	origin: UpdateEmbedPayloadOrigin;
 	shouldDisableEvent?: boolean;
+}
+
+export const enum UpdateEmbedPayloadOrigin {
+	DisableOldEventScheduledTask = 'disable-old-event-scheduled-task',
+	EditEventCommand = 'edit-event-command',
+	JobOrRoleButtonClick = 'job-or-role-button-click',
+	RemoveParticipation = 'remove-participation',
+	RoleSelectMenu = 'role-select-menu'
 }
 
 export type EventData = Pick<Event, 'bannerImage' | 'channelId' | 'description' | 'id' | 'leader' | 'name' | 'roleToPing'> & {

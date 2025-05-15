@@ -1,4 +1,4 @@
-import { BloombotEvents, CustomIdPrefixes, ErrorIdentifiers } from '#lib/util/constants';
+import { BloombotEvents, CustomIdPrefixes, ErrorIdentifiers, UpdateEmbedPayloadOrigin } from '#lib/util/constants';
 import { BloombotEmojis } from '#lib/util/emojis';
 import { getFullEventData } from '#lib/util/functions/getFullEventData';
 import { getHealerJobButtons } from '#lib/util/job-buttons/healer';
@@ -52,7 +52,11 @@ export class StringSelectMenuHandler extends InteractionHandler {
 		}
 
 		if (isNullishOrEmpty(components)) {
-			this.container.client.emit(BloombotEvents.UpdateEmbed, { eventId: result.eventId, guildId: interaction.guildId });
+			this.container.client.emit(BloombotEvents.UpdateEmbed, {
+				eventId: result.eventId,
+				guildId: interaction.guildId,
+				origin: UpdateEmbedPayloadOrigin.RoleSelectMenu
+			});
 
 			return interaction.editReply({
 				content: `${BloombotEmojis.GreenTick} Successfully updated your role to ${inlineCode(result.selectedRole)}.`

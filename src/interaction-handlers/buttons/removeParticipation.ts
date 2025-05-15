@@ -1,4 +1,4 @@
-import { BloombotEvents, CustomIdPrefixes, ErrorIdentifiers } from '#lib/util/constants';
+import { BloombotEvents, CustomIdPrefixes, ErrorIdentifiers, UpdateEmbedPayloadOrigin } from '#lib/util/constants';
 import { BloombotEmojis } from '#lib/util/emojis';
 import { getFullEventData } from '#lib/util/functions/getFullEventData';
 import { OwnerMentions } from '#root/config';
@@ -53,7 +53,11 @@ export class ButtonHandler extends InteractionHandler {
 		});
 
 		if (eventData.instance.messageId) {
-			this.container.client.emit(BloombotEvents.UpdateEmbed, { eventId, guildId: interaction.guildId });
+			this.container.client.emit(BloombotEvents.UpdateEmbed, {
+				eventId,
+				guildId: interaction.guildId,
+				origin: UpdateEmbedPayloadOrigin.RemoveParticipation
+			});
 		}
 
 		return this.some(`${BloombotEmojis.GreenTick} Successfully removed you from the participants list.`);
