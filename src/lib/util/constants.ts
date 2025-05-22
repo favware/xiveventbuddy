@@ -132,6 +132,6 @@ type EventDataEmojis =
 	| 'Tentative'
 	| 'Time'
 	| 'TimeExpired';
-type OtherEmojis = 'GreenTick' | 'RedCross';
+type OtherEmojis = 'GreenTick' | 'Nightbloom' | 'RedCross';
 
 export type Emojis = EventDataEmojis | Jobs | JobTypeEmojis | OtherEmojis;
