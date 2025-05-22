@@ -11,7 +11,7 @@ import { inlineCode, type ButtonInteraction } from 'discord.js';
 export class ButtonHandler extends InteractionHandler {
 	public override async run(interaction: ButtonInteraction<'cached'>) {
 		return interaction.editReply({
-			content: `${BloombotEmojis.GreenTick} Successfully updated your job to ${inlineCode($Enums.Jobs.Summoner)}.`
+			content: `${BloombotEmojis.GreenTick} Successfully updated your job to ${BloombotEmojis.Summoner} ${inlineCode($Enums.Jobs.Summoner)}.`
 		});
 	}
 

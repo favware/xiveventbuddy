@@ -59,12 +59,12 @@ export class StringSelectMenuHandler extends InteractionHandler {
 			});
 
 			return interaction.editReply({
-				content: `${BloombotEmojis.GreenTick} Successfully updated your role to ${inlineCode(result.selectedRole)}.`
+				content: `${BloombotEmojis.GreenTick} Successfully updated your role to ${BloombotEmojis[result.selectedRole]} ${inlineCode(result.selectedRole)}.`
 			});
 		}
 
 		return interaction.editReply({
-			content: `${BloombotEmojis.GreenTick} Successfully updated your role to ${inlineCode(result.selectedRole)}. Next, select which job you will be playing from these options:`,
+			content: `${BloombotEmojis.GreenTick} Successfully updated your role to ${BloombotEmojis[result.selectedRole]} ${inlineCode(result.selectedRole)}. Next, select which job you will be playing from these options:`,
 			components
 		});
 	}
