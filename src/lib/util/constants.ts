@@ -75,7 +75,23 @@ export const enum CustomIdPrefixes {
 	DarkKnight = 'darkknight',
 	Gunbreaker = 'gunbreaker',
 	Paladin = 'paladin',
-	Warrior = 'warrior'
+	Warrior = 'warrior',
+
+	PhantomJobSelectMenu = 'phantom-job-select-menu',
+
+	PhantomBard = 'phantom-bard',
+	PhantomBerserker = 'phantom-berserker',
+	PhantomCannoneer = 'phantom-cannoneer',
+	PhantomChemist = 'phantom-chemist',
+	PhantomFreelancer = 'phantom-freelancer',
+	PhantomGeomancer = 'phantom-geomancer',
+	PhantomKnight = 'phantom-knight',
+	PhantomMonk = 'phantom-monk',
+	PhantomOracle = 'phantom-oracle',
+	PhantomRanger = 'phantom-ranger',
+	PhantomSamurai = 'phantom-samurai',
+	PhantomThief = 'phantom-thief',
+	PhantomTimeMage = 'phantom-timemage'
 }
 /* eslint-enable typescript-sort-keys/string-enum */
 
@@ -108,13 +124,13 @@ export const enum UpdateEmbedPayloadOrigin {
 	RoleSelectMenu = 'role-select-menu'
 }
 
-export type EventData = Pick<Event, 'bannerImage' | 'channelId' | 'description' | 'id' | 'leader' | 'name' | 'roleToPing'> & {
+export type EventData = Pick<Event, 'bannerImage' | 'channelId' | 'description' | 'id' | 'leader' | 'name' | 'roleToPing' | 'variant'> & {
 	instance: Pick<EventInstance, 'dateTime'> & {
 		participants: Pick<Participant, 'discordId' | 'job' | 'role' | 'signupOrder'>[];
 	};
 };
 
-type JobTypeEmojis = 'AllRounder' | 'DPS' | 'Healer' | 'MagicRangedDPS' | 'MeleeDPS' | 'PhysRangedDPS' | 'Tank';
+type JobTypeEmojis = 'AllRounder' | 'DPS' | 'Healer' | 'MagicRangedDPS' | 'MeleeDPS' | 'PhantomJob' | 'PhysRangedDPS' | 'Tank';
 type EventDataEmojis =
 	| 'Absence'
 	| 'Bench'
