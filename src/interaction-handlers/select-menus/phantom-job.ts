@@ -1,5 +1,6 @@
 import { BloombotEvents, CustomIdPrefixes, ErrorIdentifiers, UpdateEmbedPayloadOrigin } from '#lib/util/constants';
 import { BloombotEmojis } from '#lib/util/emojis';
+import { formatPhantomJobName } from '#lib/util/functions/formatPhantomJobName';
 import { getFullEventData } from '#lib/util/functions/getFullEventData';
 import { OwnerMentions } from '#root/config';
 import { $Enums } from '@prisma/client';
@@ -20,10 +21,8 @@ export class StringSelectMenuHandler extends InteractionHandler {
 			origin: UpdateEmbedPayloadOrigin.RoleSelectMenu
 		});
 
-		const formattedJob = result.selectedPhantomJob.replaceAll(/(?<capital>[A-Z])/g, ' $<capital>').trim();
-
 		return interaction.editReply({
-			content: `${BloombotEmojis.GreenTick} Successfully updated your role to ${BloombotEmojis[result.selectedPhantomJob]} ${inlineCode(formattedJob)}.`
+			content: `${BloombotEmojis.GreenTick} Successfully updated your role to ${BloombotEmojis[result.selectedPhantomJob]} ${inlineCode(formatPhantomJobName(result.selectedPhantomJob))}.`
 		});
 	}
 
