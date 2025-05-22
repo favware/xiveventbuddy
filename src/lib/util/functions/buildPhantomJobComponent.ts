@@ -1,5 +1,5 @@
 import { CustomIdPrefixes } from '#lib/util/constants';
-import { getPresenceStateButtons } from '#lib/util/functions/getPresenceStateButtonts';
+import { getPresenceStateButtons } from '#lib/util/functions/getPresenceStateButtons';
 import { $Enums } from '@prisma/client';
 import { ActionRowBuilder, StringSelectMenuBuilder, StringSelectMenuOptionBuilder, type ButtonBuilder } from 'discord.js';
 
