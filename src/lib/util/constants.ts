@@ -77,21 +77,7 @@ export const enum CustomIdPrefixes {
 	Paladin = 'paladin',
 	Warrior = 'warrior',
 
-	PhantomJobSelectMenu = 'phantom-job-select-menu',
-
-	PhantomBard = 'phantom-bard',
-	PhantomBerserker = 'phantom-berserker',
-	PhantomCannoneer = 'phantom-cannoneer',
-	PhantomChemist = 'phantom-chemist',
-	PhantomFreelancer = 'phantom-freelancer',
-	PhantomGeomancer = 'phantom-geomancer',
-	PhantomKnight = 'phantom-knight',
-	PhantomMonk = 'phantom-monk',
-	PhantomOracle = 'phantom-oracle',
-	PhantomRanger = 'phantom-ranger',
-	PhantomSamurai = 'phantom-samurai',
-	PhantomThief = 'phantom-thief',
-	PhantomTimeMage = 'phantom-timemage'
+	PhantomJobSelectMenu = 'phantom-job-select-menu'
 }
 /* eslint-enable typescript-sort-keys/string-enum */
 
