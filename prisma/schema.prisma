@@ -113,7 +113,7 @@ model Event {
     createdAt   DateTime       @default(now()) @map("created_at")
     updatedAt   DateTime       @updatedAt @map("updated_at")
     instance    EventInstance?
-    variant     EventVariant?  @default(NORMAL) @map("event_variant")
+    variant     EventVariant   @default(NORMAL) @map("event_variant")
 
     @@map("events")
 }
