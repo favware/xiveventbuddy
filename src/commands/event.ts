@@ -403,6 +403,11 @@ export class SlashCommand extends BloomCommand {
 		const eventIdHeader = heading('Event ID', 2);
 		const eventListHeader = heading('Event List', 1);
 
+		const variantMapping = {
+			[$Enums.EventVariant.NORMAL]: `${BloombotEmojis.Nightbloom} Normal`,
+			[$Enums.EventVariant.OCCULT_CRESCENT]: `${BloombotEmojis.PhantomJob} Occult Crescent`
+		};
+
 		const eventList = eventInstances
 			.map((eventInstance) => {
 				const { id, dateTime, event } = eventInstance;
@@ -417,7 +422,7 @@ export class SlashCommand extends BloomCommand {
 							`**Date:** ${time(dateTime, TimestampStyles.ShortDate)}`,
 							`**Time:** ${time(dateTime, TimestampStyles.ShortTime)}`,
 							roleToPing ? `**Role to ping:** ${roleMention(roleToPing)}` : undefined,
-							`**Variant:** ${variant}`
+							`**Variant:** ${variantMapping[variant]}`
 						].filter(filterNullish)
 					)
 				].join('\n');
