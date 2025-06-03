@@ -22,7 +22,8 @@ import {
 	roleMention,
 	time,
 	TimestampStyles,
-	unorderedList
+	unorderedList,
+	userMention
 } from 'discord.js';
 
 @ApplyOptions<ChatInputCommand.Options>({
@@ -241,13 +242,31 @@ export class SlashCommand extends BloomCommand {
 								.setRequired(true)
 						)
 				)
+				.addSubcommand((builder) =>
+					builder //
+						.setName('remove-participant')
+						.setDescription('Manually remove a participant from an event.')
+						.addStringOption((builder) =>
+							builder
+								.setName('id')
+								.setDescription('The command id, use /event list to get a list, or type the event name for autocomplete.')
+								.setAutocomplete(true)
+								.setRequired(true)
+						)
+						.addUserOption((builder) =>
+							builder //
+								.setName('participant')
+								.setDescription('The participant to remove from the event.')
+								.setRequired(true)
+						)
+				)
 		);
 	}
 
 	public override async chatInputRun(interaction: ChatInputCommand.Interaction<'cached'>) {
 		await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 
-		const subcommand = interaction.options.getSubcommand(true) as 'create' | 'delete' | 'edit' | 'list';
+		const subcommand = interaction.options.getSubcommand(true) as 'create' | 'delete' | 'edit' | 'list' | 'remove-participant';
 
 		switch (subcommand) {
 			case 'create':
@@ -258,7 +277,68 @@ export class SlashCommand extends BloomCommand {
 				return this.editEvent(interaction);
 			case 'delete':
 				return this.deleteEvent(interaction);
+			case 'remove-participant': {
+				return this.removeParticipant(interaction);
+			}
 		}
+	}
+
+	private async removeParticipant(interaction: ChatInputCommand.Interaction<'cached'>) {
+		const id = interaction.options.getString('id', true);
+		const participant = interaction.options.getUser('participant', true);
+
+		const event = await this.container.prisma.event.findFirst({
+			where: {
+				id
+			},
+			select: {
+				id: true,
+				name: true,
+				instance: {
+					select: {
+						id: true,
+						participants: true
+					}
+				}
+			}
+		});
+
+		if (!event?.instance?.participants.length) {
+			const eventName = event?.name ? ` ${event.name}` : '';
+
+			throw new UserError({
+				message: `${BloombotEmojis.RedCross} No participants found for the event${eventName}.`,
+				identifier: ErrorIdentifiers.RemoveParticipantNoParticipantsFound
+			});
+		}
+
+		const participantData = event.instance.participants.find((eventParticipant) => eventParticipant.discordId === participant.id);
+
+		if (!participantData) {
+			throw new UserError({
+				message: `${BloombotEmojis.RedCross} ${userMention(participant.id)} was not a participant for the event ${event.name}.`,
+				identifier: ErrorIdentifiers.RemoveParticipantNotFound
+			});
+		}
+
+		await this.container.prisma.participant.delete({
+			where: {
+				eventInstanceId_discordId: {
+					discordId: participant.id,
+					eventInstanceId: event.instance.id
+				}
+			}
+		});
+
+		this.container.client.emit(BloombotEvents.UpdateEmbed, {
+			eventId: event.id,
+			guildId: interaction.guildId,
+			origin: UpdateEmbedPayloadOrigin.RemoveParticipantCommand
+		});
+
+		return interaction.editReply({
+			content: `${BloombotEmojis.GreenTick} Successfully removed participant ${userMention(participant.id)} from the event ${event.name}.`
+		});
 	}
 
 	private async createEvent(interaction: ChatInputCommand.Interaction<'cached'>) {

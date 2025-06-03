@@ -34,6 +34,8 @@ export const enum ErrorIdentifiers {
 	EventEditMessageChannelNotFoundError = 'EventEditMessageChannelNotFoundError',
 	EventEditMessageFetchFailedError = 'EventEditMessageFetchFailedError',
 	EventEditPostedMessageUndefinedError = 'EventEditPostedMessageUndefinedError',
+	RemoveParticipantNoParticipantsFound = 'RemoveParticipantNoParticipantsFound',
+	RemoveParticipantNotFound = 'RemoveParticipantNotFound',
 	UnableToFindEventForButtonClickError = 'UnableToFindEventForButtonClickError',
 	UnableToFindEventForSelectMenuChoiceError = 'unableToFindEventForSelectMenuChoiceError',
 	UnexpectedRoleSelectMenuChoiceError = 'unexpectedRoleSelectMenuChoiceError'
@@ -106,6 +108,7 @@ export const enum UpdateEmbedPayloadOrigin {
 	DisableOldEventScheduledTask = 'disable-old-event-scheduled-task',
 	EditEventCommand = 'edit-event-command',
 	JobOrRoleButtonClick = 'job-or-role-button-click',
+	RemoveParticipantCommand = 'remove-participant-command',
 	RemoveParticipation = 'remove-participation',
 	RoleSelectMenu = 'role-select-menu'
 }
