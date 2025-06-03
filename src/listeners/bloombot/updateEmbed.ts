@@ -4,6 +4,7 @@ import { buildEventAttachment } from '#lib/util/functions/buildEventAttachment';
 import { buildEventComponents } from '#lib/util/functions/buildEventComponents';
 import { buildEventEmbed } from '#lib/util/functions/buildEventEmbed';
 import { buildPhantomJobComponent } from '#lib/util/functions/buildPhantomJobComponent';
+import { resolveOnErrorCodes } from '#lib/util/functions/resolveOnErrorCodes';
 import { OwnerMentions } from '#root/config';
 import { $Enums } from '@prisma/client';
 import { Listener, UserError } from '@sapphire/framework';
@@ -24,14 +25,14 @@ export class UserListener extends Listener<typeof BloombotEvents.UpdateEmbed> {
 			}
 		});
 
-		const guild = await this.container.client.guilds.fetch(guildId);
+		const guild = await resolveOnErrorCodes(this.container.client.guilds.fetch(guildId));
 
 		if (guild) {
-			const channelWithMessage = await guild.channels.fetch(eventData.channelId);
+			const channelWithMessage = await resolveOnErrorCodes(guild.channels.fetch(eventData.channelId));
 
 			if (channelWithMessage?.isSendable() && eventData.instance?.messageId) {
 				try {
-					const postedMessage = await channelWithMessage.messages.fetch(eventData.instance.messageId);
+					const postedMessage = await resolveOnErrorCodes(channelWithMessage.messages.fetch(eventData.instance.messageId));
 
 					if (postedMessage) {
 						await postedMessage.edit({

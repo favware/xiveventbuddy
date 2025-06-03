@@ -1,4 +1,5 @@
 import type { BloombotEvents, CreateServerEventPayload } from '#lib/util/constants';
+import { resolveOnErrorCodes } from '#lib/util/functions/resolveOnErrorCodes';
 import { $Enums } from '@prisma/client';
 import { Listener } from '@sapphire/framework';
 import { addHours, getISODay } from 'date-fns';
@@ -43,10 +44,10 @@ export class UserListener extends Listener<typeof BloombotEvents.CreateServerEve
 				return;
 			}
 
-			const guild = await this.container.client.guilds.fetch(guildId);
+			const guild = await resolveOnErrorCodes(this.container.client.guilds.fetch(guildId));
 
 			if (guild) {
-				const leaderUser = await guild.members.fetch(eventData.leader);
+				const leaderUser = await resolveOnErrorCodes(guild.members.fetch(eventData.leader));
 
 				const response = await guild.scheduledEvents.create({
 					name: eventData.name,
@@ -56,8 +57,13 @@ export class UserListener extends Listener<typeof BloombotEvents.CreateServerEve
 					scheduledStartTime: eventData.instance.dateTime,
 					scheduledEndTime: addHours(eventData.instance.dateTime, eventData.duration),
 					description: eventData.description ?? undefined,
-					reason: `Event created by ${leaderUser.user.username}`,
 					image: eventData.bannerImage ? Buffer.from(eventData.bannerImage, 'base64') : null,
+
+					...(leaderUser?.user.username
+						? {
+								reason: `Event created by ${leaderUser.user.username}`
+							}
+						: {}),
 
 					...(eventData.interval &&
 					(eventData.interval === $Enums.EventInterval.WEEKLY || eventData.interval === $Enums.EventInterval.ONCE_EVERY_OTHER_WEEK)

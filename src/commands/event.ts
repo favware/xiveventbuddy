@@ -662,11 +662,11 @@ export class SlashCommand extends BloomCommand {
 				origin: UpdateEmbedPayloadOrigin.EditEventCommand
 			});
 		} else {
-			const existingMessageChannel = await interaction.guild.channels.fetch(existingEvent.channelId);
+			const existingMessageChannel = await resolveOnErrorCodes(interaction.guild.channels.fetch(existingEvent.channelId));
 
 			if (existingMessageChannel?.isSendable() && existingEvent.instance.messageId) {
-				const oldPostedMessage = await existingMessageChannel.messages.fetch(existingEvent.instance.messageId);
-				await oldPostedMessage.delete();
+				const oldPostedMessage = await resolveOnErrorCodes(existingMessageChannel.messages.fetch(existingEvent.instance.messageId));
+				await oldPostedMessage?.delete();
 
 				const postedMessage = await resolvedEventChannel.send({
 					content: updatedEvent.roleToPing ? roleMention(updatedEvent.roleToPing) : undefined,
@@ -718,7 +718,7 @@ export class SlashCommand extends BloomCommand {
 		const resolvedEventChannel = interaction.guild.channels.cache.get(existingEvent.channelId);
 		if (resolvedEventChannel?.isSendable() && existingEvent.instance.messageId) {
 			try {
-				const postedMessage = await resolvedEventChannel.messages.fetch(existingEvent.instance.messageId);
+				const postedMessage = await resolveOnErrorCodes(resolvedEventChannel.messages.fetch(existingEvent.instance.messageId));
 				await postedMessage?.delete();
 			} catch {
 				// do nothing

@@ -22,7 +22,7 @@ export class UserListener extends Listener<typeof BloombotEvents.UpdateServerEve
 
 		if (!eventData.instance?.discordEventId) return null;
 
-		const guild = await this.container.client.guilds.fetch(guildId);
+		const guild = await resolveOnErrorCodes(this.container.client.guilds.fetch(guildId));
 
 		if (!guild) return null;
 
@@ -42,7 +42,7 @@ export class UserListener extends Listener<typeof BloombotEvents.UpdateServerEve
 			return null;
 		}
 
-		const leaderUser = await guild.members.fetch(eventData.leader);
+		const leaderUser = await resolveOnErrorCodes(guild.members.fetch(eventData.leader));
 
 		const response = await guild.scheduledEvents.edit(eventData.instance.discordEventId, {
 			name: eventData.name,
@@ -52,8 +52,13 @@ export class UserListener extends Listener<typeof BloombotEvents.UpdateServerEve
 			scheduledStartTime: eventData.instance.dateTime,
 			scheduledEndTime: addHours(eventData.instance.dateTime, eventData.duration),
 			description: eventData.description ?? undefined,
-			reason: `Event created by ${leaderUser.user.username}`,
 			image: eventData.bannerImage ? Buffer.from(eventData.bannerImage, 'base64') : null,
+
+			...(leaderUser?.user.username
+				? {
+						reason: `Event created by ${leaderUser.user.username}`
+					}
+				: {}),
 
 			...(eventData.interval &&
 			(eventData.interval === $Enums.EventInterval.WEEKLY || eventData.interval === $Enums.EventInterval.ONCE_EVERY_OTHER_WEEK)
