@@ -46,7 +46,7 @@ export class AutocompleteHandler extends InteractionHandler {
 				allEvents = allEvents.filter((event) => {
 					if (!event.instance?.dateTime || typeof event.duration !== 'number') return false;
 					const afterDurationOfEvent = subHours(now, event.duration);
-					return event.instance.dateTime <= afterDurationOfEvent;
+					return event.instance.dateTime > afterDurationOfEvent;
 				});
 			}
 
