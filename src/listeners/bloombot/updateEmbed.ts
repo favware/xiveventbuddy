@@ -8,7 +8,7 @@ import { resolveOnErrorCodes } from '#lib/util/functions/resolveOnErrorCodes';
 import { OwnerMentions } from '#root/config';
 import { $Enums } from '@prisma/client';
 import { Listener, UserError } from '@sapphire/framework';
-import { roleMention } from 'discord.js';
+import { RESTJSONErrorCodes, roleMention } from 'discord.js';
 
 export class UserListener extends Listener<typeof BloombotEvents.UpdateEmbed> {
 	public override async run({ eventId, guildId, origin, shouldDisableEvent = false }: UpdateEmbedPayload) {
@@ -25,14 +25,17 @@ export class UserListener extends Listener<typeof BloombotEvents.UpdateEmbed> {
 			}
 		});
 
-		const guild = await resolveOnErrorCodes(this.container.client.guilds.fetch(guildId));
+		const guild = await resolveOnErrorCodes(this.container.client.guilds.fetch(guildId), RESTJSONErrorCodes.UnknownGuild);
 
 		if (guild) {
-			const channelWithMessage = await resolveOnErrorCodes(guild.channels.fetch(eventData.channelId));
+			const channelWithMessage = await resolveOnErrorCodes(guild.channels.fetch(eventData.channelId), RESTJSONErrorCodes.UnknownChannel);
 
 			if (channelWithMessage?.isSendable() && eventData.instance?.messageId) {
 				try {
-					const postedMessage = await resolveOnErrorCodes(channelWithMessage.messages.fetch(eventData.instance.messageId));
+					const postedMessage = await resolveOnErrorCodes(
+						channelWithMessage.messages.fetch(eventData.instance.messageId),
+						RESTJSONErrorCodes.UnknownMessage
+					);
 
 					if (postedMessage) {
 						await postedMessage.edit({

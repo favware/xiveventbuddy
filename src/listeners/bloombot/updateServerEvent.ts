@@ -3,7 +3,12 @@ import { resolveOnErrorCodes } from '#lib/util/functions/resolveOnErrorCodes';
 import { $Enums } from '@prisma/client';
 import { Listener } from '@sapphire/framework';
 import { addHours, getISODay } from 'date-fns';
-import { GuildScheduledEventEntityType, GuildScheduledEventPrivacyLevel, GuildScheduledEventRecurrenceRuleFrequency } from 'discord.js';
+import {
+	GuildScheduledEventEntityType,
+	GuildScheduledEventPrivacyLevel,
+	GuildScheduledEventRecurrenceRuleFrequency,
+	RESTJSONErrorCodes
+} from 'discord.js';
 
 export class UserListener extends Listener<typeof BloombotEvents.UpdateServerEvent> {
 	public override async run({ eventId, guildId }: UpdateServerEventPayload) {
@@ -22,7 +27,7 @@ export class UserListener extends Listener<typeof BloombotEvents.UpdateServerEve
 
 		if (!eventData.instance?.discordEventId) return null;
 
-		const guild = await resolveOnErrorCodes(this.container.client.guilds.fetch(guildId));
+		const guild = await resolveOnErrorCodes(this.container.client.guilds.fetch(guildId), RESTJSONErrorCodes.UnknownGuild);
 
 		if (!guild) return null;
 
@@ -31,7 +36,10 @@ export class UserListener extends Listener<typeof BloombotEvents.UpdateServerEve
 			// If the event is in the past and it had a discord event id, we want to delete it.
 			if (eventData.instance.discordEventId) {
 				return Promise.all([
-					resolveOnErrorCodes(guild.scheduledEvents.delete(eventData.instance.discordEventId)),
+					resolveOnErrorCodes(
+						guild.scheduledEvents.delete(eventData.instance.discordEventId),
+						RESTJSONErrorCodes.UnknownGuildScheduledEvent
+					),
 					this.container.prisma.event.update({
 						where: { id: eventId },
 						data: { instance: { update: { discordEventId: null } } }
@@ -42,7 +50,7 @@ export class UserListener extends Listener<typeof BloombotEvents.UpdateServerEve
 			return null;
 		}
 
-		const leaderUser = await resolveOnErrorCodes(guild.members.fetch(eventData.leader));
+		const leaderUser = await resolveOnErrorCodes(guild.members.fetch(eventData.leader), RESTJSONErrorCodes.UnknownMember);
 
 		const response = await guild.scheduledEvents.edit(eventData.instance.discordEventId, {
 			name: eventData.name,

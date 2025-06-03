@@ -6,7 +6,7 @@ import { buildPhantomJobComponent } from '#lib/util/functions/buildPhantomJobCom
 import { resolveOnErrorCodes } from '#lib/util/functions/resolveOnErrorCodes';
 import { $Enums } from '@prisma/client';
 import { Listener } from '@sapphire/framework';
-import { roleMention } from 'discord.js';
+import { RESTJSONErrorCodes, roleMention } from 'discord.js';
 
 export class UserListener extends Listener<typeof BloombotEvents.PostEmbed> {
 	public override async run({ eventId, guildId }: PostEmbedPayload) {
@@ -23,10 +23,10 @@ export class UserListener extends Listener<typeof BloombotEvents.PostEmbed> {
 			}
 		});
 
-		const guild = await resolveOnErrorCodes(this.container.client.guilds.fetch(guildId));
+		const guild = await resolveOnErrorCodes(this.container.client.guilds.fetch(guildId), RESTJSONErrorCodes.UnknownGuild);
 
 		if (guild) {
-			const eventChannel = await resolveOnErrorCodes(guild.channels.fetch(eventData.channelId));
+			const eventChannel = await resolveOnErrorCodes(guild.channels.fetch(eventData.channelId), RESTJSONErrorCodes.UnknownChannel);
 
 			if (eventChannel?.isSendable()) {
 				const postedMessage = await eventChannel.send({

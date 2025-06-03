@@ -3,7 +3,12 @@ import { resolveOnErrorCodes } from '#lib/util/functions/resolveOnErrorCodes';
 import { $Enums } from '@prisma/client';
 import { Listener } from '@sapphire/framework';
 import { addHours, getISODay } from 'date-fns';
-import { GuildScheduledEventEntityType, GuildScheduledEventPrivacyLevel, GuildScheduledEventRecurrenceRuleFrequency } from 'discord.js';
+import {
+	GuildScheduledEventEntityType,
+	GuildScheduledEventPrivacyLevel,
+	GuildScheduledEventRecurrenceRuleFrequency,
+	RESTJSONErrorCodes
+} from 'discord.js';
 
 export class UserListener extends Listener<typeof BloombotEvents.CreateServerEvent> {
 	public override async run({ eventId, guildId, isReschedule, discordEventId }: CreateServerEventPayload) {
@@ -44,10 +49,10 @@ export class UserListener extends Listener<typeof BloombotEvents.CreateServerEve
 				return;
 			}
 
-			const guild = await resolveOnErrorCodes(this.container.client.guilds.fetch(guildId));
+			const guild = await resolveOnErrorCodes(this.container.client.guilds.fetch(guildId), RESTJSONErrorCodes.UnknownGuild);
 
 			if (guild) {
-				const leaderUser = await resolveOnErrorCodes(guild.members.fetch(eventData.leader));
+				const leaderUser = await resolveOnErrorCodes(guild.members.fetch(eventData.leader), RESTJSONErrorCodes.UnknownMember);
 
 				const response = await guild.scheduledEvents.create({
 					name: eventData.name,

@@ -19,6 +19,7 @@ import {
 	inlineCode,
 	MessageFlags,
 	PermissionFlagsBits,
+	RESTJSONErrorCodes,
 	roleMention,
 	time,
 	TimestampStyles,
@@ -664,10 +665,16 @@ export class SlashCommand extends BloomCommand {
 				origin: UpdateEmbedPayloadOrigin.EditEventCommand
 			});
 		} else {
-			const existingMessageChannel = await resolveOnErrorCodes(interaction.guild.channels.fetch(existingEvent.channelId));
+			const existingMessageChannel = await resolveOnErrorCodes(
+				interaction.guild.channels.fetch(existingEvent.channelId),
+				RESTJSONErrorCodes.UnknownChannel
+			);
 
 			if (existingMessageChannel?.isSendable() && existingEvent.instance.messageId) {
-				const oldPostedMessage = await resolveOnErrorCodes(existingMessageChannel.messages.fetch(existingEvent.instance.messageId));
+				const oldPostedMessage = await resolveOnErrorCodes(
+					existingMessageChannel.messages.fetch(existingEvent.instance.messageId),
+					RESTJSONErrorCodes.UnknownMessage
+				);
 				await oldPostedMessage?.delete();
 
 				const postedMessage = await resolvedEventChannel.send({
@@ -720,7 +727,10 @@ export class SlashCommand extends BloomCommand {
 		const resolvedEventChannel = interaction.guild.channels.cache.get(existingEvent.channelId);
 		if (resolvedEventChannel?.isSendable() && existingEvent.instance.messageId) {
 			try {
-				const postedMessage = await resolveOnErrorCodes(resolvedEventChannel.messages.fetch(existingEvent.instance.messageId));
+				const postedMessage = await resolveOnErrorCodes(
+					resolvedEventChannel.messages.fetch(existingEvent.instance.messageId),
+					RESTJSONErrorCodes.UnknownMessage
+				);
 				await postedMessage?.delete();
 			} catch {
 				// do nothing
@@ -735,7 +745,10 @@ export class SlashCommand extends BloomCommand {
 			});
 
 			if (existingEvent.instance.discordEventId) {
-				await resolveOnErrorCodes(interaction.guild.scheduledEvents.delete(existingEvent.instance.discordEventId));
+				await resolveOnErrorCodes(
+					interaction.guild.scheduledEvents.delete(existingEvent.instance.discordEventId),
+					RESTJSONErrorCodes.UnknownGuildScheduledEvent
+				);
 			}
 
 			return await interaction.editReply({
