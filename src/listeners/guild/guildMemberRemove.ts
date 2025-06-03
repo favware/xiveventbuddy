@@ -1,11 +1,13 @@
 import { BloombotEvents, UpdateEmbedPayloadOrigin } from '#lib/util/constants';
 import { type Events, Listener } from '@sapphire/framework';
+import { subHours } from 'date-fns';
 import type { GuildMember } from 'discord.js';
 
 export class UserListener extends Listener<typeof Events.GuildMemberRemove> {
 	public override async run(member: GuildMember) {
 		const memberId = member.id;
 		const guildId = member.guild.id;
+		const now = new Date();
 
 		const events = await this.container.prisma.event.findMany({
 			where: {
@@ -22,32 +24,36 @@ export class UserListener extends Listener<typeof Events.GuildMemberRemove> {
 			},
 			select: {
 				id: true,
+				duration: true,
 				instance: {
 					select: {
-						id: true
+						id: true,
+						dateTime: true
 					}
 				}
 			}
 		});
 
-		await Promise.all(
-			events.map(async (entry) => {
-				if (!entry.instance?.id) return;
+		const expiredEvents = events.filter((event) => {
+			if (!event.instance?.dateTime || typeof event.duration !== 'number') return false;
+			const afterDurationOfEvent = subHours(now, event.duration);
+			return event.instance.dateTime <= afterDurationOfEvent;
+		});
 
-				return this.container.prisma.participant.delete({
-					where: {
-						eventInstanceId_discordId: {
-							eventInstanceId: entry.instance.id,
-							discordId: memberId
-						}
+		for (const expiredEvent of expiredEvents) {
+			if (!expiredEvent.instance?.id) continue;
+
+			await this.container.prisma.participant.delete({
+				where: {
+					eventInstanceId_discordId: {
+						eventInstanceId: expiredEvent.instance.id,
+						discordId: memberId
 					}
-				});
-			})
-		);
+				}
+			});
 
-		for (const event of events) {
 			this.container.client.emit(BloombotEvents.UpdateEmbed, {
-				eventId: event.id,
+				eventId: expiredEvent.id,
 				guildId,
 				origin: UpdateEmbedPayloadOrigin.MemberLeaveRemoveParticipation
 			});
