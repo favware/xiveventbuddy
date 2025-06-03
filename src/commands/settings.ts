@@ -1,69 +1,66 @@
 import { BloomCommand } from '#lib/extensions/BloomComand';
 import { BloombotEmojis } from '#lib/util/emojis';
-import { ApplyOptions } from '@sapphire/decorators';
-import type { ApplicationCommandRegistry, Awaitable, ChatInputCommand } from '@sapphire/framework';
+import { ApplyOptions, RegisterChatInputCommand } from '@sapphire/decorators';
+import type { ChatInputCommand } from '@sapphire/framework';
 import { ApplicationIntegrationType, inlineCode, MessageFlags, roleMention } from 'discord.js';
 
 @ApplyOptions<ChatInputCommand.Options>({
 	description: 'Change the settings of the bot'
 })
+@RegisterChatInputCommand((builder, command) =>
+	builder //
+		.setName(command.name)
+		.setDescription(command.description)
+		.setIntegrationTypes(ApplicationIntegrationType.GuildInstall)
+		//  Event managers
+		.addSubcommand((builder) =>
+			builder //
+				.setName('add-manager-role')
+				.setDescription('Add a role to the list of event managers')
+				.addRoleOption((input) =>
+					input //
+						.setName('role')
+						.setDescription('The role to add to the event managers list')
+						.setRequired(true)
+				)
+		)
+		.addSubcommand((builder) =>
+			builder //
+				.setName('remove-manager-role')
+				.setDescription('Removes a role from the list of event managers')
+				.addRoleOption((input) =>
+					input //
+						.setName('role')
+						.setDescription('The role to remove to the event managers list')
+						.setRequired(true)
+				)
+		)
+
+		// Verified servers
+		.addSubcommand((builder) =>
+			builder //
+				.setName('add-verified-server')
+				.setDescription('Add a server to the list of verified servers')
+				.addStringOption((input) =>
+					input //
+						.setName('server')
+						.setDescription('The discord ID of the server to add to the list of verified servers')
+						.setRequired(true)
+				)
+		)
+		.addSubcommand((builder) =>
+			builder //
+				.setName('remove-verified-server')
+				.setDescription('Removes a server from the list of verified servers')
+				.addRoleOption((input) =>
+					input //
+						.setName('server')
+						.setDescription('The discord ID of the server to remove from the list of verified servers')
+						.setRequired(true)
+				)
+		)
+)
 export class SlashCommand extends BloomCommand {
-	public override registerApplicationCommands(registry: ApplicationCommandRegistry): Awaitable<void> {
-		registry.registerChatInputCommand((command) =>
-			command //
-				.setName(this.name)
-				.setDescription(this.description)
-				.setIntegrationTypes(ApplicationIntegrationType.GuildInstall)
-				//  Event managers
-				.addSubcommand((builder) =>
-					builder //
-						.setName('add-manager-role')
-						.setDescription('Add a role to the list of event managers')
-						.addRoleOption((input) =>
-							input //
-								.setName('role')
-								.setDescription('The role to add to the event managers list')
-								.setRequired(true)
-						)
-				)
-				.addSubcommand((builder) =>
-					builder //
-						.setName('remove-manager-role')
-						.setDescription('Removes a role from the list of event managers')
-						.addRoleOption((input) =>
-							input //
-								.setName('role')
-								.setDescription('The role to remove to the event managers list')
-								.setRequired(true)
-						)
-				)
-
-				// Verified servers
-				.addSubcommand((builder) =>
-					builder //
-						.setName('add-verified-server')
-						.setDescription('Add a server to the list of verified servers')
-						.addStringOption((input) =>
-							input //
-								.setName('server')
-								.setDescription('The discord ID of the server to add to the list of verified servers')
-								.setRequired(true)
-						)
-				)
-				.addSubcommand((builder) =>
-					builder //
-						.setName('remove-verified-server')
-						.setDescription('Removes a server from the list of verified servers')
-						.addRoleOption((input) =>
-							input //
-								.setName('server')
-								.setDescription('The discord ID of the server to remove from the list of verified servers')
-								.setRequired(true)
-						)
-				)
-		);
-	}
-
 	public override async chatInputRun(interaction: ChatInputCommand.Interaction<'cached'>) {
 		await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 

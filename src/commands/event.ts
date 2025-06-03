@@ -7,9 +7,9 @@ import { buildEventEmbed } from '#lib/util/functions/buildEventEmbed';
 import { resolveOnErrorCodes } from '#lib/util/functions/resolveOnErrorCodes';
 import { OwnerMentions, Owners } from '#root/config';
 import { $Enums } from '@prisma/client';
-import { ApplyOptions } from '@sapphire/decorators';
+import { ApplyOptions, RegisterChatInputCommand } from '@sapphire/decorators';
 import { fetch, FetchResultTypes } from '@sapphire/fetch';
-import { Result, UserError, type ApplicationCommandRegistry, type Awaitable, type ChatInputCommand } from '@sapphire/framework';
+import { Result, UserError, type ChatInputCommand } from '@sapphire/framework';
 import { filterNullish, isNullishOrZero } from '@sapphire/utilities';
 import { format } from 'date-fns';
 import {
@@ -27,201 +27,198 @@ import {
 @ApplyOptions<ChatInputCommand.Options>({
 	description: 'Manage the Nightbloom events'
 })
+@RegisterChatInputCommand((builder, command) =>
+	builder
+		.setName(command.name)
+		.setDescription(command.description)
+		.setIntegrationTypes(ApplicationIntegrationType.GuildInstall)
+		.addSubcommand((builder) =>
+			builder
+				.setName('create')
+				.setDescription('Create a new event')
+				.addStringOption((builder) =>
+					builder //
+						.setName('name')
+						.setDescription('The name of the event')
+						.setRequired(true)
+				)
+				.addStringOption((builder) =>
+					builder //
+						.setName('date')
+						.setDescription('The date of the event, or first occurrence if interval is set. Format is DD-MM-YYYY or DD/MM/YYYY')
+						.setRequired(true)
+				)
+				.addStringOption((builder) =>
+					builder //
+						.setName('time')
+						.setDescription('The time of the event. Format is HH:mm (24 hour clock). Time is always Light server time (UTC)')
+						.setRequired(true)
+				)
+				.addIntegerOption((builder) =>
+					builder //
+						.setName('duration')
+						.setDescription('The duration of the event in hours')
+						.setChoices(
+							{ name: '1 hour', value: 1 },
+							{ name: '2 hours', value: 2 },
+							{ name: '3 hours', value: 3 },
+							{ name: '4 hours', value: 4 }
+						)
+						.setRequired(true)
+				)
+				.addStringOption((builder) =>
+					builder //
+						.setName('description')
+						.setDescription('The description of the event, for newlines type \\n')
+						.setRequired(false)
+				)
+				.addStringOption((builder) =>
+					builder //
+						.setName('interval')
+						.setDescription('The interval at which this event should repeat')
+						.setRequired(false)
+						.setChoices(
+							{ name: 'Weekly', value: $Enums.EventInterval.WEEKLY },
+							{ name: 'Once every other week', value: $Enums.EventInterval.ONCE_EVERY_OTHER_WEEK },
+							{ name: 'Monthly', value: $Enums.EventInterval.MONTHLY },
+							{
+								name: 'Every one before last friday of the month',
+								value: $Enums.EventInterval.ONE_BEFORE_LAST_FRIDAY_OF_THE_MONTH
+							}
+						)
+				)
+				.addRoleOption((builder) =>
+					builder //
+						.setName('role-to-ping')
+						.setDescription('A role to ping when the event is created')
+						.setRequired(false)
+				)
+				.addChannelOption((builder) =>
+					builder //
+						.setName('channel')
+						.setDescription('The channel in which the event should posted, if omitted the current channel is used.')
+						.setRequired(false)
+				)
+				.addUserOption((builder) =>
+					builder //
+						.setName('leader')
+						.setDescription('The event leader for this event, defaults to yourself if not provided.')
+						.setRequired(false)
+				)
+				.addAttachmentOption((builder) =>
+					builder //
+						.setName('banner-image')
+						.setDescription('The banner image, shown below the event embed and in the Discord server event banner.')
+						.setRequired(false)
+				)
+		)
+		.addSubcommand((builder) =>
+			builder //
+				.setName('list')
+				.setDescription('List all currently known events and their IDs. Future scheduled events will not be listed.')
+		)
+		.addSubcommand((builder) =>
+			builder
+				.setName('edit')
+				.setDescription('Edit an existing event.')
+				.addStringOption((builder) =>
+					builder
+						.setName('id')
+						.setDescription('The command id, use /event list to get a list, or type the event name for autocomplete.')
+						.setAutocomplete(true)
+						.setRequired(true)
+				)
+				.addStringOption((builder) =>
+					builder //
+						.setName('name')
+						.setDescription('The new name of the event')
+						.setRequired(false)
+				)
+				.addStringOption((builder) =>
+					builder //
+						.setName('date')
+						.setDescription('The new date of the event. Format is DD-MM-YYYY or DD/MM/YYYY')
+						.setRequired(false)
+				)
+				.addStringOption((builder) =>
+					builder //
+						.setName('time')
+						.setDescription('The new time of the event. Format is HH:mm (24 hour clock). Time is always Light server time (UTC)')
+						.setRequired(false)
+				)
+				.addIntegerOption((builder) =>
+					builder //
+						.setName('duration')
+						.setDescription('The duration of the event in hours')
+						.setChoices(
+							{ name: '1 hour', value: 1 },
+							{ name: '2 hours', value: 2 },
+							{ name: '3 hours', value: 3 },
+							{ name: '4 hours', value: 4 }
+						)
+						.setRequired(false)
+				)
+				.addStringOption((builder) =>
+					builder //
+						.setName('description')
+						.setDescription('The new description of the event, for newlines type \\n')
+						.setRequired(false)
+				)
+				.addStringOption((builder) =>
+					builder //
+						.setName('interval')
+						.setDescription('The new interval at which this event should repeat')
+						.setRequired(false)
+						.setChoices(
+							{ name: 'Weekly', value: $Enums.EventInterval.WEEKLY },
+							{ name: 'Once every other week', value: $Enums.EventInterval.ONCE_EVERY_OTHER_WEEK },
+							{ name: 'Monthly', value: $Enums.EventInterval.MONTHLY },
+							{
+								name: 'Every one before last friday of the month',
+								value: $Enums.EventInterval.ONE_BEFORE_LAST_FRIDAY_OF_THE_MONTH
+							}
+						)
+				)
+				.addRoleOption((builder) =>
+					builder //
+						.setName('role-to-ping')
+						.setDescription('The new role to ping for the event')
+						.setRequired(false)
+				)
+				.addChannelOption((builder) =>
+					builder //
+						.setName('channel')
+						.setDescription('The channel in which the event should posted, if omitted the current channel is used.')
+						.setRequired(false)
+				)
+				.addUserOption((builder) =>
+					builder //
+						.setName('leader')
+						.setDescription('The new event leader for this event.')
+						.setRequired(false)
+				)
+				.addAttachmentOption((builder) =>
+					builder //
+						.setName('banner-image')
+						.setDescription('The banner image, shown below the event embed and in the Discord server event banner.')
+						.setRequired(false)
+				)
+		)
+		.addSubcommand((builder) =>
+			builder //
+				.setName('delete')
+				.setDescription('Deletes an existing event.')
+				.addStringOption((builder) =>
+					builder
+						.setName('id')
+						.setDescription('The command id, use /event list to get a list, or type the event name for autocomplete.')
+						.setAutocomplete(true)
+						.setRequired(true)
+				)
+		)
+)
 export class SlashCommand extends BloomCommand {
 	private readonly timeRegex = /^(?:0\d|1\d|2[0-4]):[0-5]\d$/;
-
-	public override registerApplicationCommands(registry: ApplicationCommandRegistry): Awaitable<void> {
-		registry.registerChatInputCommand((command) =>
-			command //
-				.setName(this.name)
-				.setDescription(this.description)
-				.setIntegrationTypes(ApplicationIntegrationType.GuildInstall)
-				.addSubcommand((builder) =>
-					builder
-						.setName('create')
-						.setDescription('Create a new event')
-						.addStringOption((builder) =>
-							builder //
-								.setName('name')
-								.setDescription('The name of the event')
-								.setRequired(true)
-						)
-						.addStringOption((builder) =>
-							builder //
-								.setName('date')
-								.setDescription('The date of the event, or first occurrence if interval is set. Format is DD-MM-YYYY or DD/MM/YYYY')
-								.setRequired(true)
-						)
-						.addStringOption((builder) =>
-							builder //
-								.setName('time')
-								.setDescription('The time of the event. Format is HH:mm (24 hour clock). Time is always Light server time (UTC)')
-								.setRequired(true)
-						)
-						.addIntegerOption((builder) =>
-							builder //
-								.setName('duration')
-								.setDescription('The duration of the event in hours')
-								.setChoices(
-									{ name: '1 hour', value: 1 },
-									{ name: '2 hours', value: 2 },
-									{ name: '3 hours', value: 3 },
-									{ name: '4 hours', value: 4 }
-								)
-								.setRequired(true)
-						)
-						.addStringOption((builder) =>
-							builder //
-								.setName('description')
-								.setDescription('The description of the event, for newlines type \\n')
-								.setRequired(false)
-						)
-						.addStringOption((builder) =>
-							builder //
-								.setName('interval')
-								.setDescription('The interval at which this event should repeat')
-								.setRequired(false)
-								.setChoices(
-									{ name: 'Weekly', value: $Enums.EventInterval.WEEKLY },
-									{ name: 'Once every other week', value: $Enums.EventInterval.ONCE_EVERY_OTHER_WEEK },
-									{ name: 'Monthly', value: $Enums.EventInterval.MONTHLY },
-									{
-										name: 'Every one before last friday of the month',
-										value: $Enums.EventInterval.ONE_BEFORE_LAST_FRIDAY_OF_THE_MONTH
-									}
-								)
-						)
-						.addRoleOption((builder) =>
-							builder //
-								.setName('role-to-ping')
-								.setDescription('A role to ping when the event is created')
-								.setRequired(false)
-						)
-						.addChannelOption((builder) =>
-							builder //
-								.setName('channel')
-								.setDescription('The channel in which the event should posted, if omitted the current channel is used.')
-								.setRequired(false)
-						)
-						.addUserOption((builder) =>
-							builder //
-								.setName('leader')
-								.setDescription('The event leader for this event, defaults to yourself if not provided.')
-								.setRequired(false)
-						)
-						.addAttachmentOption((builder) =>
-							builder //
-								.setName('banner-image')
-								.setDescription('The banner image, shown below the event embed and in the Discord server event banner.')
-								.setRequired(false)
-						)
-				)
-				.addSubcommand((builder) =>
-					builder //
-						.setName('list')
-						.setDescription('List all currently known events and their IDs. Future scheduled events will not be listed.')
-				)
-				.addSubcommand((builder) =>
-					builder
-						.setName('edit')
-						.setDescription('Edit an existing event.')
-						.addStringOption((builder) =>
-							builder
-								.setName('id')
-								.setDescription('The command id, use /event list to get a list, or type the event name for autocomplete.')
-								.setAutocomplete(true)
-								.setRequired(true)
-						)
-						.addStringOption((builder) =>
-							builder //
-								.setName('name')
-								.setDescription('The new name of the event')
-								.setRequired(false)
-						)
-						.addStringOption((builder) =>
-							builder //
-								.setName('date')
-								.setDescription('The new date of the event. Format is DD-MM-YYYY or DD/MM/YYYY')
-								.setRequired(false)
-						)
-						.addStringOption((builder) =>
-							builder //
-								.setName('time')
-								.setDescription('The new time of the event. Format is HH:mm (24 hour clock). Time is always Light server time (UTC)')
-								.setRequired(false)
-						)
-						.addIntegerOption((builder) =>
-							builder //
-								.setName('duration')
-								.setDescription('The duration of the event in hours')
-								.setChoices(
-									{ name: '1 hour', value: 1 },
-									{ name: '2 hours', value: 2 },
-									{ name: '3 hours', value: 3 },
-									{ name: '4 hours', value: 4 }
-								)
-								.setRequired(false)
-						)
-						.addStringOption((builder) =>
-							builder //
-								.setName('description')
-								.setDescription('The new description of the event, for newlines type \\n')
-								.setRequired(false)
-						)
-						.addStringOption((builder) =>
-							builder //
-								.setName('interval')
-								.setDescription('The new interval at which this event should repeat')
-								.setRequired(false)
-								.setChoices(
-									{ name: 'Weekly', value: $Enums.EventInterval.WEEKLY },
-									{ name: 'Once every other week', value: $Enums.EventInterval.ONCE_EVERY_OTHER_WEEK },
-									{ name: 'Monthly', value: $Enums.EventInterval.MONTHLY },
-									{
-										name: 'Every one before last friday of the month',
-										value: $Enums.EventInterval.ONE_BEFORE_LAST_FRIDAY_OF_THE_MONTH
-									}
-								)
-						)
-						.addRoleOption((builder) =>
-							builder //
-								.setName('role-to-ping')
-								.setDescription('The new role to ping for the event')
-								.setRequired(false)
-						)
-						.addChannelOption((builder) =>
-							builder //
-								.setName('channel')
-								.setDescription('The channel in which the event should posted, if omitted the current channel is used.')
-								.setRequired(false)
-						)
-						.addUserOption((builder) =>
-							builder //
-								.setName('leader')
-								.setDescription('The new event leader for this event.')
-								.setRequired(false)
-						)
-						.addAttachmentOption((builder) =>
-							builder //
-								.setName('banner-image')
-								.setDescription('The banner image, shown below the event embed and in the Discord server event banner.')
-								.setRequired(false)
-						)
-				)
-				.addSubcommand((builder) =>
-					builder //
-						.setName('delete')
-						.setDescription('Deletes an existing event.')
-						.addStringOption((builder) =>
-							builder
-								.setName('id')
-								.setDescription('The command id, use /event list to get a list, or type the event name for autocomplete.')
-								.setAutocomplete(true)
-								.setRequired(true)
-						)
-				)
-		);
-	}
 
 	public override async chatInputRun(interaction: ChatInputCommand.Interaction<'cached'>) {
 		await interaction.deferReply({ flags: MessageFlags.Ephemeral });
