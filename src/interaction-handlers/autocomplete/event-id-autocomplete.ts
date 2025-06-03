@@ -28,6 +28,10 @@ export class AutocompleteHandler extends InteractionHandler {
 				}
 			});
 
+			if (isNullishOrEmpty(allEvents)) {
+				return this.some([]);
+			}
+
 			if (isNullishOrEmpty(focusedOption.value)) {
 				return this.some(allEvents.slice(0, 20).map((event) => ({ name: `Name: ${event.name}`, value: event.id })));
 			}
