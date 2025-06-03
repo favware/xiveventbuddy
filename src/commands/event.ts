@@ -93,18 +93,18 @@ export class SlashCommand extends BloomCommand {
 									}
 								)
 						)
-						.addRoleOption((builder) =>
-							builder //
-								.setName('role-to-ping')
-								.setDescription('A role to ping when the event is created')
-								.setRequired(false)
-						)
-						.addChannelOption((builder) =>
-							builder //
-								.setName('channel')
-								.setDescription('The channel in which the event should posted, if omitted the current channel is used.')
-								.setRequired(false)
-						)
+						// .addRoleOption((builder) =>
+						// 	builder //
+						// 		.setName('role-to-ping')
+						// 		.setDescription('A role to ping when the event is created')
+						// 		.setRequired(false)
+						// )
+						// .addChannelOption((builder) =>
+						// 	builder //
+						// 		.setName('channel')
+						// 		.setDescription('The channel in which the event should posted, if omitted the current channel is used.')
+						// 		.setRequired(false)
+						// )
 						.addUserOption((builder) =>
 							builder //
 								.setName('leader')
@@ -195,18 +195,18 @@ export class SlashCommand extends BloomCommand {
 									}
 								)
 						)
-						.addRoleOption((builder) =>
-							builder //
-								.setName('role-to-ping')
-								.setDescription('The new role to ping for the event')
-								.setRequired(false)
-						)
-						.addChannelOption((builder) =>
-							builder //
-								.setName('channel')
-								.setDescription('The channel in which the event should posted, if omitted the current channel is used.')
-								.setRequired(false)
-						)
+						// .addRoleOption((builder) =>
+						// 	builder //
+						// 		.setName('role-to-ping')
+						// 		.setDescription('The new role to ping for the event')
+						// 		.setRequired(false)
+						// )
+						// .addChannelOption((builder) =>
+						// 	builder //
+						// 		.setName('channel')
+						// 		.setDescription('The channel in which the event should posted, if omitted the current channel is used.')
+						// 		.setRequired(false)
+						// )
 						.addUserOption((builder) =>
 							builder //
 								.setName('leader')
@@ -360,9 +360,10 @@ export class SlashCommand extends BloomCommand {
 
 		const eventDate = this.setTimeAndTimezone(dateUnixTimestamp, stringTime);
 
-		const channel = interaction.options.getChannel('channel', false);
+		// const channel = interaction.options.getChannel('channel', false);
 
-		const eventChannel = channel ?? interaction.channel;
+		// const eventChannel = channel ?? interaction.channel;
+		const eventChannel = interaction.channel;
 
 		if (!eventChannel?.isSendable()) {
 			return interaction.editReply({
@@ -384,7 +385,7 @@ export class SlashCommand extends BloomCommand {
 		const name = interaction.options.getString('name', true);
 		const description = interaction.options.getString('description', false);
 		const interval = interaction.options.getString('interval', false);
-		const roleToPing = interaction.options.getRole('role-to-ping', false);
+		// const roleToPing = interaction.options.getRole('role-to-ping', false);
 		const eventDuration = interaction.options.getInteger('duration', true);
 		const leader = interaction.options.getUser('leader', false);
 		const variant = interaction.options.getString('variant', false);
@@ -397,7 +398,7 @@ export class SlashCommand extends BloomCommand {
 				channelId: eventChannel.id,
 				guildId: interaction.guildId,
 				interval: interval as $Enums.EventInterval,
-				roleToPing: roleToPing?.id,
+				// roleToPing: roleToPing?.id,
 				leader: leader?.id ?? interaction.user.id,
 				bannerImage: await this.getBannerImage(interaction),
 				variant: (variant as $Enums.EventVariant | null) ?? $Enums.EventVariant.NORMAL,
@@ -593,14 +594,15 @@ export class SlashCommand extends BloomCommand {
 		const name = interaction.options.getString('name', false) ?? existingEvent.name;
 		const description = interaction.options.getString('description', false) ?? existingEvent.description;
 		const interval = interaction.options.getString('interval', false) ?? existingEvent.interval;
-		const channel = interaction.options.getChannel('channel', false);
+		// const channel = interaction.options.getChannel('channel', false);
 		const eventDuration = interaction.options.getInteger('duration', false);
-		const roleToPing = interaction.options.getRole('role-to-ping', false);
+		// const roleToPing = interaction.options.getRole('role-to-ping', false);
 		const leader = interaction.options.getUser('leader', false);
 		const variant = interaction.options.getString('variant', false);
 
+		// const resolvedEventChannel =channel ?? (existingEvent.channelId ? interaction.guild.channels.cache.get(existingEvent.channelId) : null) ?? interaction.channel;
 		const resolvedEventChannel =
-			channel ?? (existingEvent.channelId ? interaction.guild.channels.cache.get(existingEvent.channelId) : null) ?? interaction.channel;
+			(existingEvent.channelId ? interaction.guild.channels.cache.get(existingEvent.channelId) : null) ?? interaction.channel;
 
 		if (!resolvedEventChannel?.isSendable()) {
 			return interaction.editReply({
@@ -618,7 +620,7 @@ export class SlashCommand extends BloomCommand {
 				channelId: resolvedEventChannel.id,
 				guildId: interaction.guildId,
 				interval: interval as $Enums.EventInterval,
-				roleToPing: roleToPing?.id ?? existingEvent.roleToPing,
+				// roleToPing: roleToPing?.id ?? existingEvent.roleToPing,
 				leader: leader?.id ?? existingEvent.leader,
 				bannerImage: (await this.getBannerImage(interaction)) ?? existingEvent.bannerImage,
 				duration: eventDuration ?? existingEvent.duration,
