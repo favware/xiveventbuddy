@@ -1,7 +1,8 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import { InteractionHandler, InteractionHandlerTypes } from '@sapphire/framework';
-import { cutText, isNullishOrEmpty } from '@sapphire/utilities';
+import { cutText, isNullish, isNullishOrEmpty } from '@sapphire/utilities';
 import { jaroWinkler } from '@skyra/jaro-winkler';
+import { format, subHours } from 'date-fns';
 import type { ApplicationCommandOptionChoiceData, AutocompleteInteraction } from 'discord.js';
 
 @ApplyOptions<InteractionHandler.Options>({
@@ -16,24 +17,49 @@ export class AutocompleteHandler extends InteractionHandler {
 		if (interaction.commandName !== 'event') return this.none();
 
 		const focusedOption = interaction.options.getFocused(true);
+		const subcommand = interaction.options.getSubcommand(true);
 
 		if (focusedOption.name === 'id') {
-			const allEvents = await this.container.prisma.event.findMany({
+			let allEvents = await this.container.prisma.event.findMany({
 				where: {
 					guildId: interaction.guildId
 				},
 				select: {
 					id: true,
-					name: true
+					duration: true,
+					name: true,
+					instance: {
+						select: {
+							id: true,
+							dateTime: true
+						}
+					}
 				}
 			});
 
-			if (isNullishOrEmpty(allEvents)) {
+			if (isNullishOrEmpty(allEvents) || allEvents.every((event) => isNullish(event.instance))) {
 				return this.some([]);
 			}
 
+			if (subcommand === 'remove-participant') {
+				const now = new Date();
+				allEvents = allEvents.filter((event) => {
+					if (!event.instance?.dateTime || typeof event.duration !== 'number') return false;
+					const afterDurationOfEvent = subHours(now, event.duration);
+					return event.instance.dateTime <= afterDurationOfEvent;
+				});
+			}
+
 			if (isNullishOrEmpty(focusedOption.value)) {
-				return this.some(allEvents.slice(0, 20).map((event) => ({ name: cutText(`Name: ${event.name}`, 100), value: event.id })));
+				return this.some(
+					allEvents.slice(0, 20).map((event) => {
+						const formattedDate = event.instance?.dateTime ? format(event.instance.dateTime, 'PPPP') : 'Unknown date for event';
+						return {
+							name: cutText(`Date: ${formattedDate}; Name: ${event.name}`, 100),
+							value: event.id
+						};
+					})
+				);
 			}
 
 			return this.some(this.fuzzySearch(focusedOption.value, allEvents));
