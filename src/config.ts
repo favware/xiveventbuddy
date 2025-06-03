@@ -31,7 +31,7 @@ export function parseRedisOption(): Pick<RedisOptions, 'host' | 'password' | 'po
 export const WEBHOOK_ERROR = parseWebhookError();
 
 export const CLIENT_OPTIONS: ClientOptions = {
-	intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildScheduledEvents],
+	intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildScheduledEvents, GatewayIntentBits.GuildMembers],
 	allowedMentions: { users: [], roles: [] },
 	presence: { activities: [getPresenceActivity()] },
 	loadDefaultErrorListeners: false,

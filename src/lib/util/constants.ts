@@ -108,6 +108,7 @@ export const enum UpdateEmbedPayloadOrigin {
 	DisableOldEventScheduledTask = 'disable-old-event-scheduled-task',
 	EditEventCommand = 'edit-event-command',
 	JobOrRoleButtonClick = 'job-or-role-button-click',
+	MemberLeaveRemoveParticipation = 'member-leave-remove-participation',
 	RemoveParticipantCommand = 'remove-participant-command',
 	RemoveParticipation = 'remove-participation',
 	RoleSelectMenu = 'role-select-menu'
