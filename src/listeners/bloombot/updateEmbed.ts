@@ -96,11 +96,6 @@ export class UserListener extends Listener<typeof BloombotEvents.UpdateEmbed> {
 						}
 					});
 				}
-			} else {
-				throw new UserError({
-					message: `${BloombotEmojis.RedCross} I was unexpectedly unable to find the channel the event was posted in. Contact ${OwnerMentions} for assistance.`,
-					identifier: ErrorIdentifiers.EventEditMessageChannelNotFoundError
-				});
 			}
 		}
 	}
