@@ -41,7 +41,7 @@ export class AutocompleteHandler extends InteractionHandler {
 				return this.some([]);
 			}
 
-			if (subcommand === 'remove-participant') {
+			if (subcommand === 'remove-participant' || subcommand === 'edit') {
 				const now = new Date();
 				allEvents = allEvents.filter((event) => {
 					if (!event.instance?.dateTime || typeof event.duration !== 'number') return false;
