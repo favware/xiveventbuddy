@@ -1,6 +1,6 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import { InteractionHandler, InteractionHandlerTypes } from '@sapphire/framework';
-import { isNullishOrEmpty } from '@sapphire/utilities';
+import { cutText, isNullishOrEmpty } from '@sapphire/utilities';
 import { jaroWinkler } from '@skyra/jaro-winkler';
 import type { ApplicationCommandOptionChoiceData, AutocompleteInteraction } from 'discord.js';
 
@@ -33,7 +33,7 @@ export class AutocompleteHandler extends InteractionHandler {
 			}
 
 			if (isNullishOrEmpty(focusedOption.value)) {
-				return this.some(allEvents.slice(0, 20).map((event) => ({ name: `Name: ${event.name}`, value: event.id })));
+				return this.some(allEvents.slice(0, 20).map((event) => ({ name: cutText(`Name: ${event.name}`, 100), value: event.id })));
 			}
 
 			return this.some(this.fuzzySearch(focusedOption.value, allEvents));
