@@ -55,12 +55,12 @@ export class SlashCommand extends XIVEventBuddyCommand {
 	}
 
 	public override async chatInputRun(interaction: ChatInputCommand.Interaction<'cached'>) {
-		const subcommand = interaction.options.getSubcommand(true) as 'eorzea' | 'server';
+		const subcommand = interaction.options.getSubcommand(true) as 'eorzea' | 'server-time';
 
 		switch (subcommand) {
 			case 'eorzea':
 				return this.eorzeaTime(interaction);
-			case 'server':
+			case 'server-time':
 				return this.serverTime(interaction);
 		}
 	}
