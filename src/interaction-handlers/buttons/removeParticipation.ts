@@ -1,5 +1,5 @@
-import { BloombotEvents, CustomIdPrefixes, ErrorIdentifiers, UpdateEmbedPayloadOrigin } from '#lib/util/constants';
-import { BloombotEmojis } from '#lib/util/emojis';
+import { CustomIdPrefixes, ErrorIdentifiers, UpdateEmbedPayloadOrigin, XIVEventBuddyEvents } from '#lib/util/constants';
+import { XIVEventBuddyEmojis } from '#lib/util/emojis';
 import { getFullEventData } from '#lib/util/functions/getFullEventData';
 import { OwnerMentions } from '#root/config';
 import { ApplyOptions } from '@sapphire/decorators';
@@ -25,7 +25,7 @@ export class ButtonHandler extends InteractionHandler {
 
 		if (!eventData?.instance?.id) {
 			throw new UserError({
-				message: `${BloombotEmojis.RedCross} I was unexpectedly unable to find the event matching the click of that button. Contact ${OwnerMentions} for assistance.`,
+				message: `${XIVEventBuddyEmojis.RedCross} I was unexpectedly unable to find the event matching the click of that button. Contact ${OwnerMentions} for assistance.`,
 				identifier: ErrorIdentifiers.UnableToFindEventForButtonClickError
 			});
 		}
@@ -40,7 +40,7 @@ export class ButtonHandler extends InteractionHandler {
 		});
 
 		if (!participantExists) {
-			return this.some(`${BloombotEmojis.RedCross} You have not yet signed up for participation.`);
+			return this.some(`${XIVEventBuddyEmojis.RedCross} You have not yet signed up for participation.`);
 		}
 
 		await this.container.prisma.participant.delete({
@@ -53,13 +53,13 @@ export class ButtonHandler extends InteractionHandler {
 		});
 
 		if (eventData.instance.messageId) {
-			this.container.client.emit(BloombotEvents.UpdateEmbed, {
+			this.container.client.emit(XIVEventBuddyEvents.UpdateEmbed, {
 				eventId,
 				guildId: interaction.guildId,
 				origin: UpdateEmbedPayloadOrigin.RemoveParticipation
 			});
 		}
 
-		return this.some(`${BloombotEmojis.GreenTick} Successfully removed you from the participants list.`);
+		return this.some(`${XIVEventBuddyEmojis.GreenTick} Successfully removed you from the participants list.`);
 	}
 }

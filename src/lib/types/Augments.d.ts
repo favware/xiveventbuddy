@@ -1,5 +1,11 @@
 import type { prismaType } from '#lib/setup/prisma';
-import type { BloombotEvents, CreateServerEventPayload, PostEmbedPayload, UpdateEmbedPayload, UpdateServerEventPayload } from '#lib/util/constants';
+import type {
+	CreateServerEventPayload,
+	PostEmbedPayload,
+	UpdateEmbedPayload,
+	UpdateServerEventPayload,
+	XIVEventBuddyEvents
+} from '#lib/util/constants';
 import type { Nullish } from '@sapphire/utilities';
 import type { BooleanString, IntegerString } from '@skyra/env-utilities';
 import type { Events, WebhookClient } from 'discord.js';
@@ -22,17 +28,15 @@ declare module '@sapphire/framework' {
 
 	interface SapphireClient {
 		emit(event: Events.Error, error: Error): boolean;
-		emit(event: BloombotEvents.CreateServerEvent, payload: CreateServerEventPayload): boolean;
-		emit(event: BloombotEvents.UpdateServerEvent, payload: UpdateServerEventPayload): boolean;
-		emit(event: BloombotEvents.PostEmbed, payload: PostEmbedPayload): boolean;
-		emit(event: BloombotEvents.UpdateEmbed, payload: UpdateEmbedPayload): boolean;
+		emit(event: XIVEventBuddyEvents.CreateServerEvent, payload: CreateServerEventPayload): boolean;
+		emit(event: XIVEventBuddyEvents.UpdateServerEvent, payload: UpdateServerEventPayload): boolean;
+		emit(event: XIVEventBuddyEvents.PostEmbed, payload: PostEmbedPayload): boolean;
+		emit(event: XIVEventBuddyEvents.UpdateEmbed, payload: UpdateEmbedPayload): boolean;
 	}
 }
 
 declare module '@skyra/env-utilities' {
 	interface Env {
-		CLIENT_VERSION: string;
-
 		DATABASE_URL: string;
 		DISCORD_TOKEN: string;
 		REDIS_HOST: string;

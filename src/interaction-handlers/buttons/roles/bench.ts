@@ -1,5 +1,5 @@
 import { CustomIdPrefixes } from '#lib/util/constants';
-import { BloombotEmojis } from '#lib/util/emojis';
+import { XIVEventBuddyEmojis } from '#lib/util/emojis';
 import { handleJobOrRoleButtonClick } from '#lib/util/functions/handleJobOrRoleButtonClick';
 import { $Enums } from '@prisma/client';
 import { ApplyOptions } from '@sapphire/decorators';
@@ -12,7 +12,7 @@ import { inlineCode, type ButtonInteraction } from 'discord.js';
 export class ButtonHandler extends InteractionHandler {
 	public override async run(interaction: ButtonInteraction<'cached'>) {
 		return interaction.editReply({
-			content: `${BloombotEmojis.GreenTick} Successfully updated your status to ${inlineCode($Enums.Roles.Bench)}.`
+			content: `${XIVEventBuddyEmojis.GreenTick} Successfully updated your status to ${inlineCode($Enums.Roles.Bench)}.`
 		});
 	}
 

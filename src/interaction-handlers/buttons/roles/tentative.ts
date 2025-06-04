@@ -1,4 +1,4 @@
-import { BloombotEmojis } from '#lib/util/emojis';
+import { XIVEventBuddyEmojis } from '#lib/util/emojis';
 import { handleJobOrRoleButtonClick } from '#lib/util/functions/handleJobOrRoleButtonClick';
 import { CustomIdPrefixes } from '#utils/constants';
 import { $Enums } from '@prisma/client';
@@ -12,7 +12,7 @@ import { inlineCode, type ButtonInteraction } from 'discord.js';
 export class ButtonHandler extends InteractionHandler {
 	public override async run(interaction: ButtonInteraction<'cached'>) {
 		return interaction.editReply({
-			content: `${BloombotEmojis.GreenTick} Successfully updated your status to ${inlineCode($Enums.Roles.Tentative)}.`
+			content: `${XIVEventBuddyEmojis.GreenTick} Successfully updated your status to ${inlineCode($Enums.Roles.Tentative)}.`
 		});
 	}
 

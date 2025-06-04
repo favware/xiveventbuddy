@@ -1,4 +1,4 @@
-import { BloombotEvents, UpdateEmbedPayloadOrigin } from '#lib/util/constants';
+import { UpdateEmbedPayloadOrigin, XIVEventBuddyEvents } from '#lib/util/constants';
 import { type Events, Listener } from '@sapphire/framework';
 import { subHours } from 'date-fns';
 import type { GuildMember } from 'discord.js';
@@ -52,7 +52,7 @@ export class UserListener extends Listener<typeof Events.GuildMemberRemove> {
 				}
 			});
 
-			this.container.client.emit(BloombotEvents.UpdateEmbed, {
+			this.container.client.emit(XIVEventBuddyEvents.UpdateEmbed, {
 				eventId: expiredEvent.id,
 				guildId,
 				origin: UpdateEmbedPayloadOrigin.MemberLeaveRemoveParticipation

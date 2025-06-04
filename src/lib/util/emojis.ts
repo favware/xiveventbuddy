@@ -2,7 +2,7 @@ import type { Emojis } from '#lib/util/constants';
 import type { $Enums } from '@prisma/client';
 import { formatEmoji } from 'discord.js';
 
-export const BloombotEmojis: Record<Emojis, string> = {
+export const XIVEventBuddyEmojis: Record<Emojis, string> = {
 	// Jobs
 	Astrologian: formatEmoji('1324558618640646146', false),
 	Bard: formatEmoji('1324558620435943494', false),
@@ -71,9 +71,9 @@ export const BloombotEmojis: Record<Emojis, string> = {
 	// Other
 	RedCross: formatEmoji('1324572748130947143', false),
 	GreenTick: formatEmoji('1324572747069915188', false),
-	Nightbloom: formatEmoji('1276857491262672980', false)
+	XIVEventBuddy: formatEmoji('1379921930769010779', false) // TODO: Replace with some XIV Icon
 } as const;
 
 export function getEmojiForJob(job: $Enums.Jobs): string {
-	return BloombotEmojis[job] || '';
+	return XIVEventBuddyEmojis[job] || '';
 }

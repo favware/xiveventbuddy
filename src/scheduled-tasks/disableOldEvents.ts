@@ -1,4 +1,4 @@
-import { BloombotEvents, UpdateEmbedPayloadOrigin } from '#lib/util/constants';
+import { UpdateEmbedPayloadOrigin, XIVEventBuddyEvents } from '#lib/util/constants';
 import { ApplyOptions } from '@sapphire/decorators';
 import { ScheduledTask } from '@sapphire/plugin-scheduled-tasks';
 import { subHours } from 'date-fns';
@@ -33,7 +33,7 @@ export class DisableOldEvents extends ScheduledTask {
 				const eventInstanceDateTime = event.instance.dateTime;
 
 				if (eventInstanceDateTime <= afterDurationOfEvent) {
-					this.container.client.emit(BloombotEvents.UpdateEmbed, {
+					this.container.client.emit(XIVEventBuddyEvents.UpdateEmbed, {
 						eventId: event.id,
 						guildId: event.guildId,
 						shouldDisableEvent: true,

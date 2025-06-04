@@ -1,5 +1,5 @@
-import { BloombotEvents, CustomIdPrefixes, ErrorIdentifiers, UpdateEmbedPayloadOrigin } from '#lib/util/constants';
-import { BloombotEmojis } from '#lib/util/emojis';
+import { CustomIdPrefixes, ErrorIdentifiers, UpdateEmbedPayloadOrigin, XIVEventBuddyEvents } from '#lib/util/constants';
+import { XIVEventBuddyEmojis } from '#lib/util/emojis';
 import { getFullEventData } from '#lib/util/functions/getFullEventData';
 import { getHealerJobButtons } from '#lib/util/job-buttons/healer';
 import { getMagicDpsJobButtons } from '#lib/util/job-buttons/magicdps';
@@ -47,25 +47,25 @@ export class StringSelectMenuHandler extends InteractionHandler {
 			case $Enums.Roles.Bench:
 			case $Enums.Roles.PhantomJob:
 				throw new UserError({
-					message: `${BloombotEmojis.RedCross} I received an unexpected role from the select menu of selecting your role. Contact ${OwnerMentions} for assistance.`,
+					message: `${XIVEventBuddyEmojis.RedCross} I received an unexpected role from the select menu of selecting your role. Contact ${OwnerMentions} for assistance.`,
 					identifier: ErrorIdentifiers.UnexpectedRoleSelectMenuChoiceError
 				});
 		}
 
 		if (isNullishOrEmpty(components)) {
-			this.container.client.emit(BloombotEvents.UpdateEmbed, {
+			this.container.client.emit(XIVEventBuddyEvents.UpdateEmbed, {
 				eventId: result.eventId,
 				guildId: interaction.guildId,
 				origin: UpdateEmbedPayloadOrigin.RoleSelectMenu
 			});
 
 			return interaction.editReply({
-				content: `${BloombotEmojis.GreenTick} Successfully updated your role to ${BloombotEmojis[result.selectedRole]} ${inlineCode(result.selectedRole)}.`
+				content: `${XIVEventBuddyEmojis.GreenTick} Successfully updated your role to ${XIVEventBuddyEmojis[result.selectedRole]} ${inlineCode(result.selectedRole)}.`
 			});
 		}
 
 		return interaction.editReply({
-			content: `${BloombotEmojis.GreenTick} Successfully updated your role to ${BloombotEmojis[result.selectedRole]} ${inlineCode(result.selectedRole)}. Next, select which job you will be playing from these options:`,
+			content: `${XIVEventBuddyEmojis.GreenTick} Successfully updated your role to ${XIVEventBuddyEmojis[result.selectedRole]} ${inlineCode(result.selectedRole)}. Next, select which job you will be playing from these options:`,
 			components
 		});
 	}
@@ -81,7 +81,7 @@ export class StringSelectMenuHandler extends InteractionHandler {
 
 		if (!eventData?.instance?.id) {
 			throw new UserError({
-				message: `${BloombotEmojis.RedCross} I was unexpectedly unable to find the event matching the selection of that option. Contact ${OwnerMentions} for assistance.`,
+				message: `${XIVEventBuddyEmojis.RedCross} I was unexpectedly unable to find the event matching the selection of that option. Contact ${OwnerMentions} for assistance.`,
 				identifier: ErrorIdentifiers.UnableToFindEventForSelectMenuChoiceError
 			});
 		}

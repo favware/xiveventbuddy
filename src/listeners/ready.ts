@@ -30,7 +30,7 @@ export class UserListener extends Listener<typeof Events.ClientReady> {
 
 		console.log(
 			createBanner({
-				name: [vice.multiline(figlet.textSync('Bloombot'))],
+				name: [vice.multiline(figlet.textSync('XIVEventBuddy'))],
 				extra: [
 					blc(this.packageJson?.version ?? '1.0.0'), //
 					`[${success}] Gateway`,

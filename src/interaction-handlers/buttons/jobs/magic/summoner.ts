@@ -1,4 +1,4 @@
-import { BloombotEmojis } from '#lib/util/emojis';
+import { XIVEventBuddyEmojis } from '#lib/util/emojis';
 import { formatJobUpdateMessage } from '#lib/util/functions/formatJobUpdateMessage';
 import { handleJobOrRoleButtonClick } from '#lib/util/functions/handleJobOrRoleButtonClick';
 import { $Enums } from '@prisma/client';
@@ -12,7 +12,7 @@ import { type ButtonInteraction } from 'discord.js';
 export class ButtonHandler extends InteractionHandler {
 	public override async run(interaction: ButtonInteraction<'cached'>) {
 		return interaction.editReply({
-			content: formatJobUpdateMessage(BloombotEmojis.Summoner, $Enums.Jobs.Summoner)
+			content: formatJobUpdateMessage(XIVEventBuddyEmojis.Summoner, $Enums.Jobs.Summoner)
 		});
 	}
 

@@ -1,4 +1,4 @@
-import { BloombotEvents } from '#lib/util/constants';
+import { XIVEventBuddyEvents } from '#lib/util/constants';
 import { $Enums } from '@prisma/client';
 import { ApplyOptions } from '@sapphire/decorators';
 import { ScheduledTask } from '@sapphire/plugin-scheduled-tasks';
@@ -78,8 +78,8 @@ export class RescheduleEventTask extends ScheduledTask {
 					}
 				});
 
-				this.container.client.emit(BloombotEvents.PostEmbed, { eventId: event.id, guildId: event.guildId });
-				this.container.client.emit(BloombotEvents.CreateServerEvent, {
+				this.container.client.emit(XIVEventBuddyEvents.PostEmbed, { eventId: event.id, guildId: event.guildId });
+				this.container.client.emit(XIVEventBuddyEvents.CreateServerEvent, {
 					eventId: event.id,
 					guildId: event.guildId,
 					isReschedule: true,

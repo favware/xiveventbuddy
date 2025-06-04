@@ -1,10 +1,10 @@
 {
-	"name": "bloombot",
-	"version": "1.1.0",
-	"description": "A private bot for the Nightbloom FC Discord server.",
+	"name": "xiveventbuddy",
+	"version": "2.0.0",
+	"description": "A user friendly first discord bot to host your XIV events.",
 	"author": "Jeroen Claassens <support@favware.tech>",
 	"license": "Apache-2.0",
-	"module": "dist/bloombot.js",
+	"module": "dist/xiveventbuddy.js",
 	"private": true,
 	"type": "module",
 	"imports": {
@@ -14,7 +14,7 @@
 		"#lib/env": "./dist/lib/env/index.js"
 	},
 	"scripts": {
-		"start": "node --preserve-symlinks --enable-source-maps dist/bloombot.js",
+		"start": "node --preserve-symlinks --enable-source-maps dist/xiveventbuddy.js",
 		"lint": "eslint --fix",
 		"format": "prettier --write .",
 		"prisma:generate": "prisma generate",
