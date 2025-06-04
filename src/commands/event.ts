@@ -486,7 +486,7 @@ export class SlashCommand extends XIVEventBuddyCommand {
 		const eventListHeader = heading('Event List', 1);
 
 		const variantMapping = {
-			[$Enums.EventVariant.NORMAL]: `${XIVEventBuddyEmojis.Nightbloom} Normal`,
+			[$Enums.EventVariant.NORMAL]: `${XIVEventBuddyEmojis.XIVEventBuddy} Normal`,
 			[$Enums.EventVariant.OCCULT_CRESCENT]: `${XIVEventBuddyEmojis.PhantomJob} Occult Crescent`
 		};
 

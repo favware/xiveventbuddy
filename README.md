@@ -1,7 +1,6 @@
 <div align="center">
 
-<!-- TODO: Add new icon -->
-<!-- <img height="200" src="https://cdn.favware.tech/img/nightbloom-logo.png" alt="XIVEventBuddy"/> -->
+<img src="./assets/emotes/xiveventbuddy.png" alt="XIVEventBuddy"/>
 
 # XIVEventBuddy
 

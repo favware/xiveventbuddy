@@ -37,8 +37,6 @@ declare module '@sapphire/framework' {
 
 declare module '@skyra/env-utilities' {
 	interface Env {
-		CLIENT_VERSION: string;
-
 		DATABASE_URL: string;
 		DISCORD_TOKEN: string;
 		REDIS_HOST: string;

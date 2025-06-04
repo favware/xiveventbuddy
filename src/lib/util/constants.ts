@@ -30,7 +30,7 @@ export const enum XIVServers {
 	Primal = 'primal'
 }
 
-export const enum XIVEventBuddyEvents {
+export enum XIVEventBuddyEvents {
 	CreateServerEvent = 'createServerEvent',
 	PostEmbed = 'postEmbed',
 	UpdateEmbed = 'updateEmbed',
@@ -150,9 +150,6 @@ type EventDataEmojis =
 	| 'Tentative'
 	| 'Time'
 	| 'TimeExpired';
-type OtherEmojis =
-	| 'GreenTick'
-	| 'Nightbloom' // TODO: Replace with some XIV Icon
-	| 'RedCross';
+type OtherEmojis = 'GreenTick' | 'RedCross' | 'XIVEventBuddy';
 
 export type Emojis = EventDataEmojis | Jobs | JobTypeEmojis | OtherEmojis;

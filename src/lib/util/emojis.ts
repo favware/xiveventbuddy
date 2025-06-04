@@ -71,7 +71,7 @@ export const XIVEventBuddyEmojis: Record<Emojis, string> = {
 	// Other
 	RedCross: formatEmoji('1324572748130947143', false),
 	GreenTick: formatEmoji('1324572747069915188', false),
-	Nightbloom: formatEmoji('1276857491262672980', false) // TODO: Replace with some XIV Icon
+	XIVEventBuddy: formatEmoji('1379921930769010779', false) // TODO: Replace with some XIV Icon
 } as const;
 
 export function getEmojiForJob(job: $Enums.Jobs): string {

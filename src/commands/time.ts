@@ -22,11 +22,13 @@ export class SlashCommand extends XIVEventBuddyCommand {
 				)
 				.addSubcommand((builder) =>
 					builder //
-						.setName('server')
+						.setName('server-time')
 						.setDescription('Gets the current server time')
 						.addStringOption((builder) =>
 							builder //
 								.setName('server')
+								.setDescription('The server to get the time for')
+								.setRequired(true)
 								.setChoices([
 									// EU
 									{ name: 'Light', value: XIVServers.Light },
