@@ -1,5 +1,5 @@
-import { BloombotEvents, ErrorIdentifiers, UpdateEmbedPayloadOrigin } from '#lib/util/constants';
-import { BloombotEmojis } from '#lib/util/emojis';
+import { ErrorIdentifiers, UpdateEmbedPayloadOrigin, XIVEventBuddyEvents } from '#lib/util/constants';
+import { XIVEventBuddyEmojis } from '#lib/util/emojis';
 import { OwnerMentions } from '#root/config';
 import type { $Enums } from '@prisma/client';
 import { container, UserError } from '@sapphire/framework';
@@ -51,7 +51,7 @@ export async function handleJobOrRoleButtonClick(interaction: ButtonInteraction<
 
 	if (!eventData?.instance?.id) {
 		throw new UserError({
-			message: `${BloombotEmojis.RedCross} I was unexpectedly unable to find the event matching the click of that button. Contact ${OwnerMentions} for assistance.`,
+			message: `${XIVEventBuddyEmojis.RedCross} I was unexpectedly unable to find the event matching the click of that button. Contact ${OwnerMentions} for assistance.`,
 			identifier: ErrorIdentifiers.UnableToFindEventForButtonClickError
 		});
 	}
@@ -83,7 +83,7 @@ export async function handleJobOrRoleButtonClick(interaction: ButtonInteraction<
 	});
 
 	if (eventData.instance.messageId) {
-		container.client.emit(BloombotEvents.UpdateEmbed, {
+		container.client.emit(XIVEventBuddyEvents.UpdateEmbed, {
 			eventId,
 			guildId: interaction.guildId,
 			origin: UpdateEmbedPayloadOrigin.JobOrRoleButtonClick

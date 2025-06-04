@@ -1,5 +1,5 @@
 import { braillePatternBlank, BrandingColors, leftToRightMark, type EventData } from '#lib/util/constants';
-import { BloombotEmojis, getEmojiForJob } from '#lib/util/emojis';
+import { getEmojiForJob, XIVEventBuddyEmojis } from '#lib/util/emojis';
 import {
 	getAbsentParticipants,
 	getAllRounderParticipants,
@@ -50,16 +50,16 @@ export function buildEventEmbed(event: EventData, shouldDisableEvent = false) {
 			inline: true,
 			name: leftToRightMark,
 			value: [
-				`${BloombotEmojis.Leader} ${userMention(event.leader)}`,
-				`${shouldDisableEvent ? BloombotEmojis.DateExpired : BloombotEmojis.Date} ${time(eventDateTime, TimestampStyles.ShortDate)}`
+				`${XIVEventBuddyEmojis.Leader} ${userMention(event.leader)}`,
+				`${shouldDisableEvent ? XIVEventBuddyEmojis.DateExpired : XIVEventBuddyEmojis.Date} ${time(eventDateTime, TimestampStyles.ShortDate)}`
 			].join('\n')
 		},
 		{
 			inline: true,
 			name: leftToRightMark,
 			value: [
-				`${shouldDisableEvent ? BloombotEmojis.SignupsExpired : BloombotEmojis.Signups} ${bold(presentParticipants.length.toString())} (+${benchedParticipants.length + lateParticipants.length + tentativeParticipants.length})`,
-				`${shouldDisableEvent ? BloombotEmojis.TimeExpired : BloombotEmojis.Time} ${underline(time(eventDateTime, TimestampStyles.ShortTime))}`
+				`${shouldDisableEvent ? XIVEventBuddyEmojis.SignupsExpired : XIVEventBuddyEmojis.Signups} ${bold(presentParticipants.length.toString())} (+${benchedParticipants.length + lateParticipants.length + tentativeParticipants.length})`,
+				`${shouldDisableEvent ? XIVEventBuddyEmojis.TimeExpired : XIVEventBuddyEmojis.Time} ${underline(time(eventDateTime, TimestampStyles.ShortTime))}`
 			].join('\n')
 		},
 		{
@@ -67,7 +67,7 @@ export function buildEventEmbed(event: EventData, shouldDisableEvent = false) {
 			name: leftToRightMark,
 			value: [
 				braillePatternBlank,
-				`${shouldDisableEvent ? BloombotEmojis.CountdownExpired : BloombotEmojis.Countdown} ${time(eventDateTime, TimestampStyles.RelativeTime)}`
+				`${shouldDisableEvent ? XIVEventBuddyEmojis.CountdownExpired : XIVEventBuddyEmojis.Countdown} ${time(eventDateTime, TimestampStyles.RelativeTime)}`
 			].join('\n')
 		}
 	);
@@ -77,17 +77,17 @@ export function buildEventEmbed(event: EventData, shouldDisableEvent = false) {
 			{
 				inline: true,
 				name: leftToRightMark,
-				value: `${BloombotEmojis.Tank} Tanks ${bold(tankParticipants.length.toString())}`
+				value: `${XIVEventBuddyEmojis.Tank} Tanks ${bold(tankParticipants.length.toString())}`
 			},
 			{
 				inline: true,
 				name: leftToRightMark,
-				value: `${BloombotEmojis.DPS} DPS ${bold((meleeDpsParticipants.length + physRangedDpsParticipants.length + magicRangedDpsParticipants.length).toString())}`
+				value: `${XIVEventBuddyEmojis.DPS} DPS ${bold((meleeDpsParticipants.length + physRangedDpsParticipants.length + magicRangedDpsParticipants.length).toString())}`
 			},
 			{
 				inline: true,
 				name: leftToRightMark,
-				value: `${BloombotEmojis.Healer} Healers ${bold(healerParticipants.length.toString())}`
+				value: `${XIVEventBuddyEmojis.Healer} Healers ${bold(healerParticipants.length.toString())}`
 			}
 		);
 	}
@@ -100,7 +100,7 @@ export function buildEventEmbed(event: EventData, shouldDisableEvent = false) {
 			inline: true,
 			name: leftToRightMark,
 			value: [
-				`${BloombotEmojis.Tank} ${bold(underline('Tank'))} ${tankCount}`, //
+				`${XIVEventBuddyEmojis.Tank} ${bold(underline('Tank'))} ${tankCount}`, //
 				...tankLines
 			].join('\n')
 		});
@@ -114,7 +114,7 @@ export function buildEventEmbed(event: EventData, shouldDisableEvent = false) {
 			inline: true,
 			name: leftToRightMark,
 			value: [
-				`${BloombotEmojis.MeleeDPS} ${bold(underline('Melee'))} ${meleeDpsCount}`, //
+				`${XIVEventBuddyEmojis.MeleeDPS} ${bold(underline('Melee'))} ${meleeDpsCount}`, //
 				...meleeDpsLines
 			].join('\n')
 		});
@@ -128,7 +128,7 @@ export function buildEventEmbed(event: EventData, shouldDisableEvent = false) {
 			inline: true,
 			name: leftToRightMark,
 			value: [
-				`${BloombotEmojis.PhysRangedDPS} ${bold(underline('Ranged'))} ${physRangedCount}`, //
+				`${XIVEventBuddyEmojis.PhysRangedDPS} ${bold(underline('Ranged'))} ${physRangedCount}`, //
 				...physRangedDpsLines
 			].join('\n')
 		});
@@ -142,7 +142,7 @@ export function buildEventEmbed(event: EventData, shouldDisableEvent = false) {
 			inline: true,
 			name: leftToRightMark,
 			value: [
-				`${BloombotEmojis.MagicRangedDPS} ${bold(underline('Magical'))} ${magicDpsCount}`, //
+				`${XIVEventBuddyEmojis.MagicRangedDPS} ${bold(underline('Magical'))} ${magicDpsCount}`, //
 				...magicRangedDpsLines
 			].join('\n')
 		});
@@ -156,7 +156,7 @@ export function buildEventEmbed(event: EventData, shouldDisableEvent = false) {
 			inline: true,
 			name: leftToRightMark,
 			value: [
-				`${BloombotEmojis.Healer} ${bold(underline('Healer'))} ${healerCount}`, //
+				`${XIVEventBuddyEmojis.Healer} ${bold(underline('Healer'))} ${healerCount}`, //
 				...healerLines
 			].join('\n')
 		});
@@ -170,7 +170,7 @@ export function buildEventEmbed(event: EventData, shouldDisableEvent = false) {
 			inline: true,
 			name: leftToRightMark,
 			value: [
-				`${BloombotEmojis.AllRounder} ${bold(underline('Allrounder'))} ${allRounderCount}`, //
+				`${XIVEventBuddyEmojis.AllRounder} ${bold(underline('Allrounder'))} ${allRounderCount}`, //
 				...allRounderLines
 			].join('\n')
 		});
@@ -184,7 +184,7 @@ export function buildEventEmbed(event: EventData, shouldDisableEvent = false) {
 			inline: true,
 			name: leftToRightMark,
 			value: [
-				`${BloombotEmojis.PhantomJob} ${bold(underline('Phantom Jobs'))} ${phantomJobCount}`, //
+				`${XIVEventBuddyEmojis.PhantomJob} ${bold(underline('Phantom Jobs'))} ${phantomJobCount}`, //
 				...phantomJobLines
 			].join('\n')
 		});
@@ -196,7 +196,7 @@ export function buildEventEmbed(event: EventData, shouldDisableEvent = false) {
 		builder.addFields({
 			inline: false,
 			name: leftToRightMark,
-			value: `${BloombotEmojis.Late} Late (${lateParticipants.length}): ${formattedLateParticipants}`
+			value: `${XIVEventBuddyEmojis.Late} Late (${lateParticipants.length}): ${formattedLateParticipants}`
 		});
 	}
 
@@ -206,7 +206,7 @@ export function buildEventEmbed(event: EventData, shouldDisableEvent = false) {
 		builder.addFields({
 			inline: false,
 			name: leftToRightMark,
-			value: `${BloombotEmojis.Bench} Benched (${benchedParticipants.length}): ${formattedBenchedParticipants}`
+			value: `${XIVEventBuddyEmojis.Bench} Benched (${benchedParticipants.length}): ${formattedBenchedParticipants}`
 		});
 	}
 
@@ -216,7 +216,7 @@ export function buildEventEmbed(event: EventData, shouldDisableEvent = false) {
 		builder.addFields({
 			inline: false,
 			name: leftToRightMark,
-			value: `${BloombotEmojis.Tentative} Tentative (${tentativeParticipants.length}): ${formattedTentativeParticipants}`
+			value: `${XIVEventBuddyEmojis.Tentative} Tentative (${tentativeParticipants.length}): ${formattedTentativeParticipants}`
 		});
 	}
 
@@ -226,7 +226,7 @@ export function buildEventEmbed(event: EventData, shouldDisableEvent = false) {
 		builder.addFields({
 			inline: false,
 			name: leftToRightMark,
-			value: `${BloombotEmojis.Absence} Absence (${absentParticipants.length}): ${formattedAbsentParticipants}`
+			value: `${XIVEventBuddyEmojis.Absence} Absence (${absentParticipants.length}): ${formattedAbsentParticipants}`
 		});
 	}
 

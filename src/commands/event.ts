@@ -1,6 +1,6 @@
-import { BloomCommand } from '#lib/extensions/BloomComand';
-import { BloombotEvents, ErrorIdentifiers, UpdateEmbedPayloadOrigin, type EventData } from '#lib/util/constants';
-import { BloombotEmojis } from '#lib/util/emojis';
+import { XIVEventBuddyCommand } from '#lib/extensions/XIVEventBuddyComand';
+import { ErrorIdentifiers, UpdateEmbedPayloadOrigin, XIVEventBuddyEvents, type EventData } from '#lib/util/constants';
+import { XIVEventBuddyEmojis } from '#lib/util/emojis';
 import { buildEventAttachment } from '#lib/util/functions/buildEventAttachment';
 import { buildEventComponents } from '#lib/util/functions/buildEventComponents';
 import { buildEventEmbed } from '#lib/util/functions/buildEventEmbed';
@@ -28,9 +28,9 @@ import {
 } from 'discord.js';
 
 @ApplyOptions<ChatInputCommand.Options>({
-	description: 'Manage the Nightbloom events'
+	description: 'Manage the server events'
 })
-export class SlashCommand extends BloomCommand {
+export class SlashCommand extends XIVEventBuddyCommand {
 	private readonly timeRegex = /^(?:0\d|1\d|2[0-4]):[0-5]\d$/;
 
 	public override registerApplicationCommands(registry: ApplicationCommandRegistry): Awaitable<void> {
@@ -308,7 +308,7 @@ export class SlashCommand extends BloomCommand {
 			const eventName = event?.name ? ` ${event.name}` : '';
 
 			throw new UserError({
-				message: `${BloombotEmojis.RedCross} No participants found for the event${eventName}.`,
+				message: `${XIVEventBuddyEmojis.RedCross} No participants found for the event${eventName}.`,
 				identifier: ErrorIdentifiers.RemoveParticipantNoParticipantsFound
 			});
 		}
@@ -317,7 +317,7 @@ export class SlashCommand extends BloomCommand {
 
 		if (!participantData) {
 			throw new UserError({
-				message: `${BloombotEmojis.RedCross} ${userMention(participant.id)} was not a participant for the event ${event.name}.`,
+				message: `${XIVEventBuddyEmojis.RedCross} ${userMention(participant.id)} was not a participant for the event ${event.name}.`,
 				identifier: ErrorIdentifiers.RemoveParticipantNotFound
 			});
 		}
@@ -331,14 +331,14 @@ export class SlashCommand extends BloomCommand {
 			}
 		});
 
-		this.container.client.emit(BloombotEvents.UpdateEmbed, {
+		this.container.client.emit(XIVEventBuddyEvents.UpdateEmbed, {
 			eventId: event.id,
 			guildId: interaction.guildId,
 			origin: UpdateEmbedPayloadOrigin.RemoveParticipantCommand
 		});
 
 		return interaction.editReply({
-			content: `${BloombotEmojis.GreenTick} Successfully removed participant ${userMention(participant.id)} from the event ${event.name}.`
+			content: `${XIVEventBuddyEmojis.GreenTick} Successfully removed participant ${userMention(participant.id)} from the event ${event.name}.`
 		});
 	}
 
@@ -347,7 +347,7 @@ export class SlashCommand extends BloomCommand {
 
 		if (dateIsInvalid) {
 			return interaction.editReply({
-				content: `${BloombotEmojis.RedCross} The date you provided is invalid, it has to be in the format of ${inlineCode('DD-MM-YYY')} or ${inlineCode('DD/MM/YYY')}.`
+				content: `${XIVEventBuddyEmojis.RedCross} The date you provided is invalid, it has to be in the format of ${inlineCode('DD-MM-YYY')} or ${inlineCode('DD/MM/YYY')}.`
 			});
 		}
 
@@ -355,7 +355,7 @@ export class SlashCommand extends BloomCommand {
 
 		if (!this.timeRegex.test(stringTime)) {
 			return interaction.editReply({
-				content: `${BloombotEmojis.RedCross} The time you provided is invalid, it has to be in the format of ${inlineCode('HH:mm')}.`
+				content: `${XIVEventBuddyEmojis.RedCross} The time you provided is invalid, it has to be in the format of ${inlineCode('HH:mm')}.`
 			});
 		}
 
@@ -368,7 +368,7 @@ export class SlashCommand extends BloomCommand {
 
 		if (!eventChannel?.isSendable()) {
 			return interaction.editReply({
-				content: `${BloombotEmojis.RedCross} The channel you provided is invalid.`
+				content: `${XIVEventBuddyEmojis.RedCross} The channel you provided is invalid.`
 			});
 		}
 
@@ -379,7 +379,7 @@ export class SlashCommand extends BloomCommand {
 				?.has([PermissionFlagsBits.SendMessages, PermissionFlagsBits.ViewChannel, PermissionFlagsBits.EmbedLinks])
 		) {
 			return interaction.editReply({
-				content: `${BloombotEmojis.RedCross} I do not have permission to send messages in the specified channel. I need at least the ${inlineCode('View Channel')}, ${inlineCode('Send Messages')}, and ${inlineCode('Embed Links')} permissions.`
+				content: `${XIVEventBuddyEmojis.RedCross} I do not have permission to send messages in the specified channel. I need at least the ${inlineCode('View Channel')}, ${inlineCode('Send Messages')}, and ${inlineCode('Embed Links')} permissions.`
 			});
 		}
 
@@ -434,13 +434,13 @@ export class SlashCommand extends BloomCommand {
 
 		if (!event.instance) {
 			return interaction.editReply({
-				content: `${BloombotEmojis.RedCross} An unexpected fatal error occurred while creating the event. Contact ${OwnerMentions} for assistance.`,
+				content: `${XIVEventBuddyEmojis.RedCross} An unexpected fatal error occurred while creating the event. Contact ${OwnerMentions} for assistance.`,
 				allowedMentions: { users: Owners }
 			});
 		}
 
-		this.container.client.emit(BloombotEvents.PostEmbed, { eventId: event.id, guildId: interaction.guildId });
-		this.container.client.emit(BloombotEvents.CreateServerEvent, {
+		this.container.client.emit(XIVEventBuddyEvents.PostEmbed, { eventId: event.id, guildId: interaction.guildId });
+		this.container.client.emit(XIVEventBuddyEvents.CreateServerEvent, {
 			eventId: event.id,
 			guildId: interaction.guildId,
 			isReschedule: false,
@@ -448,7 +448,7 @@ export class SlashCommand extends BloomCommand {
 		});
 
 		return interaction.editReply({
-			content: `${BloombotEmojis.GreenTick} Event ${inlineCode(name)} created successfully with ID ${inlineCode(event.id)}.`
+			content: `${XIVEventBuddyEmojis.GreenTick} Event ${inlineCode(name)} created successfully with ID ${inlineCode(event.id)}.`
 		});
 	}
 
@@ -478,7 +478,7 @@ export class SlashCommand extends BloomCommand {
 
 		if (eventInstances.length === 0) {
 			return interaction.editReply({
-				content: `${BloombotEmojis.RedCross} No events found.`
+				content: `${XIVEventBuddyEmojis.RedCross} No events found.`
 			});
 		}
 
@@ -486,8 +486,8 @@ export class SlashCommand extends BloomCommand {
 		const eventListHeader = heading('Event List', 1);
 
 		const variantMapping = {
-			[$Enums.EventVariant.NORMAL]: `${BloombotEmojis.Nightbloom} Normal`,
-			[$Enums.EventVariant.OCCULT_CRESCENT]: `${BloombotEmojis.PhantomJob} Occult Crescent`
+			[$Enums.EventVariant.NORMAL]: `${XIVEventBuddyEmojis.Nightbloom} Normal`,
+			[$Enums.EventVariant.OCCULT_CRESCENT]: `${XIVEventBuddyEmojis.PhantomJob} Occult Crescent`
 		};
 
 		const eventList = eventInstances
@@ -518,7 +518,7 @@ export class SlashCommand extends BloomCommand {
 			const filename = `event-list-${interaction.user.id}.txt`;
 
 			return interaction.editReply({
-				content: `${BloombotEmojis.GreenTick} The event list is too long to send in a single message. Here is a file with the event list.`,
+				content: `${XIVEventBuddyEmojis.GreenTick} The event list is too long to send in a single message. Here is a file with the event list.`,
 				files: [{ attachment: file, name: filename }]
 			});
 		}
@@ -558,7 +558,7 @@ export class SlashCommand extends BloomCommand {
 
 		if (!existingEvent?.instance) {
 			throw new UserError({
-				message: `${BloombotEmojis.RedCross} No event found with ID ${inlineCode(id)}.`,
+				message: `${XIVEventBuddyEmojis.RedCross} No event found with ID ${inlineCode(id)}.`,
 				identifier: ErrorIdentifiers.EventEditIdNotFound
 			});
 		}
@@ -574,7 +574,7 @@ export class SlashCommand extends BloomCommand {
 
 			if (dateIsInvalid) {
 				return interaction.editReply({
-					content: `${BloombotEmojis.RedCross} The date you provided is invalid, it has to be in the format of ${inlineCode('DD-MM-YYY')} or ${inlineCode('DD/MM/YYY')}.`
+					content: `${XIVEventBuddyEmojis.RedCross} The date you provided is invalid, it has to be in the format of ${inlineCode('DD-MM-YYY')} or ${inlineCode('DD/MM/YYY')}.`
 				});
 			}
 		}
@@ -583,7 +583,7 @@ export class SlashCommand extends BloomCommand {
 
 		if (stringTime && !this.timeRegex.test(stringTime)) {
 			return interaction.editReply({
-				content: `${BloombotEmojis.RedCross} The time you provided is invalid, it has to be in the format of ${inlineCode('HH:mm')}.`
+				content: `${XIVEventBuddyEmojis.RedCross} The time you provided is invalid, it has to be in the format of ${inlineCode('HH:mm')}.`
 			});
 		}
 
@@ -607,7 +607,7 @@ export class SlashCommand extends BloomCommand {
 
 		if (!resolvedEventChannel?.isSendable()) {
 			return interaction.editReply({
-				content: `${BloombotEmojis.RedCross} The channel you provided is invalid.`
+				content: `${XIVEventBuddyEmojis.RedCross} The channel you provided is invalid.`
 			});
 		}
 
@@ -653,13 +653,13 @@ export class SlashCommand extends BloomCommand {
 			}
 		});
 
-		this.container.client.emit(BloombotEvents.UpdateServerEvent, {
+		this.container.client.emit(XIVEventBuddyEvents.UpdateServerEvent, {
 			eventId: updatedEvent.id,
 			guildId: interaction.guildId
 		});
 
 		if (resolvedEventChannel.id === existingEvent.channelId) {
-			this.container.client.emit(BloombotEvents.UpdateEmbed, {
+			this.container.client.emit(XIVEventBuddyEvents.UpdateEmbed, {
 				eventId: updatedEvent.id,
 				guildId: interaction.guildId,
 				origin: UpdateEmbedPayloadOrigin.EditEventCommand
@@ -696,7 +696,7 @@ export class SlashCommand extends BloomCommand {
 		}
 
 		return interaction.editReply({
-			content: `${BloombotEmojis.GreenTick} Event ${inlineCode(name)} successfully updated.`
+			content: `${XIVEventBuddyEmojis.GreenTick} Event ${inlineCode(name)} successfully updated.`
 		});
 	}
 
@@ -720,7 +720,7 @@ export class SlashCommand extends BloomCommand {
 
 		if (!existingEvent?.instance) {
 			return interaction.editReply({
-				content: `${BloombotEmojis.RedCross} No event found with ID ${inlineCode(id)}.`
+				content: `${XIVEventBuddyEmojis.RedCross} No event found with ID ${inlineCode(id)}.`
 			});
 		}
 
@@ -752,11 +752,11 @@ export class SlashCommand extends BloomCommand {
 			}
 
 			return await interaction.editReply({
-				content: `${BloombotEmojis.GreenTick} Event with ID ${inlineCode(id)} successfully deleted.`
+				content: `${XIVEventBuddyEmojis.GreenTick} Event with ID ${inlineCode(id)} successfully deleted.`
 			});
 		} catch {
 			return interaction.editReply({
-				content: `${BloombotEmojis.RedCross} Failed to delete the event from the database. Contact ${OwnerMentions} for assistance.`
+				content: `${XIVEventBuddyEmojis.RedCross} Failed to delete the event from the database. Contact ${OwnerMentions} for assistance.`
 			});
 		}
 	}

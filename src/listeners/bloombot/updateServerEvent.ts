@@ -1,4 +1,4 @@
-import type { BloombotEvents, UpdateServerEventPayload } from '#lib/util/constants';
+import type { UpdateServerEventPayload, XIVEventBuddyEvents } from '#lib/util/constants';
 import { resolveOnErrorCodes } from '#lib/util/functions/resolveOnErrorCodes';
 import { $Enums } from '@prisma/client';
 import { Listener } from '@sapphire/framework';
@@ -10,7 +10,7 @@ import {
 	RESTJSONErrorCodes
 } from 'discord.js';
 
-export class UserListener extends Listener<typeof BloombotEvents.UpdateServerEvent> {
+export class UserListener extends Listener<typeof XIVEventBuddyEvents.UpdateServerEvent> {
 	public override async run({ eventId, guildId }: UpdateServerEventPayload) {
 		const eventData = await this.container.prisma.event.findFirstOrThrow({
 			where: {

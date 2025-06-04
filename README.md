@@ -1,12 +1,13 @@
 <div align="center">
 
-<img height="200" src="https://cdn.favware.tech/img/nightbloom-logo.png" alt="Bloombot"/>
+<!-- TODO: Add new icon -->
+<!-- <img height="200" src="https://cdn.favware.tech/img/nightbloom-logo.png" alt="XIVEventBuddy"/> -->
 
-# Bloombot
+# XIVEventBuddy
 
-**A private event/raid bot for the Nightbloom server, a FFXIV Free Company.**
+**A user friendly first discord bot to host your XIV events.**
 
-<a href="https://github.com/favware/Bloombot/blob/main/LICENSE" alt="License"><img src="https://img.shields.io/github/license/favware/Bloombot"/></a>
+<a href="https://github.com/favware/XIVEventBuddy/blob/main/LICENSE" alt="License"><img src="https://img.shields.io/github/license/favware/XIVEventBuddy"/></a>
 
 <a href="https://join.favware.tech" alt="Support Server"><img src="https://discord.com/api/guilds/512303595966824458/embed.png?style=banner2"/></a>
 
@@ -16,10 +17,10 @@
 
 ## About
 
-Bloombot is a private Discord bot for the Nightbloom FFXIV Free Company Discord server to provide various utilities and
-event management. We have opted to make our own bot to provide a more tailored experience for our members.
+XIVEventBuddy is a Discord bot that lets you host your FFXIV events on your Discord server. This bot aims to be user
+friendly and it will never lock any features behind a paywall.
 
-## Developing on Bloombot
+## Developing on XIVEventBuddy
 
 ### Requirements
 
@@ -29,26 +30,26 @@ event management. We have opted to make our own bot to provide a more tailored e
 
 ### [Set-Up - Refer to CONTRIBUTING.md]
 
-## A note to aspiring developers who want to self host Bloombot
+## A note to aspiring developers who want to self host XIVEventBuddy
 
-The developer team does not support the idea of other self-hosted instances of Bloombot. The team prides itself on
-providing the best experience and support for the end-users. As such, an offshoot or unaffiliated mirror of Bloombot may
-cause ill effects to the reputation and image of Bloombot. If you wish to see new features implemented, please refer to
-the developing guidelines linked above.
+The developer team does not support the idea of other self-hosted instances of XIVEventBuddy. The team prides itself on
+providing the best experience and support for the end-users. As such, an offshoot or unaffiliated mirror of
+XIVEventBuddy may cause ill effects to the reputation and image of XIVEventBuddy. If you wish to see new features
+implemented, please refer to the developing guidelines linked above.
 
-In addition, Bloombot was built with a dependence on many services which need consistent maintenance and oversight in
-order to function and behave properly. These include, but are not limited to,
+In addition, XIVEventBuddy was built with a dependence on many services which need consistent maintenance and oversight
+in order to function and behave properly. These include, but are not limited to,
 
 - [`Postgres`]: A persistent storage database database
 - [`Redis`]: Caching of queries and scheduling tasks.
 
-With this in mind, it is also worth noting that Bloombot will in no way be capable of running on services such as
+With this in mind, it is also worth noting that XIVEventBuddy will in no way be capable of running on services such as
 [Glitch] or [Heroku]. A dedicated VPS (Virtual Private Server) is required in order to maintain the proper production
 environment.
 
 ## Links
 
-**Bloombot links**
+**XIVEventBuddy links**
 
 - [Support Server][]
 - [Patreon]

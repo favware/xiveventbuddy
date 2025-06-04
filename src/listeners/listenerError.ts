@@ -1,4 +1,4 @@
-import { BloombotEmojis } from '#lib/util/emojis';
+import { XIVEventBuddyEmojis } from '#lib/util/emojis';
 import { Owners } from '#root/config';
 import { generateUnexpectedErrorMessage, ignoredCodes } from '#utils/functions/errorHelpers';
 import { Events, Listener, type ListenerErrorPayload, type Piece, UserError } from '@sapphire/framework';
@@ -66,7 +66,7 @@ export class ListenerError extends Listener<typeof Events.ListenerError> {
 		if (content.length > 2_000) {
 			const file = Buffer.from(content, 'utf8');
 			const filename = `error-log.txt`;
-			payload.content = `${BloombotEmojis.GreenTick} The message content was too long to send. Here is a file with the content.`;
+			payload.content = `${XIVEventBuddyEmojis.GreenTick} The message content was too long to send. Here is a file with the content.`;
 			payload.files = [{ attachment: file, name: filename }];
 		} else {
 			payload.content = content;

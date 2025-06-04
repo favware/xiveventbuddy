@@ -1,10 +1,10 @@
 services:
   redis:
     command: 'redis-server --requirepass redis'
-    container_name: bloombot-redis
+    container_name: xiveventbuddy-redis
     image: 'redis:alpine'
     networks:
-      - bloombot
+      - xiveventbuddy
     ports:
       - '6379:6379'
     restart: always
@@ -17,7 +17,7 @@ services:
     container_name: postgres
     image: postgres:17-alpine
     networks:
-      - bloombot
+      - xiveventbuddy
     ports:
       - '5432:5432'
     restart: always
@@ -26,7 +26,7 @@ services:
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=bloombot
+      - POSTGRES_DB=xiveventbuddy
     logging:
       options:
         max-size: '20m'
@@ -38,8 +38,8 @@ services:
       retries: 5
       start_period: 80s
 
-  bloombot:
-    container_name: bloombot
+  xiv_event_buddy:
+    container_name: xiv_event_buddy
     build: .
     env_file:
       - .env
@@ -49,13 +49,13 @@ services:
     environment:
       - NTP_SERVERS=pool.ntp.org
       - TZ="Europe/London"
-    image: favware/bloombot:latest
+    image: favware/xiv_event_buddy:latest
     logging:
       options:
         max-size: '1g'
         max-file: '3'
     networks:
-      - bloombot
+      - xiv_event_buddy
     restart: always
     tty: true
 
@@ -63,4 +63,4 @@ volumes:
   postgres-data:
 
 networks:
-  bloombot:
+  xiv_event_buddy:

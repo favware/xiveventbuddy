@@ -1,4 +1,4 @@
-<div style="text-align:center;"><h1>BLOOMBOT TERMS OF SERVICE </h1></div>
+<div style="text-align:center;"><h1>XIVEventBuddy TERMS OF SERVICE </h1></div>
 
 Last updated and effective: January 22, 2022
 
@@ -36,9 +36,9 @@ Favware
 ## TERMS
 
 By accessing this service, accessible through the [Discord](https://discord.com/privacy) chat platform, you are agreeing
-to be bound by these Bloombot Terms of Service and agree that you are responsible for the agreement with any applicable
-local laws. If you disagree with any of these terms, you are prohibited from accessing this service. The materials
-contained in the Service are protected by copyright and trade mark law.
+to be bound by these XIVEventBuddy Terms of Service and agree that you are responsible for the agreement with any
+applicable local laws. If you disagree with any of these terms, you are prohibited from accessing this service. The
+materials contained in the Service are protected by copyright and trade mark law.
 
 ## USE LICENSE
 

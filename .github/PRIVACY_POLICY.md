@@ -1,4 +1,4 @@
-<div style="text-align:center;"><h1>BLOOMBOT PRIVACY POLICY</h1></div>
+<div style="text-align:center;"><h1>XIVEventBuddy PRIVACY POLICY</h1></div>
 
 Last updated and effective: January 13, 2022
 

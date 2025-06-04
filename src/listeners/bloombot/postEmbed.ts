@@ -1,4 +1,4 @@
-import type { BloombotEvents, EventData, PostEmbedPayload } from '#lib/util/constants';
+import type { EventData, PostEmbedPayload, XIVEventBuddyEvents } from '#lib/util/constants';
 import { buildEventAttachment } from '#lib/util/functions/buildEventAttachment';
 import { buildEventComponents } from '#lib/util/functions/buildEventComponents';
 import { buildEventEmbed } from '#lib/util/functions/buildEventEmbed';
@@ -8,7 +8,7 @@ import { $Enums } from '@prisma/client';
 import { Listener } from '@sapphire/framework';
 import { RESTJSONErrorCodes, roleMention } from 'discord.js';
 
-export class UserListener extends Listener<typeof BloombotEvents.PostEmbed> {
+export class UserListener extends Listener<typeof XIVEventBuddyEvents.PostEmbed> {
 	public override async run({ eventId, guildId }: PostEmbedPayload) {
 		const eventData = await this.container.prisma.event.findFirstOrThrow({
 			where: {

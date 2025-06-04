@@ -17,7 +17,7 @@ export function convertToEorzeaTime(time: Date): string {
 	return `${eorzeaTime.hours}:${eorzeaTime.minutes.toString().padStart(2, '0')}`;
 }
 
-export function getLightServerTime() {
+export function getEUServerTime() {
 	const time = new Date();
 	const hours = time.getUTCHours().toString().padStart(2, '0');
 	const minutes = time.getUTCMinutes().toString().padStart(2, '0');

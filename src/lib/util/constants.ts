@@ -16,7 +16,21 @@ export const leftToRightMark = String.fromCodePoint(8_206);
  */
 export const braillePatternBlank = String.fromCodePoint(10_240);
 
-export enum BloombotEvents {
+export const enum XIVServers {
+	Aether = 'aether',
+	Chaos = 'chaos',
+	Crystal = 'crystal',
+	Dynamis = 'dynamis',
+	Elemental = 'elemental',
+	Gaia = 'gaia',
+	Light = 'light',
+	Mana = 'mana',
+	Materia = 'materia',
+	Meteor = 'Meteor',
+	Primal = 'primal'
+}
+
+export const enum XIVEventBuddyEvents {
 	CreateServerEvent = 'createServerEvent',
 	PostEmbed = 'postEmbed',
 	UpdateEmbed = 'updateEmbed',
@@ -136,6 +150,9 @@ type EventDataEmojis =
 	| 'Tentative'
 	| 'Time'
 	| 'TimeExpired';
-type OtherEmojis = 'GreenTick' | 'Nightbloom' | 'RedCross';
+type OtherEmojis =
+	| 'GreenTick'
+	| 'Nightbloom' // TODO: Replace with some XIV Icon
+	| 'RedCross';
 
 export type Emojis = EventDataEmojis | Jobs | JobTypeEmojis | OtherEmojis;

@@ -90,15 +90,6 @@ model EventManagers {
     @@map("event_managers")
 }
 
-model VerifiedServers {
-    id        String   @id @default(cuid())
-    discordId String   @unique @map("discord_id")
-    createdAt DateTime @default(now()) @map("created_at")
-    updatedAt DateTime @updatedAt @map("updated_at")
-
-    @@map("verified_servers")
-}
-
 model Event {
     id          String         @id @default(cuid())
     name        String

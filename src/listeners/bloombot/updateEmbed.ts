@@ -1,5 +1,5 @@
-import { type BloombotEvents, ErrorIdentifiers, type EventData, type UpdateEmbedPayload } from '#lib/util/constants';
-import { BloombotEmojis } from '#lib/util/emojis';
+import { ErrorIdentifiers, type EventData, type UpdateEmbedPayload, type XIVEventBuddyEvents } from '#lib/util/constants';
+import { XIVEventBuddyEmojis } from '#lib/util/emojis';
 import { buildEventAttachment } from '#lib/util/functions/buildEventAttachment';
 import { buildEventComponents } from '#lib/util/functions/buildEventComponents';
 import { buildEventEmbed } from '#lib/util/functions/buildEventEmbed';
@@ -10,7 +10,7 @@ import { $Enums } from '@prisma/client';
 import { Listener, UserError } from '@sapphire/framework';
 import { RESTJSONErrorCodes, roleMention } from 'discord.js';
 
-export class UserListener extends Listener<typeof BloombotEvents.UpdateEmbed> {
+export class UserListener extends Listener<typeof XIVEventBuddyEvents.UpdateEmbed> {
 	public override async run({ eventId, guildId, origin, shouldDisableEvent = false }: UpdateEmbedPayload) {
 		const eventData = await this.container.prisma.event.findFirstOrThrow({
 			where: {
@@ -65,7 +65,7 @@ export class UserListener extends Listener<typeof BloombotEvents.UpdateEmbed> {
 						});
 					} else {
 						throw new UserError({
-							message: `${BloombotEmojis.RedCross} I was unexpectedly unable to update the event message. Contact ${OwnerMentions} for assistance.`,
+							message: `${XIVEventBuddyEmojis.RedCross} I was unexpectedly unable to update the event message. Contact ${OwnerMentions} for assistance.`,
 							identifier: ErrorIdentifiers.EventEditPostedMessageUndefinedError,
 							context: {
 								origin,
@@ -84,7 +84,7 @@ export class UserListener extends Listener<typeof BloombotEvents.UpdateEmbed> {
 					}
 
 					throw new UserError({
-						message: `${BloombotEmojis.RedCross} I was unexpectedly unable to update the event message. Contact ${OwnerMentions} for assistance.`,
+						message: `${XIVEventBuddyEmojis.RedCross} I was unexpectedly unable to update the event message. Contact ${OwnerMentions} for assistance.`,
 						identifier: ErrorIdentifiers.EventEditMessageFetchFailedError,
 						context: {
 							origin,

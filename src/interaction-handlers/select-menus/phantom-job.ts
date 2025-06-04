@@ -1,5 +1,5 @@
-import { BloombotEvents, CustomIdPrefixes, ErrorIdentifiers, UpdateEmbedPayloadOrigin } from '#lib/util/constants';
-import { BloombotEmojis } from '#lib/util/emojis';
+import { CustomIdPrefixes, ErrorIdentifiers, UpdateEmbedPayloadOrigin, XIVEventBuddyEvents } from '#lib/util/constants';
+import { XIVEventBuddyEmojis } from '#lib/util/emojis';
 import { formatPhantomJobName } from '#lib/util/functions/formatPhantomJobName';
 import { getFullEventData } from '#lib/util/functions/getFullEventData';
 import { OwnerMentions } from '#root/config';
@@ -15,14 +15,14 @@ export type PhantomJobParseResult = InteractionHandler.ParseResult<StringSelectM
 })
 export class StringSelectMenuHandler extends InteractionHandler {
 	public override async run(interaction: StringSelectMenuInteraction<'cached'>, result: InteractionHandler.ParseResult<this>) {
-		this.container.client.emit(BloombotEvents.UpdateEmbed, {
+		this.container.client.emit(XIVEventBuddyEvents.UpdateEmbed, {
 			eventId: result.eventId,
 			guildId: interaction.guildId,
 			origin: UpdateEmbedPayloadOrigin.RoleSelectMenu
 		});
 
 		return interaction.editReply({
-			content: `${BloombotEmojis.GreenTick} Successfully updated your role to ${BloombotEmojis[result.selectedPhantomJob]} ${inlineCode(formatPhantomJobName(result.selectedPhantomJob))}.`
+			content: `${XIVEventBuddyEmojis.GreenTick} Successfully updated your role to ${XIVEventBuddyEmojis[result.selectedPhantomJob]} ${inlineCode(formatPhantomJobName(result.selectedPhantomJob))}.`
 		});
 	}
 
@@ -37,7 +37,7 @@ export class StringSelectMenuHandler extends InteractionHandler {
 
 		if (!eventData?.instance?.id) {
 			throw new UserError({
-				message: `${BloombotEmojis.RedCross} I was unexpectedly unable to find the event matching the selection of that option. Contact ${OwnerMentions} for assistance.`,
+				message: `${XIVEventBuddyEmojis.RedCross} I was unexpectedly unable to find the event matching the selection of that option. Contact ${OwnerMentions} for assistance.`,
 				identifier: ErrorIdentifiers.UnableToFindEventForSelectMenuChoiceError
 			});
 		}
