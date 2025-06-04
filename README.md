@@ -6,8 +6,6 @@
 
 **A user friendly first discord bot to host your XIV events.**
 
-<a href="https://github.com/favware/XIVEventBuddy/blob/main/LICENSE" alt="License"><img src="https://img.shields.io/github/license/favware/XIVEventBuddy"/></a>
-
 <a href="https://join.favware.tech" alt="Support Server"><img src="https://discord.com/api/guilds/512303595966824458/embed.png?style=banner2"/></a>
 
 </div>
