@@ -10,6 +10,11 @@ export class UserPrecondition extends Precondition {
 			return this.ok();
 		}
 
+		// Check if the member is the server owner
+		if (interaction.user.id === interaction.guild.ownerId) {
+			return this.ok();
+		}
+
 		// Check if the member has any role with the Administrator permission
 		const hasAdminRole = interaction.member.roles.cache.some((role) => role.permissions.has(PermissionFlagsBits.Administrator));
 		if (hasAdminRole) {
