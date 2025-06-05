@@ -1,12 +1,18 @@
 import { XIVEventBuddyEmojis } from '#lib/util/emojis';
 import { Owners } from '#root/config';
 import { Precondition } from '@sapphire/framework';
-import type { ChatInputCommandInteraction } from 'discord.js';
+import { PermissionFlagsBits, type ChatInputCommandInteraction } from 'discord.js';
 
 export class UserPrecondition extends Precondition {
 	public override async chatInputRun(interaction: ChatInputCommandInteraction<'cached'>) {
 		// Check if the user ID is included in the Owners array
 		if (Owners.includes(interaction.user.id)) {
+			return this.ok();
+		}
+
+		// Check if the member has any role with the Administrator permission
+		const hasAdminRole = interaction.member.roles.cache.some((role) => role.permissions.has(PermissionFlagsBits.Administrator));
+		if (hasAdminRole) {
 			return this.ok();
 		}
 
