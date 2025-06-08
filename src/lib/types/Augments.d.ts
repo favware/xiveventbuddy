@@ -12,14 +12,6 @@ import type { Events, WebhookClient } from 'discord.js';
 
 declare module '@sapphire/pieces' {
 	interface Container {
-		/**
-		 * The Intl handler for EN-GB.
-		 */
-		i18n: {
-			listAnd: Intl.ListFormat;
-			listOr: Intl.ListFormat;
-			number: Intl.NumberFormat;
-		};
 		prisma: prismaType;
 		/**
 		 * The webhook to use for the error event.
