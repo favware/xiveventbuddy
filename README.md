@@ -6,6 +6,8 @@
 
 **A user friendly first discord bot to host your XIV events.**
 
+<a title="Crowdin" target="_blank" href="https://crowdin.com/project/xiveventbuddy"><img src="https://badges.crowdin.net/xiveventbuddy/localized.svg"></a>
+
 <a href="https://join.favware.tech" alt="Support Server"><img src="https://discord.com/api/guilds/512303595966824458/embed.png?style=banner2"/></a>
 
 </div>
@@ -16,6 +18,12 @@
 
 XIVEventBuddy is a Discord bot that lets you host your FFXIV events on your Discord server. This bot aims to be user
 friendly and it will never lock any features behind a paywall.
+
+## Translating XIVEventBuddy <a href="https://crowdin.com/project/xiveventbuddy" target="_blank"><img src="https://support.crowdin.com/assets/logos/crowdin-core-logo.png" align="right" width="30%"></a>
+
+We use **Crowdin** to translate XIVEventBuddy's messages into different languages. If you'd like to help by contributing
+new translations (or improving existing ones), [**click here**](https://crowdin.com/project/xiveventbuddy). Thank you in
+advance for any contributions!
 
 ## Developing on XIVEventBuddy
 

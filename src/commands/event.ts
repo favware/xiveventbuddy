@@ -8,9 +8,9 @@ import { buildPhantomJobComponent } from '#lib/util/functions/buildPhantomJobCom
 import { resolveOnErrorCodes } from '#lib/util/functions/resolveOnErrorCodes';
 import { OwnerMentions, Owners } from '#root/config';
 import { $Enums } from '@prisma/client';
-import { ApplyOptions } from '@sapphire/decorators';
 import { fetch, FetchResultTypes } from '@sapphire/fetch';
 import { Result, UserError, type ApplicationCommandRegistry, type Awaitable, type ChatInputCommand } from '@sapphire/framework';
+import { applyLocalizedBuilder, createLocalizedChoice, resolveKey } from '@sapphire/plugin-i18next';
 import { filterNullish, isNullishOrZero } from '@sapphire/utilities';
 import { format } from 'date-fns';
 import {
@@ -27,237 +27,172 @@ import {
 	userMention
 } from 'discord.js';
 
-@ApplyOptions<ChatInputCommand.Options>({
-	description: 'Manage the server events'
-})
 export class SlashCommand extends XIVEventBuddyCommand {
 	private readonly timeRegex = /^(?:0\d|1\d|2[0-4]):[0-5]\d$/;
 
 	public override registerApplicationCommands(registry: ApplicationCommandRegistry): Awaitable<void> {
 		registry.registerChatInputCommand((command) =>
-			command //
-				.setName(this.name)
-				.setDescription(this.description)
+			applyLocalizedBuilder(command, 'commands/event:root') //
 				.setIntegrationTypes(ApplicationIntegrationType.GuildInstall)
 				.addSubcommand((builder) =>
-					builder
-						.setName('create')
-						.setDescription('Create a new event')
+					applyLocalizedBuilder(builder, 'commands/event:create')
 						.addStringOption((builder) =>
-							builder //
-								.setName('name')
-								.setDescription('The name of the event')
+							applyLocalizedBuilder(builder, 'commands/event:event') //
 								.setRequired(true)
 						)
 						.addStringOption((builder) =>
-							builder //
-								.setName('date')
-								.setDescription('The date of the event, or first occurrence if interval is set. Format is DD-MM-YYYY or DD/MM/YYYY')
+							applyLocalizedBuilder(builder, 'commands/event:date') //
 								.setRequired(true)
 						)
 						.addStringOption((builder) =>
-							builder //
-								.setName('time')
-								.setDescription('The time of the event. Format is HH:mm (24 hour clock). Time is always Light server time (UTC)')
+							applyLocalizedBuilder(builder, 'commands/event:time') //
 								.setRequired(true)
 						)
 						.addIntegerOption((builder) =>
-							builder //
-								.setName('duration')
-								.setDescription('The duration of the event in hours')
+							applyLocalizedBuilder(builder, 'commands/event:duration') //
 								.setChoices(
-									{ name: '1 hour', value: 1 },
-									{ name: '2 hours', value: 2 },
-									{ name: '3 hours', value: 3 },
-									{ name: '4 hours', value: 4 }
+									createLocalizedChoice('commands/event:duration1Hour', { value: 1 }),
+									createLocalizedChoice('commands/event:duration2Hours', { value: 2 }),
+									createLocalizedChoice('commands/event:duration3Hours', { value: 3 }),
+									createLocalizedChoice('commands/event:duration4Hours', { value: 4 })
 								)
 								.setRequired(true)
 						)
 						.addStringOption((builder) =>
-							builder //
-								.setName('description')
-								.setDescription('The description of the event, for newlines type \\n')
+							applyLocalizedBuilder(builder, 'commands/event:description') //
 								.setRequired(false)
 						)
 						.addStringOption((builder) =>
-							builder //
-								.setName('interval')
-								.setDescription('The interval at which this event should repeat')
+							applyLocalizedBuilder(builder, 'commands/event:interval') //
 								.setRequired(false)
 								.setChoices(
-									{ name: 'Weekly', value: $Enums.EventInterval.WEEKLY },
-									{ name: 'Once every other week', value: $Enums.EventInterval.ONCE_EVERY_OTHER_WEEK },
-									{ name: 'Monthly', value: $Enums.EventInterval.MONTHLY },
-									{
-										name: 'Every one before last friday of the month',
+									createLocalizedChoice('commands/event:intervalWeekly', { value: $Enums.EventInterval.WEEKLY }),
+									createLocalizedChoice('commands/event:intervalOnceEveryOtherWeek', {
+										value: $Enums.EventInterval.ONCE_EVERY_OTHER_WEEK
+									}),
+									createLocalizedChoice('commands/event:intervalMonthly', { value: $Enums.EventInterval.MONTHLY }),
+									createLocalizedChoice('commands/event:intervalOneBeforeLastFridayOfTheMonth', {
 										value: $Enums.EventInterval.ONE_BEFORE_LAST_FRIDAY_OF_THE_MONTH
-									}
+									})
 								)
 						)
 						.addRoleOption((builder) =>
-							builder //
-								.setName('role-to-ping')
-								.setDescription('A role to ping when the event is created')
+							applyLocalizedBuilder(builder, 'commands/event:roleToPing') //
 								.setRequired(false)
 						)
 						.addChannelOption((builder) =>
-							builder //
-								.setName('channel')
-								.setDescription('The channel in which the event should posted, if omitted the current channel is used.')
+							applyLocalizedBuilder(builder, 'commands/event:channel') //
 								.setRequired(false)
 						)
 						.addUserOption((builder) =>
-							builder //
-								.setName('leader')
-								.setDescription('The event leader for this event, defaults to yourself if not provided.')
+							applyLocalizedBuilder(builder, 'commands/event:leader') //
 								.setRequired(false)
 						)
 						.addAttachmentOption((builder) =>
-							builder //
-								.setName('banner-image')
-								.setDescription('The banner image, shown below the event embed and in the Discord server event banner.')
+							applyLocalizedBuilder(builder, 'commands/event:banner') //
 								.setRequired(false)
 						)
 						.addStringOption((builder) =>
-							builder //
-								.setName('variant')
-								.setDescription('The event variant for this event')
+							applyLocalizedBuilder(builder, 'commands/event:variant') //
 								.setRequired(false)
 								.setChoices(
-									{ name: 'Normal', value: $Enums.EventVariant.NORMAL },
-									{ name: 'Occult Crescent', value: $Enums.EventVariant.OCCULT_CRESCENT }
+									createLocalizedChoice('commands/event:variantNormal', { value: $Enums.EventVariant.NORMAL }),
+									createLocalizedChoice('commands/event:variantOccultCrescent', { value: $Enums.EventVariant.OCCULT_CRESCENT })
 								)
 						)
 				)
-				.addSubcommand((builder) =>
-					builder //
-						.setName('list')
-						.setDescription('List all currently known events and their IDs. Future scheduled events will not be listed.')
+				.addSubcommand(
+					(builder) => applyLocalizedBuilder(builder, 'commands/event:list') //
 				)
 				.addSubcommand((builder) =>
-					builder
-						.setName('edit')
-						.setDescription('Edit an existing event.')
+					applyLocalizedBuilder(builder, 'commands/event:edit') //
 						.addStringOption((builder) =>
-							builder
-								.setName('id')
-								.setDescription('The command id, use /event list to get a list, or type the event name for autocomplete.')
+							applyLocalizedBuilder(builder, 'commands/event:eventId') //
 								.setAutocomplete(true)
 								.setRequired(true)
 						)
 						.addStringOption((builder) =>
-							builder //
-								.setName('name')
-								.setDescription('The new name of the event')
+							applyLocalizedBuilder(builder, 'commands/event:event') //
 								.setRequired(false)
 						)
 						.addStringOption((builder) =>
-							builder //
-								.setName('date')
-								.setDescription('The new date of the event. Format is DD-MM-YYYY or DD/MM/YYYY')
+							applyLocalizedBuilder(builder, 'commands/event:date') //
 								.setRequired(false)
 						)
 						.addStringOption((builder) =>
-							builder //
-								.setName('time')
-								.setDescription('The new time of the event. Format is HH:mm (24 hour clock). Time is always Light server time (UTC)')
+							applyLocalizedBuilder(builder, 'commands/event:time') //
 								.setRequired(false)
 						)
 						.addIntegerOption((builder) =>
-							builder //
-								.setName('duration')
-								.setDescription('The duration of the event in hours')
+							applyLocalizedBuilder(builder, 'commands/event:duration') //
 								.setChoices(
-									{ name: '1 hour', value: 1 },
-									{ name: '2 hours', value: 2 },
-									{ name: '3 hours', value: 3 },
-									{ name: '4 hours', value: 4 }
+									createLocalizedChoice('commands/event:duration1Hour', { value: 1 }),
+									createLocalizedChoice('commands/event:duration2Hours', { value: 2 }),
+									createLocalizedChoice('commands/event:duration3Hours', { value: 3 }),
+									createLocalizedChoice('commands/event:duration4Hours', { value: 4 })
 								)
 								.setRequired(false)
 						)
 						.addStringOption((builder) =>
-							builder //
-								.setName('description')
-								.setDescription('The new description of the event, for newlines type \\n')
+							applyLocalizedBuilder(builder, 'commands/event:description') //
 								.setRequired(false)
 						)
 						.addStringOption((builder) =>
-							builder //
-								.setName('interval')
-								.setDescription('The new interval at which this event should repeat')
+							applyLocalizedBuilder(builder, 'commands/event:interval') //
 								.setRequired(false)
 								.setChoices(
-									{ name: 'Weekly', value: $Enums.EventInterval.WEEKLY },
-									{ name: 'Once every other week', value: $Enums.EventInterval.ONCE_EVERY_OTHER_WEEK },
-									{ name: 'Monthly', value: $Enums.EventInterval.MONTHLY },
-									{
-										name: 'Every one before last friday of the month',
+									createLocalizedChoice('commands/event:intervalWeekly', { value: $Enums.EventInterval.WEEKLY }),
+									createLocalizedChoice('commands/event:intervalOnceEveryOtherWeek', {
+										value: $Enums.EventInterval.ONCE_EVERY_OTHER_WEEK
+									}),
+									createLocalizedChoice('commands/event:intervalMonthly', { value: $Enums.EventInterval.MONTHLY }),
+									createLocalizedChoice('commands/event:intervalOneBeforeLastFridayOfTheMonth', {
 										value: $Enums.EventInterval.ONE_BEFORE_LAST_FRIDAY_OF_THE_MONTH
-									}
+									})
 								)
 						)
 						.addRoleOption((builder) =>
-							builder //
-								.setName('role-to-ping')
-								.setDescription('The new role to ping for the event')
+							applyLocalizedBuilder(builder, 'commands/event:roleToPing') //
 								.setRequired(false)
 						)
 						.addChannelOption((builder) =>
-							builder //
-								.setName('channel')
-								.setDescription('The channel in which the event should posted, if omitted the current channel is used.')
+							applyLocalizedBuilder(builder, 'commands/event:channel') //
 								.setRequired(false)
 						)
 						.addUserOption((builder) =>
-							builder //
-								.setName('leader')
-								.setDescription('The new event leader for this event.')
+							applyLocalizedBuilder(builder, 'commands/event:leader') //
 								.setRequired(false)
 						)
 						.addAttachmentOption((builder) =>
-							builder //
-								.setName('banner-image')
-								.setDescription('The banner image, shown below the event embed and in the Discord server event banner.')
+							applyLocalizedBuilder(builder, 'commands/event:banner') //
 								.setRequired(false)
 						)
 						.addStringOption((builder) =>
-							builder //
-								.setName('variant')
-								.setDescription('The new event variant for this event')
+							applyLocalizedBuilder(builder, 'commands/event:variant') //
 								.setRequired(false)
 								.setChoices(
-									{ name: 'Normal', value: $Enums.EventVariant.NORMAL },
-									{ name: 'Occult Crescent', value: $Enums.EventVariant.OCCULT_CRESCENT }
+									createLocalizedChoice('commands/event:variantNormal', { value: $Enums.EventVariant.NORMAL }),
+									createLocalizedChoice('commands/event:variantOccultCrescent', { value: $Enums.EventVariant.OCCULT_CRESCENT })
 								)
 						)
 				)
 				.addSubcommand((builder) =>
-					builder //
-						.setName('delete')
-						.setDescription('Deletes an existing event.')
+					applyLocalizedBuilder(builder, 'commands/event:delete') //
 						.addStringOption((builder) =>
-							builder
-								.setName('id')
-								.setDescription('The command id, use /event list to get a list, or type the event name for autocomplete.')
+							applyLocalizedBuilder(builder, 'commands/event:eventId') //
 								.setAutocomplete(true)
 								.setRequired(true)
 						)
 				)
 				.addSubcommand((builder) =>
-					builder //
-						.setName('remove-participant')
-						.setDescription('Manually remove a participant from an event.')
+					applyLocalizedBuilder(builder, 'commands/event:removeParticipant') //
 						.addStringOption((builder) =>
-							builder
-								.setName('id')
-								.setDescription('The command id, use /event list to get a list, or type the event name for autocomplete.')
+							applyLocalizedBuilder(builder, 'commands/event:eventId') //
 								.setAutocomplete(true)
 								.setRequired(true)
 						)
 						.addUserOption((builder) =>
-							builder //
-								.setName('participant')
-								.setDescription('The participant to remove from the event.')
+							applyLocalizedBuilder(builder, 'commands/event:participant') //
 								.setRequired(true)
 						)
 				)
@@ -308,7 +243,7 @@ export class SlashCommand extends XIVEventBuddyCommand {
 			const eventName = event?.name ? ` ${event.name}` : '';
 
 			throw new UserError({
-				message: `${XIVEventBuddyEmojis.RedCross} No participants found for the event${eventName}.`,
+				message: await resolveKey(interaction, 'commands/event:noParticipantFound', { eventName }),
 				identifier: ErrorIdentifiers.RemoveParticipantNoParticipantsFound
 			});
 		}
@@ -317,7 +252,10 @@ export class SlashCommand extends XIVEventBuddyCommand {
 
 		if (!participantData) {
 			throw new UserError({
-				message: `${XIVEventBuddyEmojis.RedCross} ${userMention(participant.id)} was not a participant for the event ${event.name}.`,
+				message: await resolveKey(interaction, 'commands/event:notAParticipant', {
+					participantMention: userMention(participant.id),
+					eventName: event.name
+				}),
 				identifier: ErrorIdentifiers.RemoveParticipantNotFound
 			});
 		}
@@ -338,7 +276,10 @@ export class SlashCommand extends XIVEventBuddyCommand {
 		});
 
 		return interaction.editReply({
-			content: `${XIVEventBuddyEmojis.GreenTick} Successfully removed participant ${userMention(participant.id)} from the event ${event.name}.`
+			content: await resolveKey(interaction, 'commands/event:successfullyRemovedParticipant', {
+				participantMention: userMention(participant.id),
+				eventName: event.name
+			})
 		});
 	}
 

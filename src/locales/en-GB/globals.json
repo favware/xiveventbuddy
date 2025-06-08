@@ -1,0 +1,8 @@
+{
+	"default": "{{key}} has not been localized for en-GB yet.",
+	"defaultLanguage": "Default Language",
+	"numberValue": "{{value, number}}",
+	"dateValue": "{{value, date}}",
+	"timeValue": "{{value, time}}",
+	"relativeTimeValue": "{{value, relativeTime}}"
+}

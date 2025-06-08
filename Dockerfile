@@ -41,6 +41,7 @@ ENV TZ="Europe/London"
 
 COPY --chown=node:node .env .env
 COPY --chown=node:node --from=builder /usr/src/app/dist dist
+COPY --chown=node:node --from=builder /usr/src/app/src/locales src/locales
 
 RUN yarn workspaces focus --all --production
 

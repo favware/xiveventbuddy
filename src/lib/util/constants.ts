@@ -42,6 +42,14 @@ export const enum BrandingColors {
 	ExpiredEvent = 0xff0000
 }
 
+export const enum LanguageFormatters {
+	Date = 'date',
+	Number = 'number',
+	Permissions = 'permissions',
+	RelativeTime = 'relativeTime',
+	Time = 'time'
+}
+
 export const enum ErrorIdentifiers {
 	EventBannerImageDownloadError = 'EventBannerImageDownloadError',
 	EventEditIdNotFound = 'EventEditIdNotFound',

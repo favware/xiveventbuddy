@@ -1,0 +1,5 @@
+{
+	"rootName": "help",
+	"rootDescription": "Biedt installatie-informatie om aan de slag te gaan met XIVEventBuddy",
+	"content": "Welkom bij XIVEventBuddy! Om je op weg te helpen, volgt hier een overzicht van hoe deze bot werkt.\n\nHet eerste wat je wilt doen, is het gebruik van het {{settingsCommandMention}}-commando om de rol(len) te configureren die evenementen mogen aanmaken met het {{eventsCommandMention}}-commando.\n\nTot die tijd kunnen alleen mensen met de $t(permissions:Administrator)-machtiging, of de eigenaar van de server, de bot gebruiken.\nLet op: dit zijn dezelfde mensen die het {{settingsCommandMention}}-commando kunnen gebruiken.\n\nAls je verdere hulp nodig hebt of andere vragen hebt, kun je altijd de ondersteuningsserver joinen via de knop hieronder."
+}
