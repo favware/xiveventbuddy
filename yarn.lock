@@ -1232,9 +1232,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@prisma/client@npm:^6.8.2":
-  version: 6.8.2
-  resolution: "@prisma/client@npm:6.8.2"
+"@prisma/client@npm:^6.9.0":
+  version: 6.9.0
+  resolution: "@prisma/client@npm:6.9.0"
   peerDependencies:
     prisma: "*"
     typescript: ">=5.1.0"
@@ -1243,62 +1243,62 @@ __metadata:
       optional: true
     typescript:
       optional: true
-  checksum: 10/6b372ffef57500a4fa499a162c68dcd48ed155bc48afa767a3419a32773a242844957e750e2d08e4b06d03b927b536afd3e4a46fb4b5c9c0b4f16147fc6ac436
+  checksum: 10/282ffe1fbd06303b5322f6e7a930a6f7c9aa16a275fe228da9851c8c10802d4c62fcf4973fb75cb07794bfeb6689bca70e2a39b62f14e739821e53ba68af108e
   languageName: node
   linkType: hard
 
-"@prisma/config@npm:6.8.2":
-  version: 6.8.2
-  resolution: "@prisma/config@npm:6.8.2"
+"@prisma/config@npm:6.9.0":
+  version: 6.9.0
+  resolution: "@prisma/config@npm:6.9.0"
   dependencies:
     jiti: "npm:2.4.2"
-  checksum: 10/980c34ef872cf0aba58710aa6c037c1d3149930d4b386dbbf4c45890037968c741928370fb97a416f92a7778cd770bc9400047c2cee86fb6582c8844c12f132e
+  checksum: 10/e8ba1a51477e5472a291b0af76d282f825c2419fa4b437ac4ab78fb494b79e1046c3563f8cc37163ad02d6f7f41d41b1957a470a1f322be9d32c03e03cb6f849
   languageName: node
   linkType: hard
 
-"@prisma/debug@npm:6.8.2":
-  version: 6.8.2
-  resolution: "@prisma/debug@npm:6.8.2"
-  checksum: 10/3d57de92f95bc87505444a60bb805a9f5bc6c8ff68fe0bc7c9f605256a03b3c179d6d14cf2e3999332a06cf5833032940886b898a30543acb82e089df1ed28c8
+"@prisma/debug@npm:6.9.0":
+  version: 6.9.0
+  resolution: "@prisma/debug@npm:6.9.0"
+  checksum: 10/ae29f324949e56078664b925fa3f039f1b8a6234ac78067d6685e575359686b5584a47547db079a9e32c2b0bd3e4f182a51d48a445a812f8e4a751b3e77aa626
   languageName: node
   linkType: hard
 
-"@prisma/engines-version@npm:6.8.0-43.2060c79ba17c6bb9f5823312b6f6b7f4a845738e":
-  version: 6.8.0-43.2060c79ba17c6bb9f5823312b6f6b7f4a845738e
-  resolution: "@prisma/engines-version@npm:6.8.0-43.2060c79ba17c6bb9f5823312b6f6b7f4a845738e"
-  checksum: 10/ad02b7d4c29f601a02ff550175cbd8687ddb3b1537af012cd160223657c73962e7b9a19296379e42f9b909f2482dc7044068248d809150bb0d20d35cb234e114
+"@prisma/engines-version@npm:6.9.0-10.81e4af48011447c3cc503a190e86995b66d2a28e":
+  version: 6.9.0-10.81e4af48011447c3cc503a190e86995b66d2a28e
+  resolution: "@prisma/engines-version@npm:6.9.0-10.81e4af48011447c3cc503a190e86995b66d2a28e"
+  checksum: 10/3c13e996558b57c76f39df9f1263da0d11a8fbc1a1b3c19600811ad1c198a489540ab7ee741a8b686ac413e8bc1318498a9de61a27fba87328fef26bdd3fb2a0
   languageName: node
   linkType: hard
 
-"@prisma/engines@npm:6.8.2":
-  version: 6.8.2
-  resolution: "@prisma/engines@npm:6.8.2"
+"@prisma/engines@npm:6.9.0":
+  version: 6.9.0
+  resolution: "@prisma/engines@npm:6.9.0"
   dependencies:
-    "@prisma/debug": "npm:6.8.2"
-    "@prisma/engines-version": "npm:6.8.0-43.2060c79ba17c6bb9f5823312b6f6b7f4a845738e"
-    "@prisma/fetch-engine": "npm:6.8.2"
-    "@prisma/get-platform": "npm:6.8.2"
-  checksum: 10/bdc8e77e9c0cdb4d7a6ed4ed516a79907036768f42122df97f14c8ba90b7d95bdad0d2da3800df048b8a8721914e8552a9e1bb63e570f25cd67548d996d6e592
+    "@prisma/debug": "npm:6.9.0"
+    "@prisma/engines-version": "npm:6.9.0-10.81e4af48011447c3cc503a190e86995b66d2a28e"
+    "@prisma/fetch-engine": "npm:6.9.0"
+    "@prisma/get-platform": "npm:6.9.0"
+  checksum: 10/0262f6b462ea032773b97a18b9bd803056e56960c73fe432467ed26499be5a25f52dc39056f68609e6a0641a5b7a74be3d45b16aa2ccfade96b35e3cac76b15b
   languageName: node
   linkType: hard
 
-"@prisma/fetch-engine@npm:6.8.2":
-  version: 6.8.2
-  resolution: "@prisma/fetch-engine@npm:6.8.2"
+"@prisma/fetch-engine@npm:6.9.0":
+  version: 6.9.0
+  resolution: "@prisma/fetch-engine@npm:6.9.0"
   dependencies:
-    "@prisma/debug": "npm:6.8.2"
-    "@prisma/engines-version": "npm:6.8.0-43.2060c79ba17c6bb9f5823312b6f6b7f4a845738e"
-    "@prisma/get-platform": "npm:6.8.2"
-  checksum: 10/b2158debfaf0f675e3e37a8b298e01de8f39ac09c6a139db1758dda09786147c34e92671697a88d6b6a8f61421931561938da9aea9c2d75cfc2d7124ce5a4400
+    "@prisma/debug": "npm:6.9.0"
+    "@prisma/engines-version": "npm:6.9.0-10.81e4af48011447c3cc503a190e86995b66d2a28e"
+    "@prisma/get-platform": "npm:6.9.0"
+  checksum: 10/9442c952a189b157a8ccaf5b2cd38ef80585f1d9244adc0515ac54a6fb9a7c1eb99a4015bd8cd0bda7275e0310020e30c7f85a5692f9cc77ae8c4b0f8b07bfcf
   languageName: node
   linkType: hard
 
-"@prisma/get-platform@npm:6.8.2":
-  version: 6.8.2
-  resolution: "@prisma/get-platform@npm:6.8.2"
+"@prisma/get-platform@npm:6.9.0":
+  version: 6.9.0
+  resolution: "@prisma/get-platform@npm:6.9.0"
   dependencies:
-    "@prisma/debug": "npm:6.8.2"
-  checksum: 10/b6aa7440201d43bb7c5a50c74129d678b7a320c376887a83c043ea8b78e5c52e0f999bc9f435a6b9ce0e6a2b15b44eea2c034d9eb01d707907908829a7df0e28
+    "@prisma/debug": "npm:6.9.0"
+  checksum: 10/a6a3bcb18da8026c1150daf320debc831629b8b5d0352b1f8be615c4bdba6177be5d520c47712148819972c54e2c7f93330d28e23a53c969db50b125f01b2231
   languageName: node
   linkType: hard
 
@@ -1493,20 +1493,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sapphire/framework@npm:^5.3.5":
-  version: 5.3.5
-  resolution: "@sapphire/framework@npm:5.3.5"
+"@sapphire/framework@npm:^5.3.6":
+  version: 5.3.6
+  resolution: "@sapphire/framework@npm:5.3.6"
   dependencies:
     "@discordjs/builders": "npm:^1.11.2"
     "@sapphire/discord-utilities": "npm:^3.5.0"
     "@sapphire/discord.js-utilities": "npm:^7.3.3"
     "@sapphire/lexure": "npm:^1.1.10"
-    "@sapphire/pieces": "npm:^4.4.0"
+    "@sapphire/pieces": "npm:^4.4.1"
     "@sapphire/ratelimits": "npm:^2.4.11"
     "@sapphire/result": "npm:^2.7.2"
     "@sapphire/stopwatch": "npm:^1.5.4"
     "@sapphire/utilities": "npm:^3.18.2"
-  checksum: 10/d9aae8c29dc5e6d4e393627fc4fa7dc197fa01c291e355f1566a647ca0ea0ed22a67954b3b08d21236f1a3574590bf143caebd647429f6f242abd79074c1167a
+  checksum: 10/07f52af7047c2f721c5f5a2c2d647342846b98983836935537370d0fa0baba4a20998e1b0e5b0bb73968993eaf2572d22631c90054e0cf11f8c07b78e7e3f1a8
   languageName: node
   linkType: hard
 
@@ -1526,14 +1526,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sapphire/pieces@npm:^4.3.1, @sapphire/pieces@npm:^4.4.0":
-  version: 4.4.0
-  resolution: "@sapphire/pieces@npm:4.4.0"
+"@sapphire/pieces@npm:^4.3.1, @sapphire/pieces@npm:^4.4.1":
+  version: 4.4.1
+  resolution: "@sapphire/pieces@npm:4.4.1"
   dependencies:
     "@discordjs/collection": "npm:^2.1.1"
     "@sapphire/utilities": "npm:^3.18.2"
     tslib: "npm:^2.8.1"
-  checksum: 10/9252a5f8e757f4f0589b00251c4ab3d71043c2123c612ac8507bc419cccd66782c3e65019c3c836a6456b3da4e0dadc19235bcc9593405ea02f1e6505d0222b8
+  checksum: 10/54412619808ff107d88ecb2857291a8f9cb318c9f78a0ca3f729844d343fe3620694ec924b6878e9811a9989291cdd8396d2e877c63a969643979faeb3f242b6
   languageName: node
   linkType: hard
 
@@ -1723,90 +1723,90 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@swc/core-darwin-arm64@npm:1.11.29":
-  version: 1.11.29
-  resolution: "@swc/core-darwin-arm64@npm:1.11.29"
+"@swc/core-darwin-arm64@npm:1.11.31":
+  version: 1.11.31
+  resolution: "@swc/core-darwin-arm64@npm:1.11.31"
   conditions: os=darwin & cpu=arm64
   languageName: node
   linkType: hard
 
-"@swc/core-darwin-x64@npm:1.11.29":
-  version: 1.11.29
-  resolution: "@swc/core-darwin-x64@npm:1.11.29"
+"@swc/core-darwin-x64@npm:1.11.31":
+  version: 1.11.31
+  resolution: "@swc/core-darwin-x64@npm:1.11.31"
   conditions: os=darwin & cpu=x64
   languageName: node
   linkType: hard
 
-"@swc/core-linux-arm-gnueabihf@npm:1.11.29":
-  version: 1.11.29
-  resolution: "@swc/core-linux-arm-gnueabihf@npm:1.11.29"
+"@swc/core-linux-arm-gnueabihf@npm:1.11.31":
+  version: 1.11.31
+  resolution: "@swc/core-linux-arm-gnueabihf@npm:1.11.31"
   conditions: os=linux & cpu=arm
   languageName: node
   linkType: hard
 
-"@swc/core-linux-arm64-gnu@npm:1.11.29":
-  version: 1.11.29
-  resolution: "@swc/core-linux-arm64-gnu@npm:1.11.29"
+"@swc/core-linux-arm64-gnu@npm:1.11.31":
+  version: 1.11.31
+  resolution: "@swc/core-linux-arm64-gnu@npm:1.11.31"
   conditions: os=linux & cpu=arm64 & libc=glibc
   languageName: node
   linkType: hard
 
-"@swc/core-linux-arm64-musl@npm:1.11.29":
-  version: 1.11.29
-  resolution: "@swc/core-linux-arm64-musl@npm:1.11.29"
+"@swc/core-linux-arm64-musl@npm:1.11.31":
+  version: 1.11.31
+  resolution: "@swc/core-linux-arm64-musl@npm:1.11.31"
   conditions: os=linux & cpu=arm64 & libc=musl
   languageName: node
   linkType: hard
 
-"@swc/core-linux-x64-gnu@npm:1.11.29":
-  version: 1.11.29
-  resolution: "@swc/core-linux-x64-gnu@npm:1.11.29"
+"@swc/core-linux-x64-gnu@npm:1.11.31":
+  version: 1.11.31
+  resolution: "@swc/core-linux-x64-gnu@npm:1.11.31"
   conditions: os=linux & cpu=x64 & libc=glibc
   languageName: node
   linkType: hard
 
-"@swc/core-linux-x64-musl@npm:1.11.29":
-  version: 1.11.29
-  resolution: "@swc/core-linux-x64-musl@npm:1.11.29"
+"@swc/core-linux-x64-musl@npm:1.11.31":
+  version: 1.11.31
+  resolution: "@swc/core-linux-x64-musl@npm:1.11.31"
   conditions: os=linux & cpu=x64 & libc=musl
   languageName: node
   linkType: hard
 
-"@swc/core-win32-arm64-msvc@npm:1.11.29":
-  version: 1.11.29
-  resolution: "@swc/core-win32-arm64-msvc@npm:1.11.29"
+"@swc/core-win32-arm64-msvc@npm:1.11.31":
+  version: 1.11.31
+  resolution: "@swc/core-win32-arm64-msvc@npm:1.11.31"
   conditions: os=win32 & cpu=arm64
   languageName: node
   linkType: hard
 
-"@swc/core-win32-ia32-msvc@npm:1.11.29":
-  version: 1.11.29
-  resolution: "@swc/core-win32-ia32-msvc@npm:1.11.29"
+"@swc/core-win32-ia32-msvc@npm:1.11.31":
+  version: 1.11.31
+  resolution: "@swc/core-win32-ia32-msvc@npm:1.11.31"
   conditions: os=win32 & cpu=ia32
   languageName: node
   linkType: hard
 
-"@swc/core-win32-x64-msvc@npm:1.11.29":
-  version: 1.11.29
-  resolution: "@swc/core-win32-x64-msvc@npm:1.11.29"
+"@swc/core-win32-x64-msvc@npm:1.11.31":
+  version: 1.11.31
+  resolution: "@swc/core-win32-x64-msvc@npm:1.11.31"
   conditions: os=win32 & cpu=x64
   languageName: node
   linkType: hard
 
-"@swc/core@npm:^1.11.29":
-  version: 1.11.29
-  resolution: "@swc/core@npm:1.11.29"
+"@swc/core@npm:^1.11.31":
+  version: 1.11.31
+  resolution: "@swc/core@npm:1.11.31"
   dependencies:
-    "@swc/core-darwin-arm64": "npm:1.11.29"
-    "@swc/core-darwin-x64": "npm:1.11.29"
-    "@swc/core-linux-arm-gnueabihf": "npm:1.11.29"
-    "@swc/core-linux-arm64-gnu": "npm:1.11.29"
-    "@swc/core-linux-arm64-musl": "npm:1.11.29"
-    "@swc/core-linux-x64-gnu": "npm:1.11.29"
-    "@swc/core-linux-x64-musl": "npm:1.11.29"
-    "@swc/core-win32-arm64-msvc": "npm:1.11.29"
-    "@swc/core-win32-ia32-msvc": "npm:1.11.29"
-    "@swc/core-win32-x64-msvc": "npm:1.11.29"
+    "@swc/core-darwin-arm64": "npm:1.11.31"
+    "@swc/core-darwin-x64": "npm:1.11.31"
+    "@swc/core-linux-arm-gnueabihf": "npm:1.11.31"
+    "@swc/core-linux-arm64-gnu": "npm:1.11.31"
+    "@swc/core-linux-arm64-musl": "npm:1.11.31"
+    "@swc/core-linux-x64-gnu": "npm:1.11.31"
+    "@swc/core-linux-x64-musl": "npm:1.11.31"
+    "@swc/core-win32-arm64-msvc": "npm:1.11.31"
+    "@swc/core-win32-ia32-msvc": "npm:1.11.31"
+    "@swc/core-win32-x64-msvc": "npm:1.11.31"
     "@swc/counter": "npm:^0.1.3"
     "@swc/types": "npm:^0.1.21"
   peerDependencies:
@@ -1835,7 +1835,7 @@ __metadata:
   peerDependenciesMeta:
     "@swc/helpers":
       optional: true
-  checksum: 10/6945229bf6da91adff26033910e8e02ccc457a8229724d0539a0b32995d05949c7709cb9cae2cd7ab10cf4d346b235e22dd4d6b207ded765597304e21e6b6101
+  checksum: 10/3c7b3a53d38bab62faf664bf226f5d53e7e1cf43ba320b3a464461db5e9e21c788b98d5027a63403698720a95a7a1578f98b5a9e48ac0b3328aa540644ba0ebd
   languageName: node
   linkType: hard
 
@@ -1994,12 +1994,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:*, @types/node@npm:^22.0.0, @types/node@npm:^22.15.29":
-  version: 22.15.29
-  resolution: "@types/node@npm:22.15.29"
+"@types/node@npm:*, @types/node@npm:^22.0.0, @types/node@npm:^22.15.30":
+  version: 22.15.30
+  resolution: "@types/node@npm:22.15.30"
   dependencies:
     undici-types: "npm:~6.21.0"
-  checksum: 10/3426790c5aa22df445213d7f37e57ea261cf3013030fe9b3025d87c302097799a9db3b848e2a9bdb07cab8ec6c7e9947ac770cf11e12e420148296b63d63e7db
+  checksum: 10/16d03f30df7851eea4f31d9a2470a53b24dc7d3909ed1782e2538e3aafe398451da17b83d6f730dfdcd0a843ccdbe841176ecfbde6bdb51963e8d11f58a10ade
   languageName: node
   linkType: hard
 
@@ -7537,12 +7537,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prisma@npm:^6.8.2":
-  version: 6.8.2
-  resolution: "prisma@npm:6.8.2"
+"prisma@npm:^6.9.0":
+  version: 6.9.0
+  resolution: "prisma@npm:6.9.0"
   dependencies:
-    "@prisma/config": "npm:6.8.2"
-    "@prisma/engines": "npm:6.8.2"
+    "@prisma/config": "npm:6.9.0"
+    "@prisma/engines": "npm:6.9.0"
   peerDependencies:
     typescript: ">=5.1.0"
   peerDependenciesMeta:
@@ -7550,7 +7550,7 @@ __metadata:
       optional: true
   bin:
     prisma: build/index.js
-  checksum: 10/e2f2042ae89f9b00ee17f107db9773257b6a1b33af33571a4704c84841c56aeeca2cc3127f15a316488ae3c5c03ba08f6f8e91b2bbde642a22a40366f8ec4808
+  checksum: 10/2dae4723f115bb93a80941f65a0b340a7c1d1dfd2ceb783f44b5850f78bd8ab865531d26b1a1e9f17e5ff5b815a341877779d06d5d55ea9ad0fb0af2ddeef985
   languageName: node
   linkType: hard
 
@@ -9575,11 +9575,11 @@ __metadata:
     "@commitlint/cli": "npm:^19.8.1"
     "@commitlint/config-conventional": "npm:^19.8.1"
     "@favware/discord-application-emojis-manager": "npm:^1.1.1"
-    "@prisma/client": "npm:^6.8.2"
+    "@prisma/client": "npm:^6.9.0"
     "@sapphire/decorators": "npm:^6.1.1"
     "@sapphire/discord.js-utilities": "npm:^7.3.3"
     "@sapphire/fetch": "npm:^3.0.5"
-    "@sapphire/framework": "npm:^5.3.5"
+    "@sapphire/framework": "npm:^5.3.6"
     "@sapphire/plugin-logger": "npm:^4.0.2"
     "@sapphire/plugin-scheduled-tasks": "npm:^10.0.3"
     "@sapphire/prettier-config": "npm:^2.0.0"
@@ -9588,10 +9588,10 @@ __metadata:
     "@skyra/env-utilities": "npm:^2.0.1"
     "@skyra/jaro-winkler": "npm:^1.1.1"
     "@skyra/start-banner": "npm:^2.0.2"
-    "@swc/core": "npm:^1.11.29"
+    "@swc/core": "npm:^1.11.31"
     "@types/figlet": "npm:^1.7.0"
     "@types/gradient-string": "npm:^1.1.6"
-    "@types/node": "npm:^22.15.29"
+    "@types/node": "npm:^22.15.30"
     "@types/ws": "npm:^8.18.1"
     "@typescript-eslint/eslint-plugin": "npm:^8.32.1"
     "@typescript-eslint/parser": "npm:^8.32.1"
@@ -9609,7 +9609,7 @@ __metadata:
     lint-staged: "npm:^16.1.0"
     prettier: "npm:^3.5.3"
     prettier-plugin-prisma: "npm:^5.0.0"
-    prisma: "npm:^6.8.2"
+    prisma: "npm:^6.9.0"
     rimraf: "npm:^6.0.1"
     tsup: "npm:^8.5.0"
     tsx: "npm:^4.19.4"
