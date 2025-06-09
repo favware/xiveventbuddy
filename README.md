@@ -25,6 +25,11 @@ We use **Crowdin** to translate XIVEventBuddy's messages into different language
 new translations (or improving existing ones), [**click here**](https://crowdin.com/project/xiveventbuddy). Thank you in
 advance for any contributions!
 
+### Changing language for a server
+
+To change the language of a server you need to enable the "Community" feature on your Discord server. Once you have done
+that, you can change the "Server Primary Language" under "Community Overview"
+
 ## Developing on XIVEventBuddy
 
 ### Requirements
