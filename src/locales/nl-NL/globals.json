@@ -1,7 +1,7 @@
 {
-	"default": "{{key}} has not been localized for en-US yet.",
-	"defaultLanguage": "Default Language",
-	"supportServer": "Support Server",
+	"default": "{{key}} is nog niet gelokaliseerd voor nl-NL.",
+	"defaultLanguage": "Standaard taal",
+	"supportServer": "Ondersteunings Server",
 	"numberValue": "{{value, number}}",
 	"dateValue": "{{value, date}}",
 	"timeValue": "{{value, time}}",
