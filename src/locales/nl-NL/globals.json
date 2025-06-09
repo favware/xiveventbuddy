@@ -1,0 +1,10 @@
+{
+	"default": "{{key}} is nog niet gelokaliseerd voor nl-NL.",
+	"defaultLanguage": "Standaard taal",
+	"supportServer": "Ondersteunings Server",
+	"numberValue": "{{value, number}}",
+	"dateValue": "{{value, date}}",
+	"timeValue": "{{value, time}}",
+	"andListValue": "{{value, list(conjunction)}}",
+	"relativeTimeValue": "{{value, relativeTime}}"
+}
