@@ -33,7 +33,7 @@ export class ListenerError extends Listener<typeof Events.ListenerError> {
 		// Emit where the error was emitted
 		logger.fatal(`[LISTENER] ${piece.location.full}\n${error.stack ?? error.message}`);
 		try {
-			await this.alert(generateUnexpectedErrorMessage(error));
+			await this.alert(await generateUnexpectedErrorMessage(null, error));
 		} catch (error) {
 			client.emit(Events.Error, error as Error);
 		}
@@ -49,7 +49,7 @@ export class ListenerError extends Listener<typeof Events.ListenerError> {
 		this.container.logger.error(`[LISTENER] ${piece.location.full}\n${error.stack ?? error.message}`);
 
 		try {
-			await this.alert(generateUnexpectedErrorMessage(error));
+			await this.alert(await generateUnexpectedErrorMessage(null, error));
 		} catch (error) {
 			this.container.client.emit(Events.Error, error as Error);
 		}

@@ -1,6 +1,6 @@
-import { XIVEventBuddyEmojis } from '#lib/util/emojis';
-import { inlineCode } from 'discord.js';
+import { resolveKey } from '@sapphire/plugin-i18next';
+import { inlineCode, type ButtonInteraction } from 'discord.js';
 
-export function formatJobUpdateMessage(jobEmoji: string, jobName: string): string {
-	return `${XIVEventBuddyEmojis.GreenTick} Successfully updated your job to ${jobEmoji} ${inlineCode(jobName)}.`;
+export async function formatJobUpdateMessage(interaction: ButtonInteraction<'cached'>, jobEmoji: string, jobName: string): Promise<string> {
+	return resolveKey(interaction, 'interactionHandlers:successfullyUpdatedJob', { jobEmoji, jobName: inlineCode(jobName) });
 }

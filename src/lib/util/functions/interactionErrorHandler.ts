@@ -1,6 +1,15 @@
 import { rootFolder } from '#lib/util/constants';
-import { OwnerMentions, Owners } from '#root/config';
-import { getErrorLine, getLinkLine, getMethodLine, getStatusLine, getWarnError } from '#utils/functions/errorHelpers';
+import { Owners } from '#root/config';
+import {
+	generateUnexpectedErrorMessage,
+	getErrorLine,
+	getLinkLine,
+	getMethodLine,
+	getStatusLine,
+	getWarnError,
+	stringError,
+	userError
+} from '#utils/functions/errorHelpers';
 import {
 	ArgumentError,
 	container,
@@ -10,8 +19,9 @@ import {
 	type InteractionHandlerError,
 	type InteractionHandlerParseError
 } from '@sapphire/framework';
-import { codeBlock, isNullish } from '@sapphire/utilities';
-import { bold, DiscordAPIError, EmbedBuilder, HTTPError, MessageFlags, RESTJSONErrorCodes, userMention, type Interaction } from 'discord.js';
+import { resolveKey } from '@sapphire/plugin-i18next';
+import { isNullish } from '@sapphire/utilities';
+import { DiscordAPIError, EmbedBuilder, HTTPError, MessageFlags, RESTJSONErrorCodes, type Interaction } from 'discord.js';
 import { fileURLToPath } from 'node:url';
 
 const ignoredCodes = [RESTJSONErrorCodes.UnknownChannel, RESTJSONErrorCodes.UnknownMessage];
@@ -26,7 +36,7 @@ export async function handleInteractionError(error: Error, { handler, interactio
 	// If the error was an AbortError or an Internal Server Error, tell the user to re-try:
 	if (error.name === 'AbortError' || error.message === 'Internal Server Error') {
 		logger.warn(`${getWarnError(interaction)} (${interaction.user.id}) | ${error.constructor.name}`);
-		return alert(interaction, 'I had a small network error when messaging Discord. Please run this command again!');
+		return alert(interaction, await resolveKey(interaction, 'errors:networkError'));
 	}
 
 	// Extract useful information about the DiscordAPIError
@@ -46,30 +56,12 @@ export async function handleInteractionError(error: Error, { handler, interactio
 	// Emit where the error was emitted
 	logger.fatal(`[COMMAND] ${handler.location.full}\n${error.stack ?? error.message}`);
 	try {
-		await alert(interaction, generateUnexpectedErrorMessage(error));
+		await alert(interaction, await generateUnexpectedErrorMessage(interaction, error));
 	} catch (error) {
 		client.emit(Events.Error, error as Error);
 	}
 
 	return undefined;
-}
-
-function generateUnexpectedErrorMessage(error: Error) {
-	return [
-		`I found an unexpected error, please report the steps you have taken to ${OwnerMentions}!`,
-		'',
-		'',
-		bold('This is the stacktrace, please send this along with your report:'),
-		codeBlock('js', error.stack!)
-	].join('\n');
-}
-
-async function stringError(interaction: Interaction, error: string) {
-	return alert(interaction, `Dear ${userMention(interaction.user.id)}, ${error}`);
-}
-
-async function userError(interaction: Interaction, error: UserError) {
-	return alert(interaction, error.message ?? `An error occurred that I was not able to identify. Contact ${OwnerMentions} for assistance.`);
 }
 
 async function alert(interaction: Interaction, content: string) {

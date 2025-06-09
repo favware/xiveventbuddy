@@ -99,8 +99,7 @@ function parseInternationalizationOptions(): InternationalizationOptions {
 		defaultMissingKey: 'default',
 		defaultNS: 'globals',
 		defaultLanguageDirectory: fileURLToPath(LANGUAGE_ROOT),
-		fetchLanguage: async ({ interactionGuildLocale, interactionLocale, guild }) =>
-			interactionLocale ?? interactionGuildLocale ?? guild?.preferredLocale ?? 'en-US',
+		fetchLanguage: async ({ interactionGuildLocale, guild }) => interactionGuildLocale ?? guild?.preferredLocale ?? 'en-US',
 		formatters: parseInternationalizationFormatters(),
 		i18next: (_: string[], languages: string[]) => ({
 			supportedLngs: languages,

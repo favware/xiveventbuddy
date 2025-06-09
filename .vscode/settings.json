@@ -7,5 +7,9 @@
 		"**/dist/": true,
 		"**/.git/": true
 	},
-	"cSpell.words": ["Eorzea", "GREENTICK", "XIVEventBuddy"]
+	"cSpell.words": ["Eorzea", "GREENTICK", "XIVEventBuddy"],
+	"sonarlint.connectedMode.project": {
+		"connectionId": "favware",
+		"projectKey": "favware_xiveventbuddy"
+	}
 }

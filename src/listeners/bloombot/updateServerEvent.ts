@@ -2,6 +2,8 @@ import type { UpdateServerEventPayload, XIVEventBuddyEvents } from '#lib/util/co
 import { resolveOnErrorCodes } from '#lib/util/functions/resolveOnErrorCodes';
 import { $Enums } from '@prisma/client';
 import { Listener } from '@sapphire/framework';
+import { resolveKey } from '@sapphire/plugin-i18next';
+import { isNullish } from '@sapphire/utilities';
 import { addHours, getISODay } from 'date-fns';
 import {
 	GuildScheduledEventEntityType,
@@ -11,7 +13,7 @@ import {
 } from 'discord.js';
 
 export class UserListener extends Listener<typeof XIVEventBuddyEvents.UpdateServerEvent> {
-	public override async run({ eventId, guildId }: UpdateServerEventPayload) {
+	public override async run({ interaction, eventId, guildId }: UpdateServerEventPayload) {
 		const eventData = await this.container.prisma.event.findFirstOrThrow({
 			where: {
 				id: eventId
@@ -55,7 +57,11 @@ export class UserListener extends Listener<typeof XIVEventBuddyEvents.UpdateServ
 		const response = await guild.scheduledEvents.edit(eventData.instance.discordEventId, {
 			name: eventData.name,
 			entityType: GuildScheduledEventEntityType.External,
-			entityMetadata: { location: 'FC House' },
+			entityMetadata: {
+				location: await resolveKey(interaction!, 'listeners/createServerEvent:entityMetadata', {
+					lng: isNullish(interaction) ? guild.preferredLocale : undefined
+				})
+			},
 			privacyLevel: GuildScheduledEventPrivacyLevel.GuildOnly,
 			scheduledStartTime: eventData.instance.dateTime,
 			scheduledEndTime: addHours(eventData.instance.dateTime, eventData.duration),
@@ -64,7 +70,10 @@ export class UserListener extends Listener<typeof XIVEventBuddyEvents.UpdateServ
 
 			...(leaderUser?.user.username
 				? {
-						reason: `Event created by ${leaderUser.user.username}`
+						reason: await resolveKey(interaction!, 'listeners/createServerEvent:eventCreated', {
+							user: leaderUser.user.username,
+							lng: isNullish(interaction) ? guild.preferredLocale : undefined
+						})
 					}
 				: {}),
 

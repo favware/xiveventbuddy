@@ -34,6 +34,7 @@ export class DisableOldEvents extends ScheduledTask {
 
 				if (eventInstanceDateTime <= afterDurationOfEvent) {
 					this.container.client.emit(XIVEventBuddyEvents.UpdateEmbed, {
+						interaction: null,
 						eventId: event.id,
 						guildId: event.guildId,
 						shouldDisableEvent: true,

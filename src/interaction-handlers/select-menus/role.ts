@@ -6,10 +6,10 @@ import { getMagicDpsJobButtons } from '#lib/util/job-buttons/magicdps';
 import { getMeleeDpsJobButtons } from '#lib/util/job-buttons/meleedps';
 import { getPhysRangedDpsJobButtons } from '#lib/util/job-buttons/physrangeddps';
 import { getTankJobButtons } from '#lib/util/job-buttons/tank';
-import { OwnerMentions } from '#root/config';
 import { $Enums } from '@prisma/client';
 import { ApplyOptions } from '@sapphire/decorators';
 import { InteractionHandler, InteractionHandlerTypes, UserError } from '@sapphire/framework';
+import { resolveKey } from '@sapphire/plugin-i18next';
 import { isNullishOrEmpty } from '@sapphire/utilities';
 import { inlineCode, MessageFlags, type ActionRowBuilder, type ButtonBuilder, type StringSelectMenuInteraction } from 'discord.js';
 
@@ -24,19 +24,19 @@ export class StringSelectMenuHandler extends InteractionHandler {
 
 		switch (result.selectedRole) {
 			case $Enums.Roles.Tank:
-				components = getTankJobButtons(result);
+				components = await getTankJobButtons(interaction, result);
 				break;
 			case $Enums.Roles.MeleeDPS:
-				components = getMeleeDpsJobButtons(result);
+				components = await getMeleeDpsJobButtons(interaction, result);
 				break;
 			case $Enums.Roles.PhysRangedDPS:
-				components = getPhysRangedDpsJobButtons(result);
+				components = await getPhysRangedDpsJobButtons(interaction, result);
 				break;
 			case $Enums.Roles.MagicRangedDPS:
-				components = getMagicDpsJobButtons(result);
+				components = await getMagicDpsJobButtons(interaction, result);
 				break;
 			case $Enums.Roles.Healer:
-				components = getHealerJobButtons(result);
+				components = await getHealerJobButtons(interaction, result);
 				break;
 			case $Enums.Roles.AllRounder:
 				components = null;
@@ -47,25 +47,32 @@ export class StringSelectMenuHandler extends InteractionHandler {
 			case $Enums.Roles.Bench:
 			case $Enums.Roles.PhantomJob:
 				throw new UserError({
-					message: `${XIVEventBuddyEmojis.RedCross} I received an unexpected role from the select menu of selecting your role. Contact ${OwnerMentions} for assistance.`,
+					message: await resolveKey(interaction, 'interactionHandlers:roleSelectUnexpectedError'),
 					identifier: ErrorIdentifiers.UnexpectedRoleSelectMenuChoiceError
 				});
 		}
 
 		if (isNullishOrEmpty(components)) {
 			this.container.client.emit(XIVEventBuddyEvents.UpdateEmbed, {
+				interaction,
 				eventId: result.eventId,
 				guildId: interaction.guildId,
 				origin: UpdateEmbedPayloadOrigin.RoleSelectMenu
 			});
 
 			return interaction.editReply({
-				content: `${XIVEventBuddyEmojis.GreenTick} Successfully updated your role to ${XIVEventBuddyEmojis[result.selectedRole]} ${inlineCode(result.selectedRole)}.`
+				content: await resolveKey(interaction, 'interactionHandlers:roleSelectSuccessful', {
+					roleEmoji: XIVEventBuddyEmojis[result.selectedRole],
+					roleName: inlineCode(result.selectedRole)
+				})
 			});
 		}
 
 		return interaction.editReply({
-			content: `${XIVEventBuddyEmojis.GreenTick} Successfully updated your role to ${XIVEventBuddyEmojis[result.selectedRole]} ${inlineCode(result.selectedRole)}. Next, select which job you will be playing from these options:`,
+			content: await resolveKey(interaction, 'interactionHandlers:roleSelectSuccessfulWithJob', {
+				roleEmoji: XIVEventBuddyEmojis[result.selectedRole],
+				roleName: inlineCode(result.selectedRole)
+			}),
 			components
 		});
 	}
@@ -81,7 +88,7 @@ export class StringSelectMenuHandler extends InteractionHandler {
 
 		if (!eventData?.instance?.id) {
 			throw new UserError({
-				message: `${XIVEventBuddyEmojis.RedCross} I was unexpectedly unable to find the event matching the selection of that option. Contact ${OwnerMentions} for assistance.`,
+				message: await resolveKey(interaction, 'interactionHandlers:selectMenuUnexpectedError'),
 				identifier: ErrorIdentifiers.UnableToFindEventForSelectMenuChoiceError
 			});
 		}

@@ -1,4 +1,5 @@
 import type { Event, EventInstance, Jobs, Participant } from '@prisma/client';
+import type { BaseInteraction } from 'discord.js';
 
 export const rootFolder = new URL('../../../', import.meta.url);
 
@@ -111,6 +112,7 @@ export const enum CustomIdPrefixes {
 interface EventIdGuildIdPayload {
 	eventId: string;
 	guildId: string;
+	interaction: BaseInteraction | null;
 }
 
 export interface CreateServerEventPayload extends EventIdGuildIdPayload {

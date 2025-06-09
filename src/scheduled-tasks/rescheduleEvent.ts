@@ -78,8 +78,9 @@ export class RescheduleEventTask extends ScheduledTask {
 					}
 				});
 
-				this.container.client.emit(XIVEventBuddyEvents.PostEmbed, { eventId: event.id, guildId: event.guildId });
+				this.container.client.emit(XIVEventBuddyEvents.PostEmbed, { interaction: null, eventId: event.id, guildId: event.guildId });
 				this.container.client.emit(XIVEventBuddyEvents.CreateServerEvent, {
+					interaction: null,
 					eventId: event.id,
 					guildId: event.guildId,
 					isReschedule: true,

@@ -16,6 +16,8 @@ concurrency:
 
 jobs:
   PublishXIVEventBuddy:
+    # Temporarily disabled while ensuring i18next is all set up correctly
+    if: false
     name: Publish XIVEventBuddy image to container registries
     runs-on: ubuntu-latest
     steps:

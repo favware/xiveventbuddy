@@ -270,6 +270,7 @@ export class SlashCommand extends XIVEventBuddyCommand {
 		});
 
 		this.container.client.emit(XIVEventBuddyEvents.UpdateEmbed, {
+			interaction,
 			eventId: event.id,
 			guildId: interaction.guildId,
 			origin: UpdateEmbedPayloadOrigin.RemoveParticipantCommand
@@ -383,8 +384,9 @@ export class SlashCommand extends XIVEventBuddyCommand {
 			});
 		}
 
-		this.container.client.emit(XIVEventBuddyEvents.PostEmbed, { eventId: event.id, guildId: interaction.guildId });
+		this.container.client.emit(XIVEventBuddyEvents.PostEmbed, { interaction, eventId: event.id, guildId: interaction.guildId });
 		this.container.client.emit(XIVEventBuddyEvents.CreateServerEvent, {
+			interaction,
 			eventId: event.id,
 			guildId: interaction.guildId,
 			isReschedule: false,
@@ -613,12 +615,14 @@ export class SlashCommand extends XIVEventBuddyCommand {
 		});
 
 		this.container.client.emit(XIVEventBuddyEvents.UpdateServerEvent, {
+			interaction,
 			eventId: updatedEvent.id,
 			guildId: interaction.guildId
 		});
 
 		if (resolvedEventChannel.id === existingEvent.channelId) {
 			this.container.client.emit(XIVEventBuddyEvents.UpdateEmbed, {
+				interaction,
 				eventId: updatedEvent.id,
 				guildId: interaction.guildId,
 				origin: UpdateEmbedPayloadOrigin.EditEventCommand
@@ -641,8 +645,8 @@ export class SlashCommand extends XIVEventBuddyCommand {
 					embeds: [buildEventEmbed(updatedEvent as EventData)],
 					components:
 						updatedEvent.variant === $Enums.EventVariant.NORMAL
-							? buildEventComponents(updatedEvent.id)
-							: buildPhantomJobComponent(updatedEvent.id),
+							? await buildEventComponents(interaction, updatedEvent.id)
+							: await buildPhantomJobComponent(interaction, updatedEvent.id),
 					files: buildEventAttachment(updatedEvent as EventData),
 					allowedMentions: { roles: updatedEvent.roleToPing ? [updatedEvent.roleToPing] : undefined }
 				});

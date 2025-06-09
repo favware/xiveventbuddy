@@ -1,8 +1,7 @@
 import { ErrorIdentifiers, UpdateEmbedPayloadOrigin, XIVEventBuddyEvents } from '#lib/util/constants';
-import { XIVEventBuddyEmojis } from '#lib/util/emojis';
-import { OwnerMentions } from '#root/config';
 import type { $Enums } from '@prisma/client';
 import { container, UserError } from '@sapphire/framework';
+import { resolveKey } from '@sapphire/plugin-i18next';
 import { MessageFlags, type ButtonInteraction } from 'discord.js';
 
 export async function handleJobOrRoleButtonClick(interaction: ButtonInteraction<'cached'>, role: $Enums.Roles, job: $Enums.Jobs | null = null) {
@@ -51,7 +50,7 @@ export async function handleJobOrRoleButtonClick(interaction: ButtonInteraction<
 
 	if (!eventData?.instance?.id) {
 		throw new UserError({
-			message: `${XIVEventBuddyEmojis.RedCross} I was unexpectedly unable to find the event matching the click of that button. Contact ${OwnerMentions} for assistance.`,
+			message: await resolveKey(interaction, 'interactionHandlers:unexpectedError'),
 			identifier: ErrorIdentifiers.UnableToFindEventForButtonClickError
 		});
 	}
@@ -84,6 +83,7 @@ export async function handleJobOrRoleButtonClick(interaction: ButtonInteraction<
 
 	if (eventData.instance.messageId) {
 		container.client.emit(XIVEventBuddyEvents.UpdateEmbed, {
+			interaction,
 			eventId,
 			guildId: interaction.guildId,
 			origin: UpdateEmbedPayloadOrigin.JobOrRoleButtonClick

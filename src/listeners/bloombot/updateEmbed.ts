@@ -1,17 +1,17 @@
 import { ErrorIdentifiers, type EventData, type UpdateEmbedPayload, type XIVEventBuddyEvents } from '#lib/util/constants';
-import { XIVEventBuddyEmojis } from '#lib/util/emojis';
 import { buildEventAttachment } from '#lib/util/functions/buildEventAttachment';
 import { buildEventComponents } from '#lib/util/functions/buildEventComponents';
 import { buildEventEmbed } from '#lib/util/functions/buildEventEmbed';
 import { buildPhantomJobComponent } from '#lib/util/functions/buildPhantomJobComponent';
 import { resolveOnErrorCodes } from '#lib/util/functions/resolveOnErrorCodes';
-import { OwnerMentions } from '#root/config';
 import { $Enums } from '@prisma/client';
 import { Listener, UserError } from '@sapphire/framework';
+import { resolveKey } from '@sapphire/plugin-i18next';
+import { isNullish } from '@sapphire/utilities';
 import { RESTJSONErrorCodes, roleMention } from 'discord.js';
 
 export class UserListener extends Listener<typeof XIVEventBuddyEvents.UpdateEmbed> {
-	public override async run({ eventId, guildId, origin, shouldDisableEvent = false }: UpdateEmbedPayload) {
+	public override async run({ interaction, eventId, guildId, origin, shouldDisableEvent = false }: UpdateEmbedPayload) {
 		const eventData = await this.container.prisma.event.findFirstOrThrow({
 			where: {
 				id: eventId
@@ -29,6 +29,7 @@ export class UserListener extends Listener<typeof XIVEventBuddyEvents.UpdateEmbe
 
 		if (guild) {
 			const channelWithMessage = await resolveOnErrorCodes(guild.channels.fetch(eventData.channelId), RESTJSONErrorCodes.UnknownChannel);
+			const { preferredLocale } = guild;
 
 			if (channelWithMessage?.isSendable() && eventData.instance?.messageId) {
 				try {
@@ -58,14 +59,16 @@ export class UserListener extends Listener<typeof XIVEventBuddyEvents.UpdateEmbe
 							],
 							components:
 								eventData.variant === $Enums.EventVariant.NORMAL
-									? buildEventComponents(eventData.id, shouldDisableEvent)
-									: buildPhantomJobComponent(eventData.id, shouldDisableEvent),
+									? await buildEventComponents(interaction ?? preferredLocale, eventData.id, shouldDisableEvent)
+									: await buildPhantomJobComponent(interaction ?? preferredLocale, eventData.id, shouldDisableEvent),
 							files: buildEventAttachment(eventData as EventData),
 							allowedMentions: { roles: eventData.roleToPing ? [eventData.roleToPing] : undefined }
 						});
 					} else {
 						throw new UserError({
-							message: `${XIVEventBuddyEmojis.RedCross} I was unexpectedly unable to update the event message. Contact ${OwnerMentions} for assistance.`,
+							message: await resolveKey(interaction!, 'listeners/updateEmbed:unexpectedError', {
+								lng: isNullish(interaction) ? preferredLocale : undefined
+							}),
 							identifier: ErrorIdentifiers.EventEditPostedMessageUndefinedError,
 							context: {
 								origin,
@@ -84,7 +87,9 @@ export class UserListener extends Listener<typeof XIVEventBuddyEvents.UpdateEmbe
 					}
 
 					throw new UserError({
-						message: `${XIVEventBuddyEmojis.RedCross} I was unexpectedly unable to update the event message. Contact ${OwnerMentions} for assistance.`,
+						message: await resolveKey(interaction!, 'listeners/updateEmbed:unexpectedError', {
+							lng: isNullish(interaction) ? preferredLocale : undefined
+						}),
 						identifier: ErrorIdentifiers.EventEditMessageFetchFailedError,
 						context: {
 							origin,

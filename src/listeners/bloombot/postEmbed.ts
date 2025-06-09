@@ -9,7 +9,7 @@ import { Listener } from '@sapphire/framework';
 import { RESTJSONErrorCodes, roleMention } from 'discord.js';
 
 export class UserListener extends Listener<typeof XIVEventBuddyEvents.PostEmbed> {
-	public override async run({ eventId, guildId }: PostEmbedPayload) {
+	public override async run({ interaction, eventId, guildId }: PostEmbedPayload) {
 		const eventData = await this.container.prisma.event.findFirstOrThrow({
 			where: {
 				id: eventId
@@ -27,12 +27,16 @@ export class UserListener extends Listener<typeof XIVEventBuddyEvents.PostEmbed>
 
 		if (guild) {
 			const eventChannel = await resolveOnErrorCodes(guild.channels.fetch(eventData.channelId), RESTJSONErrorCodes.UnknownChannel);
+			const { preferredLocale } = guild;
 
 			if (eventChannel?.isSendable()) {
 				const postedMessage = await eventChannel.send({
 					content: eventData.roleToPing ? roleMention(eventData.roleToPing) : undefined,
 					embeds: [buildEventEmbed(eventData as EventData)],
-					components: eventData.variant === $Enums.EventVariant.NORMAL ? buildEventComponents(eventId) : buildPhantomJobComponent(eventId),
+					components:
+						eventData.variant === $Enums.EventVariant.NORMAL
+							? await buildEventComponents(interaction ?? preferredLocale, eventId)
+							: await buildPhantomJobComponent(interaction ?? preferredLocale, eventId),
 					files: buildEventAttachment(eventData as EventData),
 					allowedMentions: { roles: eventData.roleToPing ? [eventData.roleToPing] : undefined }
 				});

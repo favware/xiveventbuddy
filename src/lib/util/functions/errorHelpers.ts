@@ -1,5 +1,5 @@
 import { rootFolder } from '#lib/util/constants';
-import { OwnerMentions } from '#root/config';
+import { Owners } from '#root/config';
 import { isMessageInstance } from '@sapphire/discord.js-utilities';
 import {
 	ArgumentError,
@@ -10,6 +10,7 @@ import {
 	type Command,
 	type ContextMenuCommandErrorPayload
 } from '@sapphire/framework';
+import { resolveKey } from '@sapphire/plugin-i18next';
 import { codeBlock, isNullish } from '@sapphire/utilities';
 import {
 	bold,
@@ -43,7 +44,7 @@ export async function handleChatInputOrContextMenuCommandError(
 	// If the error was an AbortError or an Internal Server Error, tell the user to re-try:
 	if (error.name === 'AbortError' || error.message === 'Internal Server Error') {
 		logger.warn(`${getWarnError(interaction)} (${interaction.user.id}) | ${error.constructor.name}`);
-		return alert(interaction, 'I had a small network error when messaging Discord. Please run this command again!');
+		return alert(interaction, await resolveKey(interaction, 'errors:networkError'));
 	}
 
 	// Extract useful information about the DiscordAPIError
@@ -63,7 +64,7 @@ export async function handleChatInputOrContextMenuCommandError(
 	// Emit where the error was emitted
 	logger.fatal(`[COMMAND] ${command.location.full}\n${error.stack ?? error.message}`);
 	try {
-		await alert(interaction, generateUnexpectedErrorMessage(error));
+		await alert(interaction, await generateUnexpectedErrorMessage(interaction, error));
 	} catch (error) {
 		client.emit(Events.Error, error as Error);
 	}
@@ -71,41 +72,49 @@ export async function handleChatInputOrContextMenuCommandError(
 	return undefined;
 }
 
-export function generateUnexpectedErrorMessage(error: Error | UserError) {
-	const body = [
-		`I found an unexpected error, please report the steps you have taken to ${OwnerMentions}!`,
-		'',
-		'',
-		bold('This is the stacktrace, please send this along with your report:'),
-		codeBlock('js', error.stack!)
-	];
+export async function generateUnexpectedErrorMessage(interaction: BaseInteraction | null, error: Error | UserError) {
+	let body = await resolveKey(interaction!, 'errors:unexpectedError', {
+		stacktrace: codeBlock('js', error.stack!),
+		lng: isNullish(interaction) ? 'en-US' : undefined
+	});
 
 	if (error instanceof UserError && error.context) {
-		body.splice(3, 0, bold('This error had additional relevant context:'), codeBlock('json', JSON.stringify(error.context, null, 2)), '', '');
+		body += await resolveKey(interaction!, 'errors:unexpectedErrorAdditionalContext', {
+			context: codeBlock('json', JSON.stringify(error.context, null, 2)),
+			lng: isNullish(interaction) ? 'en-US' : undefined
+		});
 	}
 
-	return body.join('\n');
+	return body;
 }
 
-async function stringError(interaction: CommandInteraction, error: string) {
-	return alert(interaction, `Dear ${userMention(interaction.user.id)}, ${error}`);
+export async function stringError(interaction: BaseInteraction, error: string) {
+	return alert(
+		interaction,
+		await resolveKey(interaction, 'errors:dearPrefix', {
+			user: userMention(interaction.user.id),
+			error
+		})
+	);
 }
 
-async function userError(interaction: CommandInteraction, error: UserError) {
-	return alert(interaction, error.message || `An error occurred that I was not able to identify. Contact ${OwnerMentions} for assistance.`);
+export async function userError(interaction: BaseInteraction, error: UserError) {
+	return alert(interaction, error.message || (await resolveKey(interaction, 'errors: userError')));
 }
 
-async function alert(interaction: CommandInteraction, content: string) {
+async function alert(interaction: BaseInteraction, content: string) {
+	if (!interaction.isStringSelectMenu() && !interaction.isButton()) return;
+
 	if (interaction.replied || interaction.deferred) {
 		return interaction.editReply({
 			content,
-			allowedMentions: { users: [interaction.user.id], roles: [] }
+			allowedMentions: { users: [...new Set([interaction.user.id, ...Owners])], roles: [] }
 		});
 	}
 
 	return interaction.reply({
 		content,
-		allowedMentions: { users: [interaction.user.id], roles: [] },
+		allowedMentions: { users: [...new Set([interaction.user.id, ...Owners])], roles: [] },
 		flags: MessageFlags.Ephemeral
 	});
 }

@@ -1,9 +1,8 @@
 import { CustomIdPrefixes, ErrorIdentifiers, UpdateEmbedPayloadOrigin, XIVEventBuddyEvents } from '#lib/util/constants';
-import { XIVEventBuddyEmojis } from '#lib/util/emojis';
 import { getFullEventData } from '#lib/util/functions/getFullEventData';
-import { OwnerMentions } from '#root/config';
 import { ApplyOptions } from '@sapphire/decorators';
 import { InteractionHandler, InteractionHandlerTypes, UserError } from '@sapphire/framework';
+import { resolveKey } from '@sapphire/plugin-i18next';
 import { MessageFlags, type ButtonInteraction } from 'discord.js';
 
 @ApplyOptions<InteractionHandler.Options>({
@@ -25,7 +24,7 @@ export class ButtonHandler extends InteractionHandler {
 
 		if (!eventData?.instance?.id) {
 			throw new UserError({
-				message: `${XIVEventBuddyEmojis.RedCross} I was unexpectedly unable to find the event matching the click of that button. Contact ${OwnerMentions} for assistance.`,
+				message: await resolveKey(interaction, 'interactionHandlers:unexpectedError'),
 				identifier: ErrorIdentifiers.UnableToFindEventForButtonClickError
 			});
 		}
@@ -40,7 +39,7 @@ export class ButtonHandler extends InteractionHandler {
 		});
 
 		if (!participantExists) {
-			return this.some(`${XIVEventBuddyEmojis.RedCross} You have not yet signed up for participation.`);
+			return this.some(await resolveKey(interaction, 'interactionHandlers:removeParticipationNotYetSignedUp'));
 		}
 
 		await this.container.prisma.participant.delete({
@@ -54,12 +53,13 @@ export class ButtonHandler extends InteractionHandler {
 
 		if (eventData.instance.messageId) {
 			this.container.client.emit(XIVEventBuddyEvents.UpdateEmbed, {
+				interaction,
 				eventId,
 				guildId: interaction.guildId,
 				origin: UpdateEmbedPayloadOrigin.RemoveParticipation
 			});
 		}
 
-		return this.some(`${XIVEventBuddyEmojis.GreenTick} Successfully removed you from the participants list.`);
+		return this.some(await resolveKey(interaction, 'interactionHandlers:removeParticipationSuccessful'));
 	}
 }

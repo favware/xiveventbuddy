@@ -12,7 +12,7 @@ import { type ButtonInteraction } from 'discord.js';
 export class ButtonHandler extends InteractionHandler {
 	public override async run(interaction: ButtonInteraction<'cached'>) {
 		return interaction.editReply({
-			content: formatJobUpdateMessage(XIVEventBuddyEmojis.Summoner, $Enums.Jobs.Summoner)
+			content: await formatJobUpdateMessage(interaction, XIVEventBuddyEmojis.Summoner, $Enums.Jobs.Summoner)
 		});
 	}
 

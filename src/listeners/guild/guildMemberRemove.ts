@@ -53,6 +53,7 @@ export class UserListener extends Listener<typeof Events.GuildMemberRemove> {
 			});
 
 			this.container.client.emit(XIVEventBuddyEvents.UpdateEmbed, {
+				interaction: null,
 				eventId: expiredEvent.id,
 				guildId,
 				origin: UpdateEmbedPayloadOrigin.MemberLeaveRemoveParticipation
