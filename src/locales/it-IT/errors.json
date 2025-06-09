@@ -1,8 +1,0 @@
-{
-	"networkError": "{{REDCROSS}} I had a small network error when messaging Discord. Please run this command again!",
-	"unexpectedError": "{{REDCROSS}} I found an unexpected error, please report the steps you have taken to support!\n\nThis is the stacktrace, please send this along with your report:\n{{stacktrace}}",
-	"unexpectedErrorAdditionalContext": "\nThis error had additional relevant context:\n{{context}}",
-	"userError": "An error occurred that I was not able to identify. Contact support for assistance.",
-	"dearPrefix": "Dear {{user}}, {{error}}",
-	"jumpToMessage": "Jump to message!"
-}
