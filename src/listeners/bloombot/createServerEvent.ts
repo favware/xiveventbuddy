@@ -1,16 +1,9 @@
 import type { CreateServerEventPayload, XIVEventBuddyEvents } from '#lib/util/constants';
+import { createServerEventOptions } from '#lib/util/functions/createServerEventOptions';
 import { resolveOnErrorCodes } from '#lib/util/functions/resolveOnErrorCodes';
 import { $Enums } from '@prisma/client';
 import { Listener } from '@sapphire/framework';
-import { resolveKey } from '@sapphire/plugin-i18next';
-import { isNullish } from '@sapphire/utilities';
-import { addHours, getISODay } from 'date-fns';
-import {
-	GuildScheduledEventEntityType,
-	GuildScheduledEventPrivacyLevel,
-	GuildScheduledEventRecurrenceRuleFrequency,
-	RESTJSONErrorCodes
-} from 'discord.js';
+import { RESTJSONErrorCodes } from 'discord.js';
 
 export class UserListener extends Listener<typeof XIVEventBuddyEvents.CreateServerEvent> {
 	public override async run({ interaction, eventId, guildId, isReschedule, discordEventId }: CreateServerEventPayload) {
@@ -56,41 +49,7 @@ export class UserListener extends Listener<typeof XIVEventBuddyEvents.CreateServ
 			if (guild) {
 				const leaderUser = await resolveOnErrorCodes(guild.members.fetch(eventData.leader), RESTJSONErrorCodes.UnknownMember);
 
-				const response = await guild.scheduledEvents.create({
-					name: eventData.name,
-					entityType: GuildScheduledEventEntityType.External,
-					entityMetadata: {
-						location: await resolveKey(interaction!, 'listeners/createServerEvent:entityMetadata', {
-							lng: isNullish(interaction) ? guild.preferredLocale : undefined
-						})
-					},
-					privacyLevel: GuildScheduledEventPrivacyLevel.GuildOnly,
-					scheduledStartTime: eventData.instance.dateTime,
-					scheduledEndTime: addHours(eventData.instance.dateTime, eventData.duration),
-					description: eventData.description ?? undefined,
-					image: eventData.bannerImage ? Buffer.from(eventData.bannerImage, 'base64') : null,
-
-					...(leaderUser?.user.username
-						? {
-								reason: await resolveKey(interaction!, 'listeners/createServerEvent:eventCreated', {
-									user: leaderUser.user.username,
-									lng: isNullish(interaction) ? guild.preferredLocale : undefined
-								})
-							}
-						: {}),
-
-					...(eventData.interval &&
-					(eventData.interval === $Enums.EventInterval.WEEKLY || eventData.interval === $Enums.EventInterval.ONCE_EVERY_OTHER_WEEK)
-						? {
-								recurrenceRule: {
-									startAt: eventData.instance.dateTime.toISOString(),
-									frequency: GuildScheduledEventRecurrenceRuleFrequency.Weekly,
-									interval: eventData.interval === $Enums.EventInterval.WEEKLY ? 1 : 2,
-									byWeekday: [getISODay(eventData.instance.dateTime) - 1]
-								}
-							}
-						: {})
-				});
+				const response = await guild.scheduledEvents.create(await createServerEventOptions(eventData, interaction, guild, leaderUser));
 
 				await this.container.prisma.event.update({
 					where: { id: eventId },
