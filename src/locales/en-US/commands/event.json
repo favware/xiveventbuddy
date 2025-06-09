@@ -47,7 +47,7 @@
 	"removeParticipantDescription": "Manually remove a participant from an event.",
 	"participantName": "participant",
 	"participantDescription": "The participant to remove, use @mention or type the name for autocomplete.",
-	"checksNoParticipantsFound": "{{REDCROSS}} No participants found for the event{{eventName}}.",
+	"checksNoParticipantsFound": "{{REDCROSS}} No participants found for the event {{eventName}}.",
 	"checksNotAParticipant": "{{REDCROSS}} {{participantMention}} was not a participant for the event {{eventName}}.",
 	"removeParticipantSuccessful": "{{GREENTICK}} Successfully removed participant {{participantMention}} from the event {{eventName}}.",
 	"paramsInvalidDateFormat": "{{REDCROSS}} The date you provided is invalid, it has to be in the format of {{DD-MM-YYY, inlineCode}} or {{DD/MM/YYYY, inlineCode}}.",

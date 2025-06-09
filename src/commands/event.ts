@@ -240,10 +240,8 @@ export class SlashCommand extends XIVEventBuddyCommand {
 		});
 
 		if (!event?.instance?.participants.length) {
-			const eventName = event?.name ? ` ${event.name}` : '';
-
 			throw new UserError({
-				message: await resolveKey(interaction, 'commands/event:checksNoParticipantsFound', { eventName }),
+				message: await resolveKey(interaction, 'commands/event:checksNoParticipantsFound', { eventName: event?.name ?? '' }),
 				identifier: ErrorIdentifiers.RemoveParticipantNoParticipantsFound
 			});
 		}
