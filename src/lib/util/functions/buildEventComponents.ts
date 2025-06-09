@@ -3,8 +3,14 @@ import { getPresenceStateButtons } from '#lib/util/functions/getPresenceStateBut
 import { $Enums } from '@prisma/client';
 import { resolveKey } from '@sapphire/plugin-i18next';
 import { isNullish } from '@sapphire/utilities';
-import { BaseInteraction, type ButtonBuilder, type Locale } from 'discord.js';
-import { ActionRowBuilder, StringSelectMenuBuilder, StringSelectMenuOptionBuilder } from 'discord.js';
+import {
+	ActionRowBuilder,
+	BaseInteraction,
+	StringSelectMenuBuilder,
+	StringSelectMenuOptionBuilder,
+	type ButtonBuilder,
+	type Locale
+} from 'discord.js';
 
 const TankOption = new StringSelectMenuOptionBuilder()
 	.setLabel($Enums.Roles.Tank)
@@ -33,48 +39,23 @@ const AllRounderOption = new StringSelectMenuOptionBuilder()
 
 export async function buildEventComponents(interactionOrLocale: BaseInteraction | Locale, eventId: string, shouldDisableEvent = false) {
 	const interactionAsInteraction = interactionOrLocale instanceof BaseInteraction ? interactionOrLocale : null;
+	const lng = isNullish(interactionAsInteraction) ? (interactionOrLocale as Locale) : undefined;
 
-	const roleSelectMenu = new StringSelectMenuBuilder().setCustomId(`${CustomIdPrefixes.RoleSelectMenu}|${eventId}`).setOptions(
-		TankOption.setDescription(
-			await resolveKey(interactionAsInteraction!, 'components:selectTank', {
-				lng: isNullish(interactionAsInteraction) ? (interactionOrLocale as Locale) : undefined
-			})
-		),
-		MeleeDpsOption.setDescription(
-			await resolveKey(interactionAsInteraction!, 'components:selectMeleeDps', {
-				lng: isNullish(interactionAsInteraction) ? (interactionOrLocale as Locale) : undefined
-			})
-		),
-		PhysRangeDpsOption.setDescription(
-			await resolveKey(interactionAsInteraction!, 'components:selectPhysRangedDps', {
-				lng: isNullish(interactionAsInteraction) ? (interactionOrLocale as Locale) : undefined
-			})
-		),
-		MagicOption.setDescription(
-			await resolveKey(interactionAsInteraction!, 'components:selectMagicRangedDps', {
-				lng: isNullish(interactionAsInteraction) ? (interactionOrLocale as Locale) : undefined
-			})
-		),
-		HealerOption.setDescription(
-			await resolveKey(interactionAsInteraction!, 'components:selectHealer', {
-				lng: isNullish(interactionAsInteraction) ? (interactionOrLocale as Locale) : undefined
-			})
-		),
-		AllRounderOption.setDescription(
-			await resolveKey(interactionAsInteraction!, 'components:selectAllRounder', {
-				lng: isNullish(interactionAsInteraction) ? (interactionOrLocale as Locale) : undefined
-			})
-		)
-	);
+	const roleSelectMenu = new StringSelectMenuBuilder()
+		.setCustomId(`${CustomIdPrefixes.RoleSelectMenu}|${eventId}`)
+		.setOptions(
+			TankOption.setDescription(await resolveKey(interactionAsInteraction!, 'components:selectTank', { lng })),
+			MeleeDpsOption.setDescription(await resolveKey(interactionAsInteraction!, 'components:selectMeleeDps', { lng })),
+			PhysRangeDpsOption.setDescription(await resolveKey(interactionAsInteraction!, 'components:selectPhysRangedDps', { lng })),
+			MagicOption.setDescription(await resolveKey(interactionAsInteraction!, 'components:selectMagicRangedDps', { lng })),
+			HealerOption.setDescription(await resolveKey(interactionAsInteraction!, 'components:selectHealer', { lng })),
+			AllRounderOption.setDescription(await resolveKey(interactionAsInteraction!, 'components:selectAllRounder', { lng }))
+		);
 
 	const firstRow = new ActionRowBuilder<StringSelectMenuBuilder>();
 
 	if (shouldDisableEvent) {
-		roleSelectMenu.setDisabled(true).setPlaceholder(
-			await resolveKey(interactionAsInteraction!, 'components:eventClosed', {
-				lng: isNullish(interactionAsInteraction) ? (interactionOrLocale as Locale) : undefined
-			})
-		);
+		roleSelectMenu.setDisabled(true).setPlaceholder(await resolveKey(interactionAsInteraction!, 'components:eventClosed', { lng }));
 		firstRow.setComponents(roleSelectMenu);
 		return [firstRow];
 	}

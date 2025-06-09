@@ -68,83 +68,30 @@ const PhantomTimeMageOption = new StringSelectMenuOptionBuilder()
 
 export async function buildPhantomJobComponent(interactionOrLocale: BaseInteraction | Locale, eventId: string, shouldDisableEvent = false) {
 	const interactionAsInteraction = interactionOrLocale instanceof BaseInteraction ? interactionOrLocale : null;
+	const lng = isNullish(interactionAsInteraction) ? (interactionOrLocale as Locale) : undefined;
 
-	const phantomJobSelectMenu = new StringSelectMenuBuilder().setCustomId(`${CustomIdPrefixes.PhantomJobSelectMenu}|${eventId}`).setOptions(
-		PhantomBardOption.setDescription(
-			await resolveKey(interactionAsInteraction!, 'components:selectPhantomBard', {
-				lng: isNullish(interactionAsInteraction) ? (interactionOrLocale as Locale) : undefined
-			})
-		),
-		PhantomBerserkerOption.setDescription(
-			await resolveKey(interactionAsInteraction!, 'components:selectPhantomBerserker', {
-				lng: isNullish(interactionAsInteraction) ? (interactionOrLocale as Locale) : undefined
-			})
-		),
-		PhantomCannoneerOption.setDescription(
-			await resolveKey(interactionAsInteraction!, 'components:selectPhantomCannoneer', {
-				lng: isNullish(interactionAsInteraction) ? (interactionOrLocale as Locale) : undefined
-			})
-		),
-		PhantomChemistOption.setDescription(
-			await resolveKey(interactionAsInteraction!, 'components:selectPhantomChemist', {
-				lng: isNullish(interactionAsInteraction) ? (interactionOrLocale as Locale) : undefined
-			})
-		),
-		PhantomFreelancerOption.setDescription(
-			await resolveKey(interactionAsInteraction!, 'components:selectPhantomFreelancer', {
-				lng: isNullish(interactionAsInteraction) ? (interactionOrLocale as Locale) : undefined
-			})
-		),
-		PhantomGeomancerOption.setDescription(
-			await resolveKey(interactionAsInteraction!, 'components:selectPhantomGeomancer', {
-				lng: isNullish(interactionAsInteraction) ? (interactionOrLocale as Locale) : undefined
-			})
-		),
-		PhantomKnightOption.setDescription(
-			await resolveKey(interactionAsInteraction!, 'components:selectPhantomKnight', {
-				lng: isNullish(interactionAsInteraction) ? (interactionOrLocale as Locale) : undefined
-			})
-		),
-		PhantomMonkOption.setDescription(
-			await resolveKey(interactionAsInteraction!, 'components:selectPhantomMonk', {
-				lng: isNullish(interactionAsInteraction) ? (interactionOrLocale as Locale) : undefined
-			})
-		),
-		PhantomOracleOption.setDescription(
-			await resolveKey(interactionAsInteraction!, 'components:selectPhantomOracle', {
-				lng: isNullish(interactionAsInteraction) ? (interactionOrLocale as Locale) : undefined
-			})
-		),
-		PhantomRangerOption.setDescription(
-			await resolveKey(interactionAsInteraction!, 'components:selectPhantomRanger', {
-				lng: isNullish(interactionAsInteraction) ? (interactionOrLocale as Locale) : undefined
-			})
-		),
-		PhantomSamuraiOption.setDescription(
-			await resolveKey(interactionAsInteraction!, 'components:selectPhantomSamurai', {
-				lng: isNullish(interactionAsInteraction) ? (interactionOrLocale as Locale) : undefined
-			})
-		),
-		PhantomThiefOption.setDescription(
-			await resolveKey(interactionAsInteraction!, 'components:selectPhantomThief', {
-				lng: isNullish(interactionAsInteraction) ? (interactionOrLocale as Locale) : undefined
-			})
-		),
-		PhantomTimeMageOption.setDescription(
-			await resolveKey(interactionAsInteraction!, 'components:selectPhantomTimeMage', {
-				lng: isNullish(interactionAsInteraction) ? (interactionOrLocale as Locale) : undefined
-			})
-		)
-	);
+	const phantomJobSelectMenu = new StringSelectMenuBuilder()
+		.setCustomId(`${CustomIdPrefixes.PhantomJobSelectMenu}|${eventId}`)
+		.setOptions(
+			PhantomBardOption.setDescription(await resolveKey(interactionAsInteraction!, 'components:selectPhantomBard', { lng })),
+			PhantomBerserkerOption.setDescription(await resolveKey(interactionAsInteraction!, 'components:selectPhantomBerserker', { lng })),
+			PhantomCannoneerOption.setDescription(await resolveKey(interactionAsInteraction!, 'components:selectPhantomCannoneer', { lng })),
+			PhantomChemistOption.setDescription(await resolveKey(interactionAsInteraction!, 'components:selectPhantomChemist', { lng })),
+			PhantomFreelancerOption.setDescription(await resolveKey(interactionAsInteraction!, 'components:selectPhantomFreelancer', { lng })),
+			PhantomGeomancerOption.setDescription(await resolveKey(interactionAsInteraction!, 'components:selectPhantomGeomancer', { lng })),
+			PhantomKnightOption.setDescription(await resolveKey(interactionAsInteraction!, 'components:selectPhantomKnight', { lng })),
+			PhantomMonkOption.setDescription(await resolveKey(interactionAsInteraction!, 'components:selectPhantomMonk', { lng })),
+			PhantomOracleOption.setDescription(await resolveKey(interactionAsInteraction!, 'components:selectPhantomOracle', { lng })),
+			PhantomRangerOption.setDescription(await resolveKey(interactionAsInteraction!, 'components:selectPhantomRanger', { lng })),
+			PhantomSamuraiOption.setDescription(await resolveKey(interactionAsInteraction!, 'components:selectPhantomSamurai', { lng })),
+			PhantomThiefOption.setDescription(await resolveKey(interactionAsInteraction!, 'components:selectPhantomThief', { lng })),
+			PhantomTimeMageOption.setDescription(await resolveKey(interactionAsInteraction!, 'components:selectPhantomTimeMage', { lng }))
+		);
 
 	const firstRow = new ActionRowBuilder<StringSelectMenuBuilder>();
 
 	if (shouldDisableEvent) {
-		phantomJobSelectMenu.setDisabled(true).setPlaceholder(
-			await resolveKey(interactionAsInteraction!, 'components:eventClosed', {
-				lng: isNullish(interactionAsInteraction) ? (interactionOrLocale as Locale) : undefined
-			})
-		);
+		phantomJobSelectMenu.setDisabled(true).setPlaceholder(await resolveKey(interactionAsInteraction!, 'components:eventClosed', { lng }));
 		firstRow.setComponents(phantomJobSelectMenu);
 		return [firstRow];
 	}

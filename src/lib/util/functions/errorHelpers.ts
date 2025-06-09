@@ -74,7 +74,7 @@ export async function handleChatInputOrContextMenuCommandError(
 
 export async function generateUnexpectedErrorMessage(interaction: BaseInteraction | null, error: Error | UserError) {
 	let body = await resolveKey(interaction!, 'errors:unexpectedError', {
-		stacktrace: codeBlock('js', error.stack!),
+		stacktrace: codeBlock('js', error.stack ?? error.message),
 		lng: isNullish(interaction) ? 'en-US' : undefined
 	});
 
@@ -99,7 +99,7 @@ export async function stringError(interaction: BaseInteraction, error: string) {
 }
 
 export async function userError(interaction: BaseInteraction, error: UserError) {
-	return alert(interaction, error.message || (await resolveKey(interaction, 'errors: userError')));
+	return alert(interaction, error.message ?? (await resolveKey(interaction, 'errors: userError')));
 }
 
 async function alert(interaction: BaseInteraction, content: string) {

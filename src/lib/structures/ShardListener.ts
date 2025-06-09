@@ -6,6 +6,7 @@ export abstract class ShardListener<E extends symbol | keyof ClientEvents = ''> 
 	protected abstract readonly title: string;
 
 	protected header(shardID: number): string {
-		return `${bold(magenta(`[SHARD ${shardID}]`))} ${this.title}`;
+		const prefix = bold(magenta(`[SHARD ${shardID}]`));
+		return `${prefix} ${this.title}`;
 	}
 }
