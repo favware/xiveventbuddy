@@ -44,6 +44,7 @@ export const enum BrandingColors {
 
 export const enum LanguageFormatters {
 	Date = 'date',
+	InlineCode = 'inlineCode',
 	Number = 'number',
 	Permissions = 'permissions',
 	RelativeTime = 'relativeTime',
@@ -58,6 +59,8 @@ export const enum ErrorIdentifiers {
 	EventEditPostedMessageUndefinedError = 'EventEditPostedMessageUndefinedError',
 	RemoveParticipantNoParticipantsFound = 'RemoveParticipantNoParticipantsFound',
 	RemoveParticipantNotFound = 'RemoveParticipantNotFound',
+	RoleAlreadyInEventManagers = 'RoleAlreadyInEventManagers',
+	RoleNotInEventManagers = 'RoleNotInEventManagers',
 	UnableToFindEventForButtonClickError = 'UnableToFindEventForButtonClickError',
 	UnableToFindEventForSelectMenuChoiceError = 'unableToFindEventForSelectMenuChoiceError',
 	UnexpectedRoleSelectMenuChoiceError = 'unexpectedRoleSelectMenuChoiceError'

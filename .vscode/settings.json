@@ -7,5 +7,5 @@
 		"**/dist/": true,
 		"**/.git/": true
 	},
-	"cSpell.words": ["XIVEventBuddy", "Eorzea"]
+	"cSpell.words": ["Eorzea", "GREENTICK", "XIVEventBuddy"]
 }

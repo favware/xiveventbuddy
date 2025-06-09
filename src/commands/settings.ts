@@ -1,7 +1,8 @@
 import { XIVEventBuddyCommand } from '#lib/extensions/XIVEventBuddyComand';
-import { XIVEventBuddyEmojis } from '#lib/util/emojis';
+import { ErrorIdentifiers } from '#lib/util/constants';
 import { ApplyOptions } from '@sapphire/decorators';
-import type { ApplicationCommandRegistry, Awaitable, ChatInputCommand } from '@sapphire/framework';
+import { UserError, type ApplicationCommandRegistry, type Awaitable, type ChatInputCommand } from '@sapphire/framework';
+import { applyLocalizedBuilder, resolveKey } from '@sapphire/plugin-i18next';
 import { ApplicationIntegrationType, MessageFlags, roleMention } from 'discord.js';
 
 @ApplyOptions<ChatInputCommand.Options>({
@@ -9,33 +10,17 @@ import { ApplicationIntegrationType, MessageFlags, roleMention } from 'discord.j
 })
 export class SlashCommand extends XIVEventBuddyCommand {
 	public override registerApplicationCommands(registry: ApplicationCommandRegistry): Awaitable<void> {
-		registry.registerChatInputCommand((command) =>
-			command //
-				.setName(this.name)
-				.setDescription(this.description)
+		registry.registerChatInputCommand((builder) =>
+			applyLocalizedBuilder(builder, 'commands/settings:root')
 				.setIntegrationTypes(ApplicationIntegrationType.GuildInstall)
 				//  Event managers
 				.addSubcommand((builder) =>
-					builder //
-						.setName('add-manager-role')
-						.setDescription('Add a role to the list of event managers')
-						.addRoleOption((input) =>
-							input //
-								.setName('role')
-								.setDescription('The role to add to the event managers list')
-								.setRequired(true)
-						)
+					applyLocalizedBuilder(builder, 'commands/settings:addManager') //
+						.addRoleOption((builder) => applyLocalizedBuilder(builder, 'commands/settings:role').setRequired(true))
 				)
 				.addSubcommand((builder) =>
-					builder //
-						.setName('remove-manager-role')
-						.setDescription('Removes a role from the list of event managers')
-						.addRoleOption((input) =>
-							input //
-								.setName('role')
-								.setDescription('The role to remove to the event managers list')
-								.setRequired(true)
-						)
+					applyLocalizedBuilder(builder, 'commands/settings:removeManager') //
+						.addRoleOption((builder) => applyLocalizedBuilder(builder, 'commands/settings:role').setRequired(true))
 				)
 		);
 	}
@@ -63,8 +48,9 @@ export class SlashCommand extends XIVEventBuddyCommand {
 		});
 
 		if (roleAlreadyInRoles) {
-			return interaction.editReply({
-				content: `${XIVEventBuddyEmojis.RedCross} Role ${roleMention(roleToAdd.id)} is already in the list of event managers`
+			throw new UserError({
+				message: await resolveKey(interaction, 'commands/settings:checksAlreadyAdded', { role: roleMention(roleToAdd.id) }),
+				identifier: ErrorIdentifiers.RoleAlreadyInEventManagers
 			});
 		}
 
@@ -75,7 +61,9 @@ export class SlashCommand extends XIVEventBuddyCommand {
 		});
 
 		return interaction.editReply({
-			content: `${XIVEventBuddyEmojis.GreenTick} Role ${roleMention(roleToAdd.id)} has been added to the list of event managers`
+			content: await resolveKey(interaction, 'commands/settings:addSuccessful', {
+				role: roleMention(roleToAdd.id)
+			})
 		});
 	}
 
@@ -89,8 +77,9 @@ export class SlashCommand extends XIVEventBuddyCommand {
 		});
 
 		if (!roleInRoles) {
-			return interaction.editReply({
-				content: `${XIVEventBuddyEmojis.RedCross} Role ${roleMention(roleToRemove.id)} is not in the list of event managers`
+			throw new UserError({
+				message: await resolveKey(interaction, 'commands/settings:checksNotInTheList', { role: roleMention(roleToRemove.id) }),
+				identifier: ErrorIdentifiers.RoleNotInEventManagers
 			});
 		}
 
@@ -101,7 +90,7 @@ export class SlashCommand extends XIVEventBuddyCommand {
 		});
 
 		return interaction.editReply({
-			content: `${XIVEventBuddyEmojis.GreenTick} Role ${roleMention(roleToRemove.id)} has been removed from the list of event managers`
+			content: await resolveKey(interaction, 'commands/settings:removeSuccessful', { role: roleMention(roleToRemove.id) })
 		});
 	}
 }

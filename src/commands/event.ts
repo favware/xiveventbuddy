@@ -6,11 +6,11 @@ import { buildEventComponents } from '#lib/util/functions/buildEventComponents';
 import { buildEventEmbed } from '#lib/util/functions/buildEventEmbed';
 import { buildPhantomJobComponent } from '#lib/util/functions/buildPhantomJobComponent';
 import { resolveOnErrorCodes } from '#lib/util/functions/resolveOnErrorCodes';
-import { OwnerMentions, Owners } from '#root/config';
+import { Owners } from '#root/config';
 import { $Enums } from '@prisma/client';
 import { fetch, FetchResultTypes } from '@sapphire/fetch';
 import { Result, UserError, type ApplicationCommandRegistry, type Awaitable, type ChatInputCommand } from '@sapphire/framework';
-import { applyLocalizedBuilder, createLocalizedChoice, resolveKey } from '@sapphire/plugin-i18next';
+import { applyLocalizedBuilder, createLocalizedChoice, resolveKey, type $Dictionary } from '@sapphire/plugin-i18next';
 import { filterNullish, isNullishOrZero } from '@sapphire/utilities';
 import { format } from 'date-fns';
 import {
@@ -243,7 +243,7 @@ export class SlashCommand extends XIVEventBuddyCommand {
 			const eventName = event?.name ? ` ${event.name}` : '';
 
 			throw new UserError({
-				message: await resolveKey(interaction, 'commands/event:noParticipantFound', { eventName }),
+				message: await resolveKey(interaction, 'commands/event:checksNoParticipantsFound', { eventName }),
 				identifier: ErrorIdentifiers.RemoveParticipantNoParticipantsFound
 			});
 		}
@@ -252,7 +252,7 @@ export class SlashCommand extends XIVEventBuddyCommand {
 
 		if (!participantData) {
 			throw new UserError({
-				message: await resolveKey(interaction, 'commands/event:notAParticipant', {
+				message: await resolveKey(interaction, 'commands/event:checksNotAParticipant', {
 					participantMention: userMention(participant.id),
 					eventName: event.name
 				}),
@@ -276,7 +276,7 @@ export class SlashCommand extends XIVEventBuddyCommand {
 		});
 
 		return interaction.editReply({
-			content: await resolveKey(interaction, 'commands/event:successfullyRemovedParticipant', {
+			content: await resolveKey(interaction, 'commands/event:removeParticipantSuccessful', {
 				participantMention: userMention(participant.id),
 				eventName: event.name
 			})
@@ -288,7 +288,7 @@ export class SlashCommand extends XIVEventBuddyCommand {
 
 		if (dateIsInvalid) {
 			return interaction.editReply({
-				content: `${XIVEventBuddyEmojis.RedCross} The date you provided is invalid, it has to be in the format of ${inlineCode('DD-MM-YYY')} or ${inlineCode('DD/MM/YYY')}.`
+				content: await resolveKey(interaction, 'commands/event:paramsInvalidDateFormat')
 			});
 		}
 
@@ -296,7 +296,7 @@ export class SlashCommand extends XIVEventBuddyCommand {
 
 		if (!this.timeRegex.test(stringTime)) {
 			return interaction.editReply({
-				content: `${XIVEventBuddyEmojis.RedCross} The time you provided is invalid, it has to be in the format of ${inlineCode('HH:mm')}.`
+				content: await resolveKey(interaction, 'commands/event:paramsInvalidTimeFormat')
 			});
 		}
 
@@ -308,7 +308,7 @@ export class SlashCommand extends XIVEventBuddyCommand {
 
 		if (!eventChannel?.isSendable()) {
 			return interaction.editReply({
-				content: `${XIVEventBuddyEmojis.RedCross} The channel you provided is invalid.`
+				content: await resolveKey(interaction, 'commands/event:paramsInvalidChannel')
 			});
 		}
 
@@ -319,7 +319,11 @@ export class SlashCommand extends XIVEventBuddyCommand {
 				?.has([PermissionFlagsBits.SendMessages, PermissionFlagsBits.ViewChannel, PermissionFlagsBits.EmbedLinks])
 		) {
 			return interaction.editReply({
-				content: `${XIVEventBuddyEmojis.RedCross} I do not have permission to send messages in the specified channel. I need at least the ${inlineCode('View Channel')}, ${inlineCode('Send Messages')}, and ${inlineCode('Embed Links')} permissions.`
+				content: await resolveKey(interaction, 'commands/event:checksChannelPermissions', {
+					viewChannel: await resolveKey(interaction, `permissions:ViewChannel`),
+					sendMessages: await resolveKey(interaction, `permissions:SendMessages`),
+					embedLinks: await resolveKey(interaction, `permissions:EmbedLinks`)
+				})
 			});
 		}
 
@@ -374,7 +378,7 @@ export class SlashCommand extends XIVEventBuddyCommand {
 
 		if (!event.instance) {
 			return interaction.editReply({
-				content: `${XIVEventBuddyEmojis.RedCross} An unexpected fatal error occurred while creating the event. Contact ${OwnerMentions} for assistance.`,
+				content: await resolveKey(interaction, 'commands/event:createUnexpectedError'),
 				allowedMentions: { users: Owners }
 			});
 		}
@@ -388,7 +392,10 @@ export class SlashCommand extends XIVEventBuddyCommand {
 		});
 
 		return interaction.editReply({
-			content: `${XIVEventBuddyEmojis.GreenTick} Event ${inlineCode(name)} created successfully with ID ${inlineCode(event.id)}.`
+			content: await resolveKey(interaction, 'commands/event:createSuccessful', {
+				eventName: inlineCode(name),
+				eventId: inlineCode(event.id)
+			})
 		});
 	}
 
@@ -418,7 +425,7 @@ export class SlashCommand extends XIVEventBuddyCommand {
 
 		if (eventInstances.length === 0) {
 			return interaction.editReply({
-				content: `${XIVEventBuddyEmojis.RedCross} No events found.`
+				content: await resolveKey(interaction, 'commands/event:checksNoEventsFound')
 			});
 		}
 
@@ -430,6 +437,17 @@ export class SlashCommand extends XIVEventBuddyCommand {
 			[$Enums.EventVariant.OCCULT_CRESCENT]: `${XIVEventBuddyEmojis.PhantomJob} Occult Crescent`
 		};
 
+		interface ListHeaders extends $Dictionary {
+			date: string;
+			description: string;
+			name: string;
+			roleToPing: string;
+			time: string;
+			variant: string;
+		}
+
+		const listHeaders = await resolveKey<string, { returnObjects: true }, ListHeaders>(interaction, 'commands/event:listHeaders');
+
 		const eventList = eventInstances
 			.map((eventInstance) => {
 				const { id, dateTime, event } = eventInstance;
@@ -439,12 +457,12 @@ export class SlashCommand extends XIVEventBuddyCommand {
 					`${eventIdHeader}: ${id}`,
 					unorderedList(
 						[
-							`**Name:** ${name}`,
-							`**Description:** ${description}`,
-							`**Date:** ${time(dateTime, TimestampStyles.ShortDate)}`,
-							`**Time:** ${time(dateTime, TimestampStyles.ShortTime)}`,
-							roleToPing ? `**Role to ping:** ${roleMention(roleToPing)}` : undefined,
-							`**Variant:** ${variantMapping[variant]}`
+							`**${listHeaders.name}:** ${name}`,
+							`**${listHeaders.description}:** ${description}`,
+							`**${listHeaders.date}:** ${time(dateTime, TimestampStyles.ShortDate)}`,
+							`**${listHeaders.time}:** ${time(dateTime, TimestampStyles.ShortTime)}`,
+							roleToPing ? `**${listHeaders.roleToPing}:** ${roleMention(roleToPing)}` : undefined,
+							`**${listHeaders.variant}:** ${variantMapping[variant]}`
 						].filter(filterNullish)
 					)
 				].join('\n');
@@ -458,7 +476,7 @@ export class SlashCommand extends XIVEventBuddyCommand {
 			const filename = `event-list-${interaction.user.id}.txt`;
 
 			return interaction.editReply({
-				content: `${XIVEventBuddyEmojis.GreenTick} The event list is too long to send in a single message. Here is a file with the event list.`,
+				content: await resolveKey(interaction, 'commands/event:listContentTooLong'),
 				files: [{ attachment: file, name: filename }]
 			});
 		}
@@ -498,7 +516,9 @@ export class SlashCommand extends XIVEventBuddyCommand {
 
 		if (!existingEvent?.instance) {
 			throw new UserError({
-				message: `${XIVEventBuddyEmojis.RedCross} No event found with ID ${inlineCode(id)}.`,
+				message: await resolveKey(interaction, 'commands/event:checksNoEventFoundWithId', {
+					eventId: inlineCode(id)
+				}),
 				identifier: ErrorIdentifiers.EventEditIdNotFound
 			});
 		}
@@ -514,7 +534,7 @@ export class SlashCommand extends XIVEventBuddyCommand {
 
 			if (dateIsInvalid) {
 				return interaction.editReply({
-					content: `${XIVEventBuddyEmojis.RedCross} The date you provided is invalid, it has to be in the format of ${inlineCode('DD-MM-YYY')} or ${inlineCode('DD/MM/YYY')}.`
+					content: await resolveKey(interaction, 'commands/event:paramsInvalidDateFormat')
 				});
 			}
 		}
@@ -523,7 +543,7 @@ export class SlashCommand extends XIVEventBuddyCommand {
 
 		if (stringTime && !this.timeRegex.test(stringTime)) {
 			return interaction.editReply({
-				content: `${XIVEventBuddyEmojis.RedCross} The time you provided is invalid, it has to be in the format of ${inlineCode('HH:mm')}.`
+				content: await resolveKey(interaction, 'commands/event:paramsInvalidTimeFormat')
 			});
 		}
 
@@ -546,7 +566,7 @@ export class SlashCommand extends XIVEventBuddyCommand {
 
 		if (!resolvedEventChannel?.isSendable()) {
 			return interaction.editReply({
-				content: `${XIVEventBuddyEmojis.RedCross} The channel you provided is invalid.`
+				content: await resolveKey(interaction, 'commands/event:paramsInvalidChannel')
 			});
 		}
 
@@ -635,7 +655,9 @@ export class SlashCommand extends XIVEventBuddyCommand {
 		}
 
 		return interaction.editReply({
-			content: `${XIVEventBuddyEmojis.GreenTick} Event ${inlineCode(name)} successfully updated.`
+			content: await resolveKey(interaction, 'commands/event:editEventSuccessful', {
+				eventName: inlineCode(name)
+			})
 		});
 	}
 
@@ -647,6 +669,7 @@ export class SlashCommand extends XIVEventBuddyCommand {
 				id
 			},
 			select: {
+				name: true,
 				channelId: true,
 				instance: {
 					select: {
@@ -658,8 +681,11 @@ export class SlashCommand extends XIVEventBuddyCommand {
 		});
 
 		if (!existingEvent?.instance) {
-			return interaction.editReply({
-				content: `${XIVEventBuddyEmojis.RedCross} No event found with ID ${inlineCode(id)}.`
+			throw new UserError({
+				message: await resolveKey(interaction, 'commands/event:checksNoEventFoundWithId', {
+					eventId: inlineCode(id)
+				}),
+				identifier: ErrorIdentifiers.EventEditIdNotFound
 			});
 		}
 
@@ -691,11 +717,13 @@ export class SlashCommand extends XIVEventBuddyCommand {
 			}
 
 			return await interaction.editReply({
-				content: `${XIVEventBuddyEmojis.GreenTick} Event with ID ${inlineCode(id)} successfully deleted.`
+				content: await resolveKey(interaction, 'commands/event:deleteEventSuccessful', {
+					eventName: inlineCode(existingEvent.name)
+				})
 			});
 		} catch {
 			return interaction.editReply({
-				content: `${XIVEventBuddyEmojis.RedCross} Failed to delete the event from the database. Contact ${OwnerMentions} for assistance.`
+				content: await resolveKey(interaction, 'commands/event:deleteUnexpectedError')
 			});
 		}
 	}

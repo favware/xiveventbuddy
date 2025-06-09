@@ -2,6 +2,7 @@ import { secondsFromMilliseconds } from '#lib/util/functions/time';
 import { BrandingColors } from '#utils/constants';
 import { ApplyOptions } from '@sapphire/decorators';
 import { Command, version as sapphireVersion, type ChatInputCommand } from '@sapphire/framework';
+import { applyLocalizedBuilder, resolveKey } from '@sapphire/plugin-i18next';
 import { roundNumber } from '@sapphire/utilities';
 import {
 	ActionRowBuilder,
@@ -20,30 +21,17 @@ import {
 import { cpus, uptime, type CpuInfo } from 'node:os';
 
 @ApplyOptions<ChatInputCommand.Options>({
-	description: 'Provides information about XIVEventBuddy, links for adding the bot, and joining the support server',
 	requiredClientPermissions: [PermissionFlagsBits.EmbedLinks, PermissionFlagsBits.CreateEvents, PermissionFlagsBits.ManageEvents]
 })
 export class SlashCommand extends Command {
-	private readonly descriptionContent = [
-		`XIVEventBuddy is a Discord bot that provides user friendly first discord bot to host your XIV events.`,
-		`This bot uses the ${hyperlink('Sapphire Framework', hideLinkEmbed('https://sapphirejs.dev'))} build on top of ${hyperlink(
-			'discord.js',
-			hideLinkEmbed('https://discord.js.org')
-		)}.`
-	].join('\n');
-
 	public override registerApplicationCommands(registry: ChatInputCommand.Registry) {
-		registry.registerChatInputCommand((builder) =>
-			builder //
-				.setName(this.name)
-				.setDescription(this.description)
-		);
+		registry.registerChatInputCommand((builder) => applyLocalizedBuilder(builder, 'commands/info:root'));
 	}
 
 	public override async chatInputRun(interaction: ChatInputCommand.Interaction) {
 		return interaction.reply({
 			//
-			embeds: [this.embed],
+			embeds: [await this.getEmbed(interaction)],
 			components: this.components,
 			ephemeral: true
 		});
@@ -99,7 +87,7 @@ export class SlashCommand extends Command {
 		});
 	}
 
-	private get embed(): EmbedBuilder {
+	private async getEmbed(interaction: Command.ChatInputCommandInteraction): Promise<EmbedBuilder> {
 		const titles = {
 			stats: 'Statistics',
 			uptime: 'Uptime',
@@ -107,34 +95,41 @@ export class SlashCommand extends Command {
 		};
 		const stats = this.generalStatistics;
 		const uptime = this.uptimeStatistics;
-		const usage = this.usageStatistics;
+		const usage = await this.getUsageStatistics(interaction);
+
+		const translationHeaders = await resolveKey<string, { returnObjects: true }, EmbedTranslationHeaders>(interaction, 'commands/info:fields');
 
 		const fields = {
 			stats: [
 				//
-				`• **Users**: ${stats.users}`,
-				`• **Guilds**: ${stats.guilds}`,
-				`• **Channels**: ${stats.channels}`,
-				`• **Node.js**: ${stats.nodeJs}`,
-				`• **Discord.js**: ${stats.version}`,
-				`• **Sapphire Framework**: ${stats.sapphireVersion}`
+				`• **${translationHeaders.stats.users}**: ${stats.users}`,
+				`• **${translationHeaders.stats.servers}**: ${stats.guilds}`,
+				`• **${translationHeaders.stats.channels}**: ${stats.channels}`,
+				`• **${translationHeaders.stats.nodejs}**: ${stats.nodeJs}`,
+				`• **${translationHeaders.stats.discordjs}**: ${stats.version}`,
+				`• **${translationHeaders.stats.sapphire}**: ${stats.sapphireVersion}`
 			].join('\n'),
 			uptime: [
 				//
-				`• **Host**: ${uptime.host}`,
-				`• **Total**: ${uptime.total}`,
-				`• **Client**: ${uptime.client}`
+				`• **${translationHeaders.uptime.host}**: ${uptime.host}`,
+				`• **${translationHeaders.uptime.total}**: ${uptime.total}`,
+				`• **${translationHeaders.uptime.client}**: ${uptime.client}`
 			].join('\n'),
 			serverUsage: [
 				//
-				`• **CPU Load**: ${usage.cpuLoad}`,
-				`• **Heap**: ${usage.ramUsed}MB (Total: ${usage.ramTotal}MB)`
+				`• **${translationHeaders.usage.cpuLoad}**: ${usage.cpuLoad}`,
+				`• **${translationHeaders.usage.heapUsed}**: ${usage.ramUsed}MB (Total: ${usage.ramTotal}MB)`
 			].join('\n')
 		};
 
 		return new EmbedBuilder() //
 			.setColor(BrandingColors.Primary)
-			.setDescription(this.descriptionContent)
+			.setDescription(
+				await resolveKey(interaction, 'commands/info:embedDescription', {
+					sapphire: hyperlink('Sapphire Framework', hideLinkEmbed('https://sapphirejs.dev')),
+					discordjs: hyperlink('discord.js', hideLinkEmbed('https://discord.js.org'))
+				})
+			)
 			.setFields(
 				{
 					name: titles.stats,
@@ -174,12 +169,13 @@ export class SlashCommand extends Command {
 		};
 	}
 
-	private get usageStatistics(): StatsUsage {
+	private async getUsageStatistics(interaction: Command.ChatInputCommandInteraction): Promise<StatsUsage> {
 		const usage = process.memoryUsage();
+
 		return {
 			cpuLoad: cpus().slice(0, 2).map(SlashCommand.formatCpuInfo.bind(null)).join(' | '),
-			ramTotal: this.container.i18n.number.format(usage.heapTotal / 1_048_576),
-			ramUsed: this.container.i18n.number.format(usage.heapUsed / 1_048_576)
+			ramTotal: await resolveKey(interaction, 'globals:numberValue', { value: usage.heapTotal / 1_048_576 }),
+			ramUsed: await resolveKey(interaction, 'globals:numberValue', { value: usage.heapUsed / 1_048_576 })
 		};
 	}
 
@@ -207,4 +203,25 @@ interface StatsUsage {
 	cpuLoad: string;
 	ramTotal: string;
 	ramUsed: string;
+}
+
+export interface EmbedTranslationHeaders {
+	stats: {
+		channels: string;
+		discordjs: string;
+		nodejs: string;
+		sapphire: string;
+		servers: string;
+		users: string;
+	};
+	uptime: {
+		client: string;
+		host: string;
+		total: string;
+	};
+	usage: {
+		cpuLoad: string;
+		heapUsed: string;
+		total: string;
+	};
 }

@@ -9,7 +9,16 @@ import { LogLevel } from '@sapphire/framework';
 import { i18next, type I18nextFormatter, type InternationalizationOptions } from '@sapphire/plugin-i18next';
 import { envParseInteger, envParseString } from '@skyra/env-utilities';
 import type { RedisOptions } from 'bullmq';
-import { GatewayIntentBits, PermissionFlagsBits, time, TimestampStyles, userMention, type ClientOptions, type WebhookClientData } from 'discord.js';
+import {
+	GatewayIntentBits,
+	inlineCode,
+	PermissionFlagsBits,
+	time,
+	TimestampStyles,
+	userMention,
+	type ClientOptions,
+	type WebhookClientData
+} from 'discord.js';
 import type { InterpolationOptions } from 'i18next';
 import { fileURLToPath } from 'node:url';
 
@@ -73,6 +82,10 @@ function parseInternationalizationFormatters(): I18nextFormatter[] {
 		{ name: LanguageFormatters.Date, format: (value) => time(new Date(value), TimestampStyles.ShortDate) },
 		{ name: LanguageFormatters.Time, format: (value) => time(new Date(value), TimestampStyles.ShortTime) },
 		{ name: LanguageFormatters.RelativeTime, format: (value) => time(new Date(value), TimestampStyles.RelativeTime) },
+		{
+			name: LanguageFormatters.InlineCode,
+			format: (value) => inlineCode(value)
+		},
 		// Add alias formatters:
 		{
 			name: LanguageFormatters.Permissions,
@@ -86,9 +99,8 @@ function parseInternationalizationOptions(): InternationalizationOptions {
 		defaultMissingKey: 'default',
 		defaultNS: 'globals',
 		defaultLanguageDirectory: fileURLToPath(LANGUAGE_ROOT),
-		fetchLanguage: async ({ interactionGuildLocale, interactionLocale, guild }) => {
-			return interactionLocale ?? interactionGuildLocale ?? guild?.preferredLocale ?? 'en-US';
-		},
+		fetchLanguage: async ({ interactionGuildLocale, interactionLocale, guild }) =>
+			interactionLocale ?? interactionGuildLocale ?? guild?.preferredLocale ?? 'en-US',
 		formatters: parseInternationalizationFormatters(),
 		i18next: (_: string[], languages: string[]) => ({
 			supportedLngs: languages,

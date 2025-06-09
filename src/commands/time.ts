@@ -1,53 +1,40 @@
 import { XIVEventBuddyCommand } from '#lib/extensions/XIVEventBuddyComand';
 import { XIVServers } from '#lib/util/constants';
 import { convertToEorzeaTime, getEUServerTime } from '#lib/util/functions/ffxivTime';
-import { ApplyOptions } from '@sapphire/decorators';
 import type { ApplicationCommandRegistry, Awaitable, ChatInputCommand } from '@sapphire/framework';
+import { applyLocalizedBuilder, createLocalizedChoice, resolveKey } from '@sapphire/plugin-i18next';
 import { ApplicationIntegrationType, inlineCode, MessageFlags } from 'discord.js';
 
-@ApplyOptions<ChatInputCommand.Options>({
-	description: 'Get either Eorzea or Light server time'
-})
 export class SlashCommand extends XIVEventBuddyCommand {
 	public override registerApplicationCommands(registry: ApplicationCommandRegistry): Awaitable<void> {
-		registry.registerChatInputCommand((command) =>
-			command //
-				.setName(this.name)
-				.setDescription(this.description)
+		registry.registerChatInputCommand((builder) =>
+			applyLocalizedBuilder(builder, 'commands/time:root') //
 				.setIntegrationTypes(ApplicationIntegrationType.GuildInstall)
+				.addSubcommand((builder) => applyLocalizedBuilder(builder, 'commands/time:eorzea'))
 				.addSubcommand((builder) =>
-					builder //
-						.setName('eorzea')
-						.setDescription('Gets the current Eorzea time')
-				)
-				.addSubcommand((builder) =>
-					builder //
-						.setName('server-time')
-						.setDescription('Gets the current server time')
+					applyLocalizedBuilder(builder, 'commands/time:serverTime') //
 						.addStringOption((builder) =>
-							builder //
-								.setName('server')
-								.setDescription('The server to get the time for')
+							applyLocalizedBuilder(builder, 'commands/time:server')
 								.setRequired(true)
 								.setChoices([
 									// EU
-									{ name: 'Light', value: XIVServers.Light },
-									{ name: 'Chaos', value: XIVServers.Chaos },
+									createLocalizedChoice('commands/time:choiceLight', { value: XIVServers.Light }),
+									createLocalizedChoice('commands/time:choiceChaos', { value: XIVServers.Chaos }),
 
 									// USA
-									{ name: 'Aether', value: XIVServers.Aether },
-									{ name: 'Crystal', value: XIVServers.Crystal },
-									{ name: 'Dynamis', value: XIVServers.Dynamis },
-									{ name: 'Primal', value: XIVServers.Primal },
+									createLocalizedChoice('commands/time:choiceAether', { value: XIVServers.Aether }),
+									createLocalizedChoice('commands/time:choiceCrystal', { value: XIVServers.Crystal }),
+									createLocalizedChoice('commands/time:choiceDynamis', { value: XIVServers.Dynamis }),
+									createLocalizedChoice('commands/time:choicePrimal', { value: XIVServers.Primal }),
 
 									// OCE
-									{ name: 'Materia', value: XIVServers.Materia },
+									createLocalizedChoice('commands/time:choiceMateria', { value: XIVServers.Materia }),
 
 									// JPN
-									{ name: 'Elemental', value: XIVServers.Elemental },
-									{ name: 'Gaia', value: XIVServers.Gaia },
-									{ name: 'Mana', value: XIVServers.Mana },
-									{ name: 'Meteor', value: XIVServers.Meteor }
+									createLocalizedChoice('commands/time:choiceElemental', { value: XIVServers.Elemental }),
+									createLocalizedChoice('commands/time:choiceGaia', { value: XIVServers.Gaia }),
+									createLocalizedChoice('commands/time:choiceMana', { value: XIVServers.Mana }),
+									createLocalizedChoice('commands/time:choiceMeteor', { value: XIVServers.Meteor })
 								])
 						)
 				)
@@ -67,7 +54,7 @@ export class SlashCommand extends XIVEventBuddyCommand {
 
 	private async eorzeaTime(interaction: ChatInputCommand.Interaction<'cached'>) {
 		return interaction.reply({
-			content: `The current Eorzea time is ${inlineCode(convertToEorzeaTime(new Date()))}.`,
+			content: await resolveKey(interaction, 'commands/time:currentTimeEorzea', { time: inlineCode(convertToEorzeaTime(new Date())) }),
 			flags: MessageFlags.Ephemeral
 		});
 	}
@@ -80,12 +67,12 @@ export class SlashCommand extends XIVEventBuddyCommand {
 			case XIVServers.Light:
 			case XIVServers.Chaos:
 				return interaction.editReply({
-					content: `The current ${server} server time is ${inlineCode(getEUServerTime())}.`
+					content: await resolveKey(interaction, 'commands/time:curerntTimeServer', { server, time: inlineCode(getEUServerTime()) })
 				});
 			default:
 				// TODO: Support US, OCE, and JPN servers
 				return interaction.editReply({
-					content: 'That server is not supported yet. Please try again later.'
+					content: await resolveKey(interaction, 'commands/time:serverUnsupported', { server })
 				});
 		}
 	}
