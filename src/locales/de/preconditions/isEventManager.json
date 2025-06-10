@@ -1,4 +1,4 @@
 {
-	"noEventManagersFound": "{{REDCROSS}} No event managers found in the database.",
-	"notAnEventManager": "{{REDCROSS}} You are not an event manager."
+	"noEventManagersFound": "{{REDCROSS}} Keine Event-Manager in der Datenbank gefunden.",
+	"notAnEventManager": "{{REDCROSS}} Du bist kein Event-Manager."
 }
