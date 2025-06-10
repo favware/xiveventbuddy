@@ -1,7 +1,7 @@
 {
 	"rootName": "impostazioni",
 	"rootDescription": "Modifica le impostazioni del bot.",
-	"addManagerName": "add-manager-role",
+	"addManagerName": "aggiungi-gestore-ruolo",
 	"addManagerNameDescription": "Aggiungi un ruolo alla lista dei gestori di eventi.",
 	"removeManagerName": "remove-manager-role",
 	"removeManagerNameDescription": "Rimuovi un ruolo dalla lista dei gestori di eventi.",
