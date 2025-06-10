@@ -1,5 +1,5 @@
 {
-	"default": "{{key}} non è ancora stato localizzato per en-US.",
+	"default": "{{key}} non è ancora stato localizzato per it.",
 	"defaultLanguage": "Lingua predefinita",
 	"supportServer": "Server di Assistenza",
 	"numberValue": "{{value, number}}",
