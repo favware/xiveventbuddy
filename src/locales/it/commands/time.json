@@ -1,12 +1,12 @@
 {
-	"rootName": "time",
-	"rootDescription": "Get either Eorzean or server time",
+	"rootName": "ora",
+	"rootDescription": "Ottieni l'ora di Eorzean o del server.",
 	"eorzeaName": "eorzea",
-	"eorzeaDescription": "Get the current time in Eorzea",
+	"eorzeaDescription": "Ottieni l'ora attuale in Eorzea.",
 	"serverTimeName": "server-time",
-	"serverTimeDescription": "Get the current time in the server's timezone",
+	"serverTimeDescription": "Ottieni l'ora corrente nel fuso orario del server.",
 	"serverName": "server",
-	"serverDescription": "The server to get the time for",
+	"serverDescription": "Il server per cui ottenere il tempo.",
 	"choiceLight": "Light",
 	"choiceChaos": "Chaos",
 	"choiceAether": "Aether",
@@ -18,7 +18,7 @@
 	"choiceGaia": "Gaia",
 	"choiceMana": "Mana",
 	"choiceMeteor": "Meteor",
-	"currentTimeEorzea": "The current time in Eorzea is {{time}}.",
-	"currentTimeServer": "The current {{server}} time is {{time}}.",
-	"serverUnsupported": "The server {{server}} is currently not yet supported. Please choose another server."
+	"currentTimeEorzea": "L'ora attuale in Eorzea è {{time}}.",
+	"currentTimeServer": "L'ora attuale {{server}} è {{time}}.",
+	"serverUnsupported": "Il server {{server}} non è ancora supportato. Si prega di scegliere un altro server."
 }

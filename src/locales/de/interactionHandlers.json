@@ -1,12 +1,12 @@
 {
-	"successfullyUpdatedJob": "{{GREENTICK}} Successfully updated your job to {{jobEmoji}} {{jobName}}.",
-	"successfullyUpdatedStatus": "{{GREENTICK}} Successfully updated your status to {{statusName}}.",
-	"unexpectedError": "{{REDCROSS}} I was unexpectedly unable to find the event matching the click of that button. Contact support for assistance.",
-	"removeParticipationNotYetSignedUp": "{{REDCROSS}} You have not signed up for this event yet, so you cannot remove your participation.",
-	"removeParticipationSuccessful": "{{GREENTICK}} Successfully removed you from the participants list.",
-	"phantomJobSelectMenu": "{{GREENTICK}} Successfully updated your role to {{phantomJobEmoji}} {{phantomJobName}}.",
-	"selectMenuUnexpectedError": "{{REDCROSS}} I was unexpectedly unable to find the event matching the selection of that option. Contact support for assistance.",
-	"roleSelectUnexpectedError": "{{REDCROSS}} I received an unexpected role from the select menu of selecting your role. Contact support for assistance.",
-	"roleSelectSuccessful": "{{GREENTICK}} Successfully updated your role to {{roleEmoji}} {{roleName}}.",
-	"roleSelectSuccessfulWithJob": "{{GREENTICK}} Successfully updated your role to {{roleEmoji}} {{roleName}}. Next, select which job you will be playing from these options:"
+	"successfullyUpdatedJob": "{{GREENTICK}} Erfolgreich deinen Job auf {{jobEmoji}} {{jobName}} aktualisiert.",
+	"successfullyUpdatedStatus": "{{GREENTICK}} Erfolgreich deinen Status auf {{statusName}} aktualisiert.",
+	"unexpectedError": "{{REDCROSS}} Ich war unerwartet nicht in der Lage, das Event zu finden, die dem Klick auf diesen Knopf entspricht. Kontaktiere den Support für Hilfe.",
+	"removeParticipationNotYetSignedUp": "{{REDCROSS}} Du hast dich noch nicht für diese Veranstaltung registriert, daher kannst du deine Teilnahme nicht entfernen.",
+	"removeParticipationSuccessful": "{{GREENTICK}} Du wurdest erfolgreich von der Teilnehmerliste entfernt.",
+	"phantomJobSelectMenu": "{{GREENTICK}} Deine Rolle wurde erfolgreich auf {{phantomJobEmoji}} {{phantomJobName}} aktualisiert.",
+	"selectMenuUnexpectedError": "{{REDCROSS}} Ich war unerwartet nicht in der Lage, die Veranstaltung zu finden, die der Auswahl dieser Option entspricht. Kontaktiere den Support für Hilfe.",
+	"roleSelectUnexpectedError": "{{REDCROSS}} Ich habe eine unerwartete Rolle aus dem Auswahlmenü Ihrer Rolle erhalten. Kontaktiere den Support für Unterstützung.",
+	"roleSelectSuccessful": "{{GREENTICK}} Deine Rolle erfolgreich auf {{roleEmoji}} {{roleName}} aktualisiert.",
+	"roleSelectSuccessfulWithJob": "{{GREENTICK}} Erfolgreich Rolle auf {{roleEmoji}} {{roleName}} aktualisiert. Als Nächstes wähle aus, welchen Job du mit diesen Optionen spielen wirst:"
 }

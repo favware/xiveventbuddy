@@ -1,8 +1,8 @@
 {
-	"networkError": "{{REDCROSS}} I had a small network error when messaging Discord. Please run this command again!",
-	"unexpectedError": "{{REDCROSS}} I found an unexpected error, please report the steps you have taken to support!\n\nThis is the stacktrace, please send this along with your report:\n{{stacktrace}}",
-	"unexpectedErrorAdditionalContext": "\nThis error had additional relevant context:\n{{context}}",
-	"userError": "An error occurred that I was not able to identify. Contact support for assistance.",
+	"networkError": "{{REDCROSS}} Ho avuto un piccolo errore di rete durante la messaggistica di Discord. Si prega di eseguire nuovamente questo comando!",
+	"unexpectedError": "{{REDCROSS}} Ho trovato un errore inaspettato, per favore segnala i passi che hai fatto per supportare!\n\nQuesto è lo stacktrace, si prega di inviare questo insieme al tuo report:\n{{stacktrace}}",
+	"unexpectedErrorAdditionalContext": "\nQuesto errore ha avuto un ulteriore contesto rilevante:\n{{context}}",
+	"userError": "Si è verificato un errore durante il quale non sono stato in grado di identificare. Contatta il supporto per l'assistenza.",
 	"dearPrefix": "Dear {{user}}, {{error}}",
-	"jumpToMessage": "Jump to message!"
+	"jumpToMessage": "Vai al messaggio!"
 }
