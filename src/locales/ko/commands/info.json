@@ -1,7 +1,7 @@
 {
 	"rootName": "info",
-	"rootDescription": "Provides information about XIVEventBuddy, links for adding the bot, and joining the support server",
-	"content": "XIVEventBuddy is a Discord bot that provides user friendly first discord bot to host your XIV events.\nThis bot uses the {{sapphire}} build on top of {{discordjs}}.",
+	"rootDescription": "Provides information about XIVEventBuddy, links for adding the bot, and joining the support server.",
+	"content": "XIVEventBuddy is a Discord bot that helps you easily host your Final Fantasy XIV events.\nIt is built with the {{sapphire}} and {{discordjs}}.",
 	"fields": {
 		"stats": {
 			"users": "Users",
