@@ -1,14 +1,14 @@
 {
-	"rootName": "settings",
-	"rootDescription": "Change the settings of the bot.",
+	"rootName": "impostazioni",
+	"rootDescription": "Modifica le impostazioni del bot.",
 	"addManagerName": "add-manager-role",
-	"addManagerNameDescription": "Add a role to the list of event managers.",
+	"addManagerNameDescription": "Aggiungi un ruolo alla lista dei gestori di eventi.",
 	"removeManagerName": "remove-manager-role",
-	"removeManagerNameDescription": "Removes a role from the list of event managers.",
-	"roleName": "role",
-	"roleDescription": "The role to add to the event managers list.",
-	"checksAlreadyAdded": "{{REDCROSS}} Role {{role}} is already in the list of event managers.",
-	"addSuccessful": "{{GREENTICK}} Role {{role}} has been added to the list of event managers.",
-	"checksNotInTheList": "{{REDCROSS}} Role {{role}} is not in the list of event managers.",
-	"removeSuccessful": "{{GREENTICK}} Role {{role}} has been removed from the list of event managers."
+	"removeManagerNameDescription": "Rimuovi un ruolo dalla lista dei gestori di eventi.",
+	"roleName": "ruolo",
+	"roleDescription": "Il ruolo da aggiungere alla lista dei gestori degli eventi.",
+	"checksAlreadyAdded": "Il ruolo {{REDCROSS}} {{role}} è già nella lista dei gestori degli eventi.",
+	"addSuccessful": "{{GREENTICK}} Ruolo {{role}} è stato aggiunto alla lista dei gestori di eventi.",
+	"checksNotInTheList": "Il ruolo {{REDCROSS}} {{role}} non è nella lista dei gestori degli eventi.",
+	"removeSuccessful": "Il ruolo {{GREENTICK}} {{role}} è stato rimosso dall'elenco dei gestori degli eventi."
 }
