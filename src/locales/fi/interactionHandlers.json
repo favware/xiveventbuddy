@@ -1,1 +1,12 @@
-{}
+{
+	"successfullyUpdatedJob": "{{GREENTICK}} Successfully updated your job to {{jobEmoji}} {{jobName}}.",
+	"successfullyUpdatedStatus": "{{GREENTICK}} Successfully updated your status to {{statusName}}.",
+	"unexpectedError": "{{REDCROSS}} I was unexpectedly unable to find the event matching the click of that button. Contact support for assistance.",
+	"removeParticipationNotYetSignedUp": "{{REDCROSS}} You have not signed up for this event yet, so you cannot remove your participation.",
+	"removeParticipationSuccessful": "{{GREENTICK}} Successfully removed you from the participants list.",
+	"phantomJobSelectMenu": "{{GREENTICK}} Successfully updated your role to {{phantomJobEmoji}} {{phantomJobName}}.",
+	"selectMenuUnexpectedError": "{{REDCROSS}} I was unexpectedly unable to find the event matching the selection of that option. Contact support for assistance.",
+	"roleSelectUnexpectedError": "{{REDCROSS}} I received an unexpected role from the select menu of selecting your role. Contact support for assistance.",
+	"roleSelectSuccessful": "{{GREENTICK}} Successfully updated your role to {{roleEmoji}} {{roleName}}.",
+	"roleSelectSuccessfulWithJob": "{{GREENTICK}} Successfully updated your role to {{roleEmoji}} {{roleName}}. Next, select which job you will be playing from these options:"
+}

@@ -1,1 +1,4 @@
-{}
+{
+	"noEventManagersFound": "{{REDCROSS}} No event managers found in the database.",
+	"notAnEventManager": "{{REDCROSS}} You are not an event manager."
+}

@@ -1,1 +1,27 @@
-{}
+{
+	"selectTank": "Select this option if you are a Tank.",
+	"selectMeleeDps": "Select this option if you are a Melee DPS.",
+	"selectPhysRangedDps": "Select this option if you are a Physical Ranged DPS.",
+	"selectMagicRangedDps": "Select this option if you are a Magic Ranged DPS.",
+	"selectHealer": "Select this option if you are a Healer.",
+	"selectAllRounder": "Select this option if you are an All-Rounder.",
+	"selectPhantomBard": "Select this option if you are a Phantom Bard",
+	"selectPhantomBerserker": "Select this option if you are a Phantom Berserker",
+	"selectPhantomCannoneer": "Select this option if you are a Phantom Cannoneer",
+	"selectPhantomChemist": "Select this option if you are a Phantom Chemist",
+	"selectPhantomFreelancer": "Select this option if you are a Phantom Freelancer",
+	"selectPhantomGeomancer": "Select this option if you are a Phantom Geomancer",
+	"selectPhantomKnight": "Select this option if you are a Phantom Knight",
+	"selectPhantomMonk": "Select this option if you are a Phantom Monk",
+	"selectPhantomOracle": "Select this option if you are a Phantom Oracle",
+	"selectPhantomRanger": "Select this option if you are a Phantom Ranger",
+	"selectPhantomSamurai": "Select this option if you are a Phantom Samurai",
+	"selectPhantomThief": "Select this option if you are a Phantom Thief",
+	"selectPhantomTimeMage": "Select this option if you are a Phantom Time Mage",
+	"eventClosed": "This event is closed",
+	"labelBench": "Bench",
+	"labelLate": "Late",
+	"labelTentative": "Tentative",
+	"labelAbsence": "Absence",
+	"labelRemoveParticipation": "Remove Participation"
+}
