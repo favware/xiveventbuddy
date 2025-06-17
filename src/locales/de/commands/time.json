@@ -1,7 +1,7 @@
 {
 	"rootName": "zeit",
 	"rootDescription": "Erfahre entweder die Eorzea oder die Server Zeit.",
-	"eorzeaName": "Eorzea",
+	"eorzeaName": "eorzea",
 	"eorzeaDescription": "Erfahre die momentane Uhrzeit in Eorzea.",
 	"serverTimeName": "server-zeit",
 	"serverTimeDescription": "Erfahre die momentane Uhrzeit in der Zeitzone des Servers.",
