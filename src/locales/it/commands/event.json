@@ -8,7 +8,7 @@
 	"dateName": "data",
 	"dateDescription": "Data evento, o prima occorrenza se intervallo impostato. Formato: GG-MM-AAAA o GG/MM/AAAA.",
 	"timeName": "orario",
-	"timeDescription": "L'ora dell'evento. Il formato è HH:mm (24 ore di orologio). Il tempo è UTC+0 in inverno, UTC+1 in estate.",
+	"timeDescription": "L'ora dell'evento. Il formato è HH:mm (24 ore di orologio). Tempo UTC+0 in inverno, UTC+1 in estate.",
 	"durationName": "durata",
 	"durationDescription": "La durata dell'evento in ore.",
 	"duration1Hour": "1 ora",
