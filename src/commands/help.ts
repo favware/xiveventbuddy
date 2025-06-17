@@ -9,7 +9,7 @@ import { ActionRowBuilder, ButtonBuilder, ButtonStyle, chatInputApplicationComma
 export class SlashCommand extends Command {
 	private readonly settingsCommandMention = chatInputApplicationCommandMention('settings', 'add-manager-role', '1324565167282978908');
 
-	private readonly eventsCommandMention = chatInputApplicationCommandMention('event', 'create', '1325268997981343764');
+	private readonly eventsCommandMention = chatInputApplicationCommandMention('event', 'create', '1384445458705027096');
 
 	public override registerApplicationCommands(registry: ChatInputCommand.Registry) {
 		registry.registerChatInputCommand((builder) => applyLocalizedBuilder(builder, 'commands/help:root'));
