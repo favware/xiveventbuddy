@@ -6,7 +6,7 @@
 	"eventName": "nome",
 	"eventDescription": "Il nome dell'evento.",
 	"dateName": "data",
-	"dateDescription": "La data dell'evento, o la prima occorrenza se l'intervallo è impostato. Il formato è GD-MM-AAAA o GG/MM/AAAA.",
+	"dateDescription": "Data evento, o prima occorrenza se intervallo impostato. Formato: GG-MM-AAAA o GG/MM/AAAA.",
 	"timeName": "orario",
 	"timeDescription": "L'ora dell'evento. Il formato è HH:mm (24 ore di orologio). Il tempo è UTC+0 in inverno, UTC+1 in estate.",
 	"durationName": "durata",
