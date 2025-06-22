@@ -11,9 +11,10 @@ import {
 	type ContextMenuCommandErrorPayload
 } from '@sapphire/framework';
 import { resolveKey } from '@sapphire/plugin-i18next';
-import { codeBlock, isNullish } from '@sapphire/utilities';
+import { codeBlock, filterNullish, isNullish } from '@sapphire/utilities';
 import {
 	bold,
+	ChatInputCommandInteraction,
 	DiscordAPIError,
 	EmbedBuilder,
 	hideLinkEmbed,
@@ -24,7 +25,7 @@ import {
 	userMention,
 	type APIMessage,
 	type BaseInteraction,
-	type CommandInteraction,
+	type ContextMenuCommandInteraction,
 	type Message
 } from 'discord.js';
 import { fileURLToPath } from 'node:url';
@@ -119,7 +120,7 @@ async function alert(interaction: BaseInteraction, content: string) {
 	});
 }
 
-async function sendErrorChannel(interaction: CommandInteraction, command: Command, error: Error) {
+async function sendErrorChannel(interaction: ChatInputCommandInteraction | ContextMenuCommandInteraction, command: Command, error: Error) {
 	const webhook = container.webhookError;
 	if (isNullish(webhook)) return;
 
@@ -128,9 +129,9 @@ async function sendErrorChannel(interaction: CommandInteraction, command: Comman
 	const lines = [
 		getLinkLine(interactionReply), //
 		getCommandLine(command),
-		getOptionsLine(interaction.options),
+		interaction instanceof ChatInputCommandInteraction ? getOptionsLine(interaction.options) : null,
 		getErrorLine(error)
-	];
+	].filter(filterNullish);
 
 	// If it's a DiscordAPIError or a HTTPError, add the HTTP path and code lines after the second one.
 	if (error instanceof DiscordAPIError || error instanceof HTTPError) {
@@ -163,7 +164,7 @@ function getCommandLine(command: Command): string {
  *
  * @param options - The options the user used when running the command.
  */
-function getOptionsLine(options: CommandInteraction['options']): string {
+function getOptionsLine(options: ChatInputCommandInteraction['options']): string {
 	if (options.data.length === 0) return '**Options**: Not Supplied';
 
 	const mappedOptions = [];
