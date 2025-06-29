@@ -55,7 +55,7 @@ export async function handleJobOrRoleButtonClick(interaction: ButtonInteraction<
 		});
 	}
 
-	const result: { max_signup_order: number | null }[] = await container.prisma.$queryRaw/* sql */ `
+	const result: { max_signup_order: number | null }[] = await container.prisma.$queryRaw /* sql */ `
 			SELECT MAX(participants.signup_order) AS max_signup_order
 			FROM participants
 			WHERE event_instance_id = ${eventData.instance.id}
