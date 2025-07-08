@@ -1,6 +1,6 @@
 import { $Enums } from '@prisma/client';
 import { resolveKey } from '@sapphire/plugin-i18next';
-import { isNullish } from '@sapphire/utilities';
+import { cutText, isNullish } from '@sapphire/utilities';
 import { addHours, getISODay } from 'date-fns';
 import {
 	GuildScheduledEventEntityType,
@@ -20,7 +20,7 @@ export async function createServerEventOptions(
 	leaderUser: GuildMember | null
 ): Promise<Promise<GuildScheduledEventCreateOptions>> {
 	return {
-		name: eventData.name,
+		name: cutText(eventData.name, 100),
 		entityType: GuildScheduledEventEntityType.External,
 		entityMetadata: {
 			location: await resolveKey(interaction!, 'listeners/createServerEvent:entityMetadata', {
@@ -30,7 +30,7 @@ export async function createServerEventOptions(
 		privacyLevel: GuildScheduledEventPrivacyLevel.GuildOnly,
 		scheduledStartTime: eventData.instance.dateTime,
 		scheduledEndTime: addHours(eventData.instance.dateTime, eventData.duration),
-		description: eventData.description ?? undefined,
+		description: cutText(eventData.description, 1_000) ?? undefined,
 		image: eventData.bannerImage ? Buffer.from(eventData.bannerImage, 'base64') : null,
 
 		...(leaderUser?.user.username
