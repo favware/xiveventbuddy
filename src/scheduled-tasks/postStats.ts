@@ -24,8 +24,8 @@ enum Lists {
 })
 export class PostStats extends ScheduledTask {
 	public override async run() {
-		// If the websocket isn't ready, skip for now
-		if (this.container.client.ws.status !== Status.Ready) {
+		// If the websocket isn't ready or we're not in a production environment, skip
+		if (this.container.client.ws.status !== Status.Ready || !this.shouldRun()) {
 			return;
 		}
 
@@ -37,26 +37,21 @@ export class PostStats extends ScheduledTask {
 		await this.processBotListStats(rawGuilds, rawUsers);
 	}
 
-	public override async onLoad() {
-		if (envParseString('NODE_ENV') !== 'production') {
-			await this.unload();
-		}
+	private shouldRun() {
+		const isProduction = envParseString('NODE_ENV') === 'production';
 
 		const discordBotListTokenIsDefined = envIsDefined('DISCORD_BOT_LIST_TOKEN');
 		// const topGgTokenIsDefined = envIsDefined('TOP_GG_TOKEN');
 		// const botListMeTokenIsDefined = envIsDefined('BOTLIST_ME_TOKEN');
 		const discordTokenIsDefined = envIsDefined('DISCORDS_TOKEN');
 
-		if (
-			!discordBotListTokenIsDefined ||
-			//  !topGgTokenIsDefined||
-			//   !botListMeTokenIsDefined ||
-			!discordTokenIsDefined
-		) {
-			await this.unload();
-		}
-
-		return super.onLoad();
+		return (
+			isProduction &&
+			discordBotListTokenIsDefined &&
+			// topGgTokenIsDefined &&
+			// botListMeTokenIsDefined &&
+			discordTokenIsDefined
+		);
 	}
 
 	private async processBotListStats(rawGuilds: number, rawUsers: number) {
