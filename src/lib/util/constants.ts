@@ -142,7 +142,7 @@ export const enum UpdateEmbedPayloadOrigin {
 	RoleSelectMenu = 'role-select-menu'
 }
 
-export type EventData = Pick<Event, 'bannerImage' | 'channelId' | 'description' | 'id' | 'leader' | 'name' | 'roleToPing' | 'variant'> & {
+export type EventData = Pick<Event, 'bannerImage' | 'channelId' | 'description' | 'id' | 'leader' | 'name' | 'rolesToPing' | 'variant'> & {
 	instance: Pick<EventInstance, 'dateTime'> & {
 		participants: Pick<Participant, 'discordId' | 'job' | 'role' | 'signupOrder'>[];
 	};

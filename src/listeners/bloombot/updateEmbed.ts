@@ -7,7 +7,7 @@ import { resolveOnErrorCodes } from '#lib/util/functions/resolveOnErrorCodes';
 import { $Enums } from '@prisma/client';
 import { Listener, UserError } from '@sapphire/framework';
 import { resolveKey } from '@sapphire/plugin-i18next';
-import { isNullish } from '@sapphire/utilities';
+import { isNullish, isNullishOrEmpty } from '@sapphire/utilities';
 import { RESTJSONErrorCodes, roleMention } from 'discord.js';
 
 export class UserListener extends Listener<typeof XIVEventBuddyEvents.UpdateEmbed> {
@@ -40,7 +40,12 @@ export class UserListener extends Listener<typeof XIVEventBuddyEvents.UpdateEmbe
 
 					if (postedMessage) {
 						await postedMessage.edit({
-							content: eventData.roleToPing ? roleMention(eventData.roleToPing) : undefined,
+							content: isNullishOrEmpty(eventData.rolesToPing)
+								? undefined
+								: await resolveKey(interaction!, 'globals:andListValue', {
+										value: eventData.rolesToPing.map(roleMention),
+										lng: preferredLocale
+									}),
 							embeds: [
 								buildEventEmbed(
 									{
@@ -51,7 +56,7 @@ export class UserListener extends Listener<typeof XIVEventBuddyEvents.UpdateEmbe
 										instance: { dateTime: eventData.instance.dateTime, participants: eventData.instance.participants },
 										leader: eventData.leader,
 										name: eventData.name,
-										roleToPing: eventData.roleToPing,
+										rolesToPing: eventData.rolesToPing,
 										variant: eventData.variant
 									} as EventData,
 									shouldDisableEvent
@@ -62,7 +67,7 @@ export class UserListener extends Listener<typeof XIVEventBuddyEvents.UpdateEmbe
 									? await buildEventComponents(interaction ?? preferredLocale, eventData.id, shouldDisableEvent)
 									: await buildPhantomJobComponent(interaction ?? preferredLocale, eventData.id, shouldDisableEvent),
 							files: buildEventAttachment(eventData as EventData),
-							allowedMentions: { roles: eventData.roleToPing ? [eventData.roleToPing] : undefined }
+							allowedMentions: { roles: isNullishOrEmpty(eventData.rolesToPing) ? undefined : eventData.rolesToPing }
 						});
 					} else {
 						throw new UserError({

@@ -22,7 +22,7 @@ export async function handleJobOrRoleButtonClick(interaction: ButtonInteraction<
 			interval: true,
 			leader: true,
 			name: true,
-			roleToPing: true,
+			rolesToPing: true,
 			updatedAt: true,
 			instance: {
 				select: {

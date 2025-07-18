@@ -6,6 +6,8 @@ import { buildPhantomJobComponent } from '#lib/util/functions/buildPhantomJobCom
 import { resolveOnErrorCodes } from '#lib/util/functions/resolveOnErrorCodes';
 import { $Enums } from '@prisma/client';
 import { Listener } from '@sapphire/framework';
+import { resolveKey } from '@sapphire/plugin-i18next';
+import { isNullishOrEmpty } from '@sapphire/utilities';
 import { RESTJSONErrorCodes, roleMention } from 'discord.js';
 
 export class UserListener extends Listener<typeof XIVEventBuddyEvents.PostEmbed> {
@@ -31,14 +33,19 @@ export class UserListener extends Listener<typeof XIVEventBuddyEvents.PostEmbed>
 
 			if (eventChannel?.isSendable()) {
 				const postedMessage = await eventChannel.send({
-					content: eventData.roleToPing ? roleMention(eventData.roleToPing) : undefined,
+					content: isNullishOrEmpty(eventData.rolesToPing)
+						? undefined
+						: await resolveKey(interaction!, 'globals:andListValue', {
+								value: eventData.rolesToPing.map(roleMention),
+								lng: preferredLocale
+							}),
 					embeds: [buildEventEmbed(eventData as EventData)],
 					components:
 						eventData.variant === $Enums.EventVariant.NORMAL
 							? await buildEventComponents(interaction ?? preferredLocale, eventId)
 							: await buildPhantomJobComponent(interaction ?? preferredLocale, eventId),
 					files: buildEventAttachment(eventData as EventData),
-					allowedMentions: { roles: eventData.roleToPing ? [eventData.roleToPing] : undefined }
+					allowedMentions: { roles: isNullishOrEmpty(eventData.rolesToPing) ? undefined : eventData.rolesToPing }
 				});
 
 				await this.container.prisma.event.update({

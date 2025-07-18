@@ -11,7 +11,7 @@ import { $Enums } from '@prisma/client';
 import { fetch, FetchResultTypes } from '@sapphire/fetch';
 import { Result, UserError, type ApplicationCommandRegistry, type Awaitable, type ChatInputCommand } from '@sapphire/framework';
 import { applyLocalizedBuilder, createLocalizedChoice, resolveKey, type $Dictionary } from '@sapphire/plugin-i18next';
-import { filterNullish, isNullishOrZero } from '@sapphire/utilities';
+import { filterNullish, isNullishOrEmpty, isNullishOrZero } from '@sapphire/utilities';
 import { format } from 'date-fns';
 import {
 	ApplicationIntegrationType,
@@ -78,6 +78,14 @@ export class SlashCommand extends XIVEventBuddyCommand {
 						)
 						.addRoleOption((builder) =>
 							applyLocalizedBuilder(builder, 'commands/event:roleToPing') //
+								.setRequired(false)
+						)
+						.addRoleOption((builder) =>
+							applyLocalizedBuilder(builder, 'commands/event:secondRoleToPing') //
+								.setRequired(false)
+						)
+						.addRoleOption((builder) =>
+							applyLocalizedBuilder(builder, 'commands/event:thirdRoleToPing') //
 								.setRequired(false)
 						)
 						.addChannelOption((builder) =>
@@ -153,6 +161,14 @@ export class SlashCommand extends XIVEventBuddyCommand {
 						)
 						.addRoleOption((builder) =>
 							applyLocalizedBuilder(builder, 'commands/event:roleToPing') //
+								.setRequired(false)
+						)
+						.addRoleOption((builder) =>
+							applyLocalizedBuilder(builder, 'commands/event:secondRoleToPing') //
+								.setRequired(false)
+						)
+						.addRoleOption((builder) =>
+							applyLocalizedBuilder(builder, 'commands/event:thirdRoleToPing') //
 								.setRequired(false)
 						)
 						.addChannelOption((builder) =>
@@ -330,6 +346,8 @@ export class SlashCommand extends XIVEventBuddyCommand {
 		const description = interaction.options.getString('description', false);
 		const interval = interaction.options.getString('interval', false);
 		const roleToPing = interaction.options.getRole('role-to-ping', false);
+		const secondRoleToPing = interaction.options.getRole('role-to-ping-2', false);
+		const roleToPingThree = interaction.options.getRole('role-to-ping-3', false);
 		const eventDuration = interaction.options.getInteger('duration', true);
 		const leader = interaction.options.getUser('leader', false);
 		const variant = interaction.options.getString('variant', false);
@@ -342,7 +360,7 @@ export class SlashCommand extends XIVEventBuddyCommand {
 				channelId: eventChannel.id,
 				guildId: interaction.guildId,
 				interval: interval as $Enums.EventInterval,
-				roleToPing: roleToPing?.id,
+				rolesToPing: [roleToPing?.id, secondRoleToPing?.id, roleToPingThree?.id].filter(filterNullish),
 				leader: leader?.id ?? interaction.user.id,
 				bannerImage: await this.getBannerImage(interaction),
 				variant: (variant as $Enums.EventVariant | null) ?? $Enums.EventVariant.NORMAL,
@@ -356,7 +374,7 @@ export class SlashCommand extends XIVEventBuddyCommand {
 				id: true,
 				name: true,
 				description: true,
-				roleToPing: true,
+				rolesToPing: true,
 				leader: true,
 				channelId: true,
 				instance: {
@@ -413,7 +431,7 @@ export class SlashCommand extends XIVEventBuddyCommand {
 					select: {
 						name: true,
 						description: true,
-						roleToPing: true,
+						rolesToPing: true,
 						variant: true
 					}
 				}
@@ -451,7 +469,7 @@ export class SlashCommand extends XIVEventBuddyCommand {
 		const eventList = eventInstances
 			.map((eventInstance) => {
 				const { id, dateTime, event } = eventInstance;
-				const { name, description, roleToPing, variant } = event;
+				const { name, description, rolesToPing, variant } = event;
 
 				return [
 					`${eventIdHeader}: ${id}`,
@@ -461,7 +479,7 @@ export class SlashCommand extends XIVEventBuddyCommand {
 							`**${listHeaders.description}:** ${description}`,
 							`**${listHeaders.date}:** ${time(dateTime, TimestampStyles.ShortDate)}`,
 							`**${listHeaders.time}:** ${time(dateTime, TimestampStyles.ShortTime)}`,
-							roleToPing ? `**${listHeaders.roleToPing}:** ${roleMention(roleToPing)}` : undefined,
+							isNullishOrEmpty(rolesToPing) ? undefined : `**${listHeaders.roleToPing}:** ${rolesToPing.map(roleMention)}`,
 							`**${listHeaders.variant}:** ${variantMapping[variant]}`
 						].filter(filterNullish)
 					)
@@ -502,7 +520,7 @@ export class SlashCommand extends XIVEventBuddyCommand {
 				duration: true,
 				interval: true,
 				leader: true,
-				roleToPing: true,
+				rolesToPing: true,
 				variant: true,
 				instance: {
 					select: {
@@ -558,11 +576,19 @@ export class SlashCommand extends XIVEventBuddyCommand {
 		const channel = interaction.options.getChannel('channel', false);
 		const eventDuration = interaction.options.getInteger('duration', false);
 		const roleToPing = interaction.options.getRole('role-to-ping', false);
+		const secondRoleToPing = interaction.options.getRole('role-to-ping-2', false);
+		const roleToPingThree = interaction.options.getRole('role-to-ping-3', false);
 		const leader = interaction.options.getUser('leader', false);
 		const variant = interaction.options.getString('variant', false);
 
 		const resolvedEventChannel =
 			channel ?? (existingEvent.channelId ? interaction.guild.channels.cache.get(existingEvent.channelId) : null) ?? interaction.channel;
+
+		let rolesToPing = [roleToPing?.id, secondRoleToPing?.id, roleToPingThree?.id].filter(filterNullish);
+
+		if (isNullishOrEmpty(rolesToPing)) {
+			rolesToPing = existingEvent.rolesToPing;
+		}
 
 		if (!resolvedEventChannel?.isSendable()) {
 			return interaction.editReply({
@@ -580,7 +606,7 @@ export class SlashCommand extends XIVEventBuddyCommand {
 				channelId: resolvedEventChannel.id,
 				guildId: interaction.guildId,
 				interval: interval as $Enums.EventInterval,
-				roleToPing: roleToPing?.id ?? existingEvent.roleToPing,
+				rolesToPing,
 				leader: leader?.id ?? existingEvent.leader,
 				bannerImage: (await this.getBannerImage(interaction)) ?? existingEvent.bannerImage,
 				duration: eventDuration ?? existingEvent.duration,
@@ -601,7 +627,7 @@ export class SlashCommand extends XIVEventBuddyCommand {
 				description: true,
 				interval: true,
 				leader: true,
-				roleToPing: true,
+				rolesToPing: true,
 				updatedAt: true,
 				variant: true,
 				instance: {
@@ -639,14 +665,16 @@ export class SlashCommand extends XIVEventBuddyCommand {
 				await oldPostedMessage?.delete();
 
 				const postedMessage = await resolvedEventChannel.send({
-					content: updatedEvent.roleToPing ? roleMention(updatedEvent.roleToPing) : undefined,
+					content: isNullishOrEmpty(updatedEvent.rolesToPing)
+						? undefined
+						: await resolveKey(interaction, 'globals:andListValue', { value: updatedEvent.rolesToPing.map(roleMention) }),
 					embeds: [buildEventEmbed(updatedEvent as EventData)],
 					components:
 						updatedEvent.variant === $Enums.EventVariant.NORMAL
 							? await buildEventComponents(interaction, updatedEvent.id)
 							: await buildPhantomJobComponent(interaction, updatedEvent.id),
 					files: buildEventAttachment(updatedEvent as EventData),
-					allowedMentions: { roles: updatedEvent.roleToPing ? [updatedEvent.roleToPing] : undefined }
+					allowedMentions: { roles: isNullishOrEmpty(updatedEvent.rolesToPing) ? undefined : updatedEvent.rolesToPing }
 				});
 
 				await this.container.prisma.event.update({
