@@ -100,7 +100,6 @@ model Event {
     guildId     String         @map("guild_id")
     interval    EventInterval?
     leader      String
-    roleToPing  String?        @map("role_to_ping")
     rolesToPing String[]       @map("roles_to_ping")
     createdAt   DateTime       @default(now()) @map("created_at")
     updatedAt   DateTime       @updatedAt @map("updated_at")
