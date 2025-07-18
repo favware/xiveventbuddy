@@ -8,8 +8,7 @@ import { Status } from 'discord.js';
 const header = blueBright('[POST COMMAND LIST   ]');
 
 @ApplyOptions<ScheduledTask.Options>({
-	// pattern: '0 0 * * *',
-	pattern: '* * * * *',
+	pattern: '0 0 * * *',
 	customJobOptions: {
 		removeOnComplete: true
 	}
@@ -21,7 +20,7 @@ export class DiscordBotList extends ScheduledTask {
 			return;
 		}
 
-		this.container.logger.info(`${header} Posting to discordbotlist...`);
+		this.container.logger.debug(`${header} Posting to discordbotlist...`);
 
 		// Fetch all events
 		const commands = this.container.client.application?.commands.cache.toJSON();

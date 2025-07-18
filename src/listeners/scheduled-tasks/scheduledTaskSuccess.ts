@@ -1,18 +1,15 @@
 import { ApplyOptions } from '@sapphire/decorators';
-import {
-	Listener
-	// Logger, LogLevel
-} from '@sapphire/framework';
+import { Listener, Logger, LogLevel } from '@sapphire/framework';
 import { ScheduledTask, ScheduledTaskEvents } from '@sapphire/plugin-scheduled-tasks';
 
 @ApplyOptions<Listener.Options>({ event: ScheduledTaskEvents.ScheduledTaskSuccess })
 export class UserListener extends Listener<typeof ScheduledTaskEvents.ScheduledTaskSuccess> {
 	public override run(task: ScheduledTask, _payload: unknown, _taskRunResult: unknown, duration: number) {
-		this.container.logger.info(`[Scheduled-Task Plugin]: successfully ran task: ${task.name} in ${this.formatDuration(duration)}`);
+		this.container.logger.debug(`[Scheduled-Task Plugin]: successfully ran task: ${task.name} in ${this.formatDuration(duration)}`);
 	}
 
 	public override onLoad() {
-		// this.enabled = (this.container.logger as Logger).level <= LogLevel.Debug;
+		this.enabled = (this.container.logger as Logger).level <= LogLevel.Debug;
 		return super.onLoad();
 	}
 

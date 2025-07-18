@@ -17,8 +17,7 @@ enum Lists {
 }
 
 @ApplyOptions<ScheduledTask.Options>({
-	// pattern: '0 * * * *',
-	pattern: '* * * * *',
+	pattern: '0 * * * *',
 	customJobOptions: {
 		removeOnComplete: true
 	}
@@ -30,7 +29,7 @@ export class PostStats extends ScheduledTask {
 			return;
 		}
 
-		this.container.logger.info(`${header} Starting task...`);
+		this.container.logger.debug(`${header} Starting task...`);
 
 		const rawGuilds = this.container.client.guilds.cache.size;
 		const rawUsers = this.container.client.guilds.cache.reduce((acc, val) => acc + (val.memberCount ?? 0), 0);
