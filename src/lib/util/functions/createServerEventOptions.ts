@@ -30,7 +30,7 @@ export async function createServerEventOptions(
 		privacyLevel: GuildScheduledEventPrivacyLevel.GuildOnly,
 		scheduledStartTime: eventData.instance.dateTime,
 		scheduledEndTime: addHours(eventData.instance.dateTime, eventData.duration),
-		description: cutText(eventData.description, 1_000) ?? undefined,
+		description: eventData.description ? cutText(eventData.description, 1_000) : undefined,
 		image: eventData.bannerImage ? Buffer.from(eventData.bannerImage, 'base64') : null,
 
 		...(leaderUser?.user.username
