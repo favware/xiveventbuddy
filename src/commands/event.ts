@@ -346,8 +346,8 @@ export class SlashCommand extends XIVEventBuddyCommand {
 		const description = interaction.options.getString('description', false);
 		const interval = interaction.options.getString('interval', false);
 		const roleToPing = interaction.options.getRole('role-to-ping', false);
-		const secondRoleToPing = interaction.options.getRole('role-to-ping-2', false);
-		const roleToPingThree = interaction.options.getRole('role-to-ping-3', false);
+		const secondRoleToPing = interaction.options.getRole('second-role-to-ping', false);
+		const thirdRoleToPing = interaction.options.getRole('third-role-to-ping', false);
 		const eventDuration = interaction.options.getInteger('duration', true);
 		const leader = interaction.options.getUser('leader', false);
 		const variant = interaction.options.getString('variant', false);
@@ -360,7 +360,7 @@ export class SlashCommand extends XIVEventBuddyCommand {
 				channelId: eventChannel.id,
 				guildId: interaction.guildId,
 				interval: interval as $Enums.EventInterval,
-				rolesToPing: [roleToPing?.id, secondRoleToPing?.id, roleToPingThree?.id].filter(filterNullish),
+				rolesToPing: [roleToPing?.id, secondRoleToPing?.id, thirdRoleToPing?.id].filter(filterNullish),
 				leader: leader?.id ?? interaction.user.id,
 				bannerImage: await this.getBannerImage(interaction),
 				variant: (variant as $Enums.EventVariant | null) ?? $Enums.EventVariant.NORMAL,
@@ -576,15 +576,15 @@ export class SlashCommand extends XIVEventBuddyCommand {
 		const channel = interaction.options.getChannel('channel', false);
 		const eventDuration = interaction.options.getInteger('duration', false);
 		const roleToPing = interaction.options.getRole('role-to-ping', false);
-		const secondRoleToPing = interaction.options.getRole('role-to-ping-2', false);
-		const roleToPingThree = interaction.options.getRole('role-to-ping-3', false);
+		const secondRoleToPing = interaction.options.getRole('second-role-to-ping', false);
+		const thirdRoleToPing = interaction.options.getRole('third-role-to-ping', false);
 		const leader = interaction.options.getUser('leader', false);
 		const variant = interaction.options.getString('variant', false);
 
 		const resolvedEventChannel =
 			channel ?? (existingEvent.channelId ? interaction.guild.channels.cache.get(existingEvent.channelId) : null) ?? interaction.channel;
 
-		let rolesToPing = [roleToPing?.id, secondRoleToPing?.id, roleToPingThree?.id].filter(filterNullish);
+		let rolesToPing = [roleToPing?.id, secondRoleToPing?.id, thirdRoleToPing?.id].filter(filterNullish);
 
 		if (isNullishOrEmpty(rolesToPing)) {
 			rolesToPing = existingEvent.rolesToPing;
