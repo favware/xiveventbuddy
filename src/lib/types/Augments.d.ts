@@ -37,13 +37,18 @@ declare module '@sapphire/framework' {
 
 declare module '@skyra/env-utilities' {
 	interface Env {
+		BOTLIST_ME_TOKEN: string;
 		DATABASE_URL: string;
+		DISCORDS_TOKEN: string;
+		DISCORD_BOT_LIST_TOKEN: string;
 		DISCORD_TOKEN: string;
 		REDIS_HOST: string;
 		REDIS_PASSWORD: string;
 
 		REDIS_PORT: IntegerString;
 		REDIS_TASK_DB: IntegerString;
+		TOP_GG_TOKEN: string;
+
 		WEBHOOK_ERROR_ENABLED: BooleanString;
 
 		WEBHOOK_ERROR_ID: string;

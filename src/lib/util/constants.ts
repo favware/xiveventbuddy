@@ -32,6 +32,7 @@ export const enum XIVServers {
 }
 
 export enum XIVEventBuddyEvents {
+	AnalyticsSync = 'analyticsSync',
 	CreateServerEvent = 'createServerEvent',
 	PostEmbed = 'postEmbed',
 	UpdateEmbed = 'updateEmbed',
