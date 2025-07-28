@@ -41,17 +41,11 @@ export class PostStats extends ScheduledTask {
 		const isProduction = envParseString('NODE_ENV') === 'production';
 
 		const discordBotListTokenIsDefined = envIsDefined('DISCORD_BOT_LIST_TOKEN');
-		// const topGgTokenIsDefined = envIsDefined('TOP_GG_TOKEN');
-		// const botListMeTokenIsDefined = envIsDefined('BOTLIST_ME_TOKEN');
+		const topGgTokenIsDefined = envIsDefined('TOP_GG_TOKEN');
+		const botListMeTokenIsDefined = envIsDefined('BOTLIST_ME_TOKEN');
 		const discordTokenIsDefined = envIsDefined('DISCORDS_TOKEN');
 
-		return (
-			isProduction &&
-			discordBotListTokenIsDefined &&
-			// topGgTokenIsDefined &&
-			// botListMeTokenIsDefined &&
-			discordTokenIsDefined
-		);
+		return isProduction && (discordBotListTokenIsDefined || topGgTokenIsDefined || botListMeTokenIsDefined || discordTokenIsDefined);
 	}
 
 	private async processBotListStats(rawGuilds: number, rawUsers: number) {
@@ -62,26 +56,24 @@ export class PostStats extends ScheduledTask {
 
 		const results: (string | null)[] = (
 			await Promise.all([
-				// this.query(
-				// 	`https://top.gg/api/bots/${botId}/stats`,
-				// 	// TODO: API impl
-				// 	JSON.stringify({ server_count: guilds, shard_count: 1 }),
-				// 	envParseString('TOP_GG_TOKEN'),
-				// 	Lists.TopGG
-				// ),
+				this.query(
+					`https://top.gg/api/bots/${botId}/stats`,
+					JSON.stringify({ server_count: guilds, shard_count: 1 }),
+					envParseString('TOP_GG_TOKEN'),
+					Lists.TopGG
+				),
 				this.query(
 					`https://discords.com/bots/api/bot/${botId}/setservers`,
 					JSON.stringify({ server_count: guilds }),
 					envParseString('DISCORDS_TOKEN'),
 					Lists.Discords
 				),
-				// this.query(
-				// 	`https://api.botlist.me/api/v1/bots/${botId}/stats`,
-				// 	// TODO: API impl
-				// 	JSON.stringify({ server_count: guilds, shard_count: 1 }),
-				// 	`Bot ${envParseString('BOTLIST_ME_TOKEN')}`,
-				// 	Lists.BotListMe
-				// ),
+				this.query(
+					`https://api.botlist.me/api/v1/bots/${botId}/stats`,
+					JSON.stringify({ server_count: guilds, shard_count: 1 }),
+					`Bot ${envParseString('BOTLIST_ME_TOKEN')}`,
+					Lists.BotListMe
+				),
 				this.query(
 					`https://discordbotlist.com/api/v1/bots/${botId}/stats`,
 					JSON.stringify({ users, guilds, voice_connections: 0, shard_id: 1 }),
