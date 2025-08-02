@@ -91,6 +91,7 @@ export class UserListener extends Listener<typeof XIVEventBuddyEvents.UpdateEmbe
 						});
 					}
 				} catch (error) {
+					console.error(error);
 					// If it's already a UserError, just re-throw it as it is likely the error from the else statement
 					if (error instanceof UserError) {
 						throw error;
