@@ -12,7 +12,5 @@ export function buildAddToCalendarUrl(event: EventData): string {
 	url.searchParams.set('summary', event.name);
 	url.searchParams.set('description', event.description ?? '');
 
-	console.log(url.toString());
-
 	return url.toString();
 }
