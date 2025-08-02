@@ -16,7 +16,7 @@ const header = blueBright('[POST COMMAND LIST   ]');
 export class DiscordBotList extends ScheduledTask {
 	public override async run() {
 		// If the websocket isn't ready, skip for now
-		if (this.container.client.ws.status !== Status.Ready) {
+		if (this.container.client.ws.status !== Status.Ready || !envIsDefined('DISCORD_BOT_LIST_TOKEN')) {
 			return;
 		}
 
@@ -41,15 +41,5 @@ export class DiscordBotList extends ScheduledTask {
 		} catch (error) {
 			this.container.logger.error(`Failed to update Discord Bot List commands: ${error}`);
 		}
-	}
-
-	public override async onLoad() {
-		const tokenIsDefined = envIsDefined('DISCORD_BOT_LIST_TOKEN');
-
-		if (!tokenIsDefined) {
-			await this.unload();
-		}
-
-		return super.onLoad();
 	}
 }
