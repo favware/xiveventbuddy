@@ -6,5 +6,8 @@
 	"dateValue": "{{value, date}}",
 	"timeValue": "{{value, time}}",
 	"andListValue": "{{value, list(conjunction)}}",
-	"relativeTimeValue": "{{value, relativeTime}}"
+	"relativeTimeValue": "{{value, relativeTime}}",
+	"addToCalendar": "Add to your calendar",
+	"duration_one": "{{count}} hour",
+	"duration_other": "{{count}} hours"
 }
