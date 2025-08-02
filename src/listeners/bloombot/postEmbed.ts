@@ -7,7 +7,7 @@ import { resolveOnErrorCodes } from '#lib/util/functions/resolveOnErrorCodes';
 import { $Enums } from '@prisma/client';
 import { Listener } from '@sapphire/framework';
 import { resolveKey } from '@sapphire/plugin-i18next';
-import { isNullishOrEmpty } from '@sapphire/utilities';
+import { isNullish, isNullishOrEmpty } from '@sapphire/utilities';
 import { RESTJSONErrorCodes, roleMention } from 'discord.js';
 
 export class UserListener extends Listener<typeof XIVEventBuddyEvents.PostEmbed> {
@@ -42,8 +42,11 @@ export class UserListener extends Listener<typeof XIVEventBuddyEvents.PostEmbed>
 					embeds: [
 						buildEventEmbed({
 							event: eventData as EventData,
-							addToCalendarString: await resolveKey(interaction!, 'globals:addToCalendar'),
+							addToCalendarString: await resolveKey(interaction!, 'globals:addToCalendar', {
+								lng: isNullish(interaction) ? preferredLocale : undefined
+							}),
 							durationString: await resolveKey(interaction!, 'globals:duration', {
+								lng: isNullish(interaction) ? preferredLocale : undefined,
 								count: eventData.duration
 							})
 						})

@@ -60,8 +60,11 @@ export class UserListener extends Listener<typeof XIVEventBuddyEvents.UpdateEmbe
 										rolesToPing: eventData.rolesToPing,
 										variant: eventData.variant
 									} as EventData,
-									addToCalendarString: await resolveKey(interaction!, 'globals:addToCalendar'),
+									addToCalendarString: await resolveKey(interaction!, 'globals:addToCalendar', {
+										lng: isNullish(interaction) ? preferredLocale : undefined
+									}),
 									durationString: await resolveKey(interaction!, 'globals:duration', {
+										lng: isNullish(interaction) ? preferredLocale : undefined,
 										count: eventData.duration
 									}),
 									shouldDisableEvent
