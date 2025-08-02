@@ -625,6 +625,7 @@ export class SlashCommand extends XIVEventBuddyCommand {
 				channelId: true,
 				createdAt: true,
 				description: true,
+				duration: true,
 				interval: true,
 				leader: true,
 				rolesToPing: true,
@@ -668,7 +669,15 @@ export class SlashCommand extends XIVEventBuddyCommand {
 					content: isNullishOrEmpty(updatedEvent.rolesToPing)
 						? undefined
 						: await resolveKey(interaction, 'globals:andListValue', { value: updatedEvent.rolesToPing.map(roleMention) }),
-					embeds: [buildEventEmbed(updatedEvent as EventData)],
+					embeds: [
+						buildEventEmbed({
+							event: updatedEvent as EventData,
+							addToCalendarString: await resolveKey(interaction, 'globals:addToCalendar'),
+							durationString: await resolveKey(interaction, 'globals:duration', {
+								count: updatedEvent.duration
+							})
+						})
+					],
 					components:
 						updatedEvent.variant === $Enums.EventVariant.NORMAL
 							? await buildEventComponents(interaction, updatedEvent.id)

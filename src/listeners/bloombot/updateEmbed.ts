@@ -47,11 +47,12 @@ export class UserListener extends Listener<typeof XIVEventBuddyEvents.UpdateEmbe
 										lng: preferredLocale
 									}),
 							embeds: [
-								buildEventEmbed(
-									{
+								buildEventEmbed({
+									event: {
 										bannerImage: eventData.bannerImage,
 										channelId: eventData.channelId,
 										description: eventData.description,
+										duration: eventData.duration,
 										id: eventData.id,
 										instance: { dateTime: eventData.instance.dateTime, participants: eventData.instance.participants },
 										leader: eventData.leader,
@@ -59,8 +60,12 @@ export class UserListener extends Listener<typeof XIVEventBuddyEvents.UpdateEmbe
 										rolesToPing: eventData.rolesToPing,
 										variant: eventData.variant
 									} as EventData,
+									addToCalendarString: await resolveKey(interaction!, 'globals:addToCalendar'),
+									durationString: await resolveKey(interaction!, 'globals:duration', {
+										count: eventData.duration
+									}),
 									shouldDisableEvent
-								)
+								})
 							],
 							components:
 								eventData.variant === $Enums.EventVariant.NORMAL

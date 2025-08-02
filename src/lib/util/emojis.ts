@@ -67,6 +67,8 @@ export const XIVEventBuddyEmojis: Record<Emojis, string> = {
 	Tentative: formatEmoji('1324558656326467616', false),
 	Time: formatEmoji('1324558657341362247', false),
 	TimeExpired: formatEmoji('1325467291999010826', false),
+	Duration: formatEmoji('1401217883794571289', false),
+	DurationExpired: formatEmoji('1401217885434548296', false),
 
 	// Other
 	RedCross: formatEmoji('1324572748130947143', false),

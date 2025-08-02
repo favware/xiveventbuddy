@@ -1,5 +1,6 @@
 import { braillePatternBlank, BrandingColors, leftToRightMark, type EventData } from '#lib/util/constants';
 import { getEmojiForJob, XIVEventBuddyEmojis } from '#lib/util/emojis';
+import { buildAddToCalendarUrl } from '#lib/util/functions/buildAddToCalendarUrl';
 import {
 	getAbsentParticipants,
 	getAllRounderParticipants,
@@ -16,9 +17,16 @@ import {
 	type FilteredParticipant
 } from '#lib/util/functions/participantRoleFilters';
 import { $Enums } from '@prisma/client';
-import { bold, EmbedBuilder, inlineCode, time, TimestampStyles, underline, userMention } from 'discord.js';
+import { bold, EmbedBuilder, hyperlink, inlineCode, time, TimestampStyles, underline, userMention } from 'discord.js';
 
-export function buildEventEmbed(event: EventData, shouldDisableEvent = false) {
+interface BuildEventEmbedParams {
+	addToCalendarString: string;
+	durationString: string;
+	event: EventData;
+	shouldDisableEvent?: boolean;
+}
+
+export function buildEventEmbed({ event, addToCalendarString, durationString, shouldDisableEvent = false }: BuildEventEmbedParams) {
 	const builder = new EmbedBuilder();
 
 	const eventDateTime = event.instance.dateTime;
@@ -35,7 +43,9 @@ export function buildEventEmbed(event: EventData, shouldDisableEvent = false) {
 	const phantomJobParticipants = getPhantomJobParticipants(event);
 	const allRounderParticipants = getAllRounderParticipants(event);
 
-	builder.setTitle(event.name).setColor(shouldDisableEvent ? BrandingColors.ExpiredEvent : BrandingColors.Primary);
+	builder //
+		.setTitle(event.name)
+		.setColor(shouldDisableEvent ? BrandingColors.ExpiredEvent : BrandingColors.Primary);
 
 	if (event.description) {
 		builder.setDescription(event.description.split(/\\{2,4}n/).join('\n'));
@@ -69,6 +79,21 @@ export function buildEventEmbed(event: EventData, shouldDisableEvent = false) {
 				braillePatternBlank,
 				`${shouldDisableEvent ? XIVEventBuddyEmojis.CountdownExpired : XIVEventBuddyEmojis.Countdown} ${time(eventDateTime, TimestampStyles.RelativeTime)}`
 			].join('\n')
+		},
+		{
+			inline: true,
+			name: leftToRightMark,
+			value: `${shouldDisableEvent ? XIVEventBuddyEmojis.DurationExpired : XIVEventBuddyEmojis.Duration} ${durationString}`
+		},
+		{
+			inline: true,
+			name: leftToRightMark,
+			value: `📆 ${hyperlink(addToCalendarString, buildAddToCalendarUrl(event))}`
+		},
+		{
+			inline: true,
+			name: braillePatternBlank,
+			value: braillePatternBlank
 		}
 	);
 

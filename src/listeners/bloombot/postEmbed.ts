@@ -39,7 +39,15 @@ export class UserListener extends Listener<typeof XIVEventBuddyEvents.PostEmbed>
 								value: eventData.rolesToPing.map(roleMention),
 								lng: preferredLocale
 							}),
-					embeds: [buildEventEmbed(eventData as EventData)],
+					embeds: [
+						buildEventEmbed({
+							event: eventData as EventData,
+							addToCalendarString: await resolveKey(interaction!, 'globals:addToCalendar'),
+							durationString: await resolveKey(interaction!, 'globals:duration', {
+								count: eventData.duration
+							})
+						})
+					],
 					components:
 						eventData.variant === $Enums.EventVariant.NORMAL
 							? await buildEventComponents(interaction ?? preferredLocale, eventId)
