@@ -8,5 +8,6 @@
 	"selectMenuUnexpectedError": "{{REDCROSS}} I was unexpectedly unable to find the event matching the selection of that option. Contact support for assistance.",
 	"roleSelectUnexpectedError": "{{REDCROSS}} I received an unexpected role from the select menu of selecting your role. Contact support for assistance.",
 	"roleSelectSuccessful": "{{GREENTICK}} Successfully updated your role to {{roleEmoji}} {{roleName}}.",
-	"roleSelectSuccessfulWithJob": "{{GREENTICK}} Successfully updated your role to {{roleEmoji}} {{roleName}}. Next, select which job you will be playing from these options:"
+	"roleSelectSuccessfulWithJob": "{{GREENTICK}} Successfully updated your role to {{roleEmoji}} {{roleName}}. Next, select which job you will be playing from these options:",
+	"serverBreakdownContentTooLong": "{{GREENTICK}} Here is a dump of all the server data:"
 }
