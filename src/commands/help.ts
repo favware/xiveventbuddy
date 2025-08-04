@@ -1,7 +1,7 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import { Command, type ChatInputCommand } from '@sapphire/framework';
 import { applyLocalizedBuilder, resolveKey } from '@sapphire/plugin-i18next';
-import { ActionRowBuilder, ButtonBuilder, ButtonStyle, chatInputApplicationCommandMention } from 'discord.js';
+import { ActionRowBuilder, ButtonBuilder, ButtonStyle, chatInputApplicationCommandMention, MessageFlags } from 'discord.js';
 
 @ApplyOptions<ChatInputCommand.Options>({
 	description: 'Provides setup information for getting started with XIVEventBuddy'
@@ -22,7 +22,7 @@ export class SlashCommand extends Command {
 				eventsCommandMention: this.eventsCommandMention
 			}),
 			components: await this.getComponents(interaction),
-			ephemeral: true
+			flags: [MessageFlags.Ephemeral]
 		});
 	}
 

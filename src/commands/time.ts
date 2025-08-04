@@ -60,7 +60,7 @@ export class SlashCommand extends XIVEventBuddyCommand {
 	}
 
 	private async serverTime(interaction: ChatInputCommand.Interaction<'cached'>) {
-		await interaction.deferReply({ ephemeral: true });
+		await interaction.deferReply({ flags: [MessageFlags.Ephemeral] });
 		const server = interaction.options.getString('server', true) as XIVServers;
 
 		switch (server) {
