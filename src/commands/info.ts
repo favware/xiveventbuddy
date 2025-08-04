@@ -1,4 +1,5 @@
 import { secondsFromMilliseconds } from '#lib/util/functions/time';
+import { Owners } from '#root/config';
 import { BrandingColors } from '#utils/constants';
 import { ApplyOptions } from '@sapphire/decorators';
 import { Command, version as sapphireVersion, type ChatInputCommand } from '@sapphire/framework';
@@ -9,6 +10,7 @@ import {
 	ButtonBuilder,
 	ButtonStyle,
 	EmbedBuilder,
+	MessageFlags,
 	OAuth2Scopes,
 	PermissionFlagsBits,
 	PermissionsBitField,
@@ -32,13 +34,13 @@ export class SlashCommand extends Command {
 		return interaction.reply({
 			//
 			embeds: [await this.getEmbed(interaction)],
-			components: this.components,
-			ephemeral: true
+			components: this.getComponents(interaction),
+			flags: [MessageFlags.Ephemeral]
 		});
 	}
 
-	private get components(): ActionRowBuilder<ButtonBuilder>[] {
-		return [
+	private getComponents(interaction: ChatInputCommand.Interaction): ActionRowBuilder<ButtonBuilder>[] {
+		const components = [
 			new ActionRowBuilder<ButtonBuilder>().addComponents(
 				new ButtonBuilder() //
 					.setStyle(ButtonStyle.Link)
@@ -73,6 +75,22 @@ export class SlashCommand extends Command {
 					})
 			)
 		];
+
+		if (Owners.includes(interaction.user.id)) {
+			components.push(
+				new ActionRowBuilder<ButtonBuilder>().addComponents(
+					new ButtonBuilder() //
+						.setStyle(ButtonStyle.Primary)
+						.setCustomId('server-breakdown')
+						.setLabel('Get list of servers')
+						.setEmoji({
+							name: '📊'
+						})
+				)
+			);
+		}
+
+		return components;
 	}
 
 	private get inviteLink() {
@@ -125,7 +143,7 @@ export class SlashCommand extends Command {
 		return new EmbedBuilder() //
 			.setColor(BrandingColors.Primary)
 			.setDescription(
-				await resolveKey(interaction, 'commands/info:embedDescription', {
+				await resolveKey(interaction, 'commands/info:content', {
 					sapphire: hyperlink('Sapphire Framework', hideLinkEmbed('https://sapphirejs.dev')),
 					discordjs: hyperlink('discord.js', hideLinkEmbed('https://discord.js.org'))
 				})
