@@ -8,5 +8,6 @@
 	"selectMenuUnexpectedError": "{{REDCROSS}} Non sono stato in grado di trovare l'evento corrispondente al clic di quel pulsante. Contatta l'assistenza per assistenza.",
 	"roleSelectUnexpectedError": "{{REDCROSS}} Ho ricevuto un ruolo inatteso dal menu selezionato per selezionare il tuo ruolo. Contatta l'assistenza per l'assistenza.",
 	"roleSelectSuccessful": "{{GREENTICK}} Hai aggiornato con successo il tuo lavoro su {{roleEmoji}} {{roleName}}.",
-	"roleSelectSuccessfulWithJob": "{{GREENTICK}} Hai aggiornato con successo il tuo ruolo su {{roleEmoji}} {{roleName}}. Successivamente, seleziona quale lavoro si sarà giocato da queste opzioni:"
+	"roleSelectSuccessfulWithJob": "{{GREENTICK}} Hai aggiornato con successo il tuo ruolo su {{roleEmoji}} {{roleName}}. Successivamente, seleziona quale lavoro si sarà giocato da queste opzioni:",
+	"serverBreakdownContentTooLong": "{{GREENTICK}} Here is a dump of all the server data:"
 }
