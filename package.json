@@ -41,10 +41,10 @@
 		"@skyra/jaro-winkler": "^1.1.1",
 		"@skyra/start-banner": "^2.0.2",
 		"bufferutil": "^4.0.9",
-		"bullmq": "^5.58.0",
+		"bullmq": "^5.58.1",
 		"colorette": "^2.0.20",
 		"date-fns": "^4.1.0",
-		"discord.js": "^14.21.0",
+		"discord.js": "^14.22.1",
 		"figlet": "^1.8.2",
 		"gradient-string": "^3.0.0",
 		"utf-8-validate": "^6.0.5",
@@ -57,14 +57,14 @@
 		"@favware/discord-application-emojis-manager": "^1.1.1",
 		"@sapphire/prettier-config": "^2.0.0",
 		"@sapphire/ts-config": "^5.0.1",
-		"@swc/core": "^1.13.3",
+		"@swc/core": "^1.13.4",
 		"@types/figlet": "^1.7.0",
 		"@types/gradient-string": "^1.1.6",
 		"@types/node": "^24.3.0",
 		"@types/ws": "^8.18.1",
 		"@typescript-eslint/eslint-plugin": "^8.37.0",
 		"@typescript-eslint/parser": "^8.37.0",
-		"eslint": "^9.33.0",
+		"eslint": "^9.34.0",
 		"eslint-config-neon": "^0.2.7",
 		"eslint-config-prettier": "^10.1.8",
 		"eslint-plugin-prettier": "^5.5.4",
@@ -86,7 +86,7 @@
 		"*": "prettier --ignore-unknown --write",
 		"*.{mjs,js,ts}": "eslint --fix"
 	},
-	"packageManager": "yarn@4.9.2",
+	"packageManager": "yarn@4.9.3",
 	"volta": {
 		"node": "22.18.0"
 	}
