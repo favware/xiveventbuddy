@@ -17,6 +17,13 @@ export const leftToRightMark = String.fromCodePoint(8_206);
  */
 export const braillePatternBlank = String.fromCodePoint(10_240);
 
+/**
+ * Zero Width Space character
+ *
+ * @see {@link https://en.wikipedia.org/wiki/Zero-width_space}
+ */
+export const zeroWidthSpace = String.fromCodePoint(8_203);
+
 export const enum XIVServers {
 	Aether = 'aether',
 	Chaos = 'chaos',

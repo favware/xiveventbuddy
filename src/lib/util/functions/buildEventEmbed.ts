@@ -1,4 +1,4 @@
-import { braillePatternBlank, BrandingColors, leftToRightMark, type EventData } from '#lib/util/constants';
+import { braillePatternBlank, BrandingColors, leftToRightMark, zeroWidthSpace, type EventData } from '#lib/util/constants';
 import { getEmojiForJob, XIVEventBuddyEmojis } from '#lib/util/emojis';
 import { buildAddToCalendarUrl } from '#lib/util/functions/buildAddToCalendarUrl';
 import {
@@ -92,8 +92,8 @@ export function buildEventEmbed({ event, addToCalendarString, durationString, sh
 		},
 		{
 			inline: true,
-			name: braillePatternBlank,
-			value: braillePatternBlank
+			name: zeroWidthSpace,
+			value: zeroWidthSpace
 		}
 	);
 
