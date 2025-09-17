@@ -75,7 +75,8 @@ export class SlashCommand extends XIVEventBuddyCommand {
 
 						await targetMessage.edit({
 							embeds: [embed],
-							components: await buildEventComponents(interaction, 'none', true)
+							components: await buildEventComponents(interaction, 'none', true),
+							files: []
 						});
 					}
 				}
