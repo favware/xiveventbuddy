@@ -2,6 +2,7 @@
 	"default": "{{key}} wurde noch nicht für en-US lokalisiert.",
 	"defaultLanguage": "Standardsprache",
 	"supportServer": "Support Server",
+	"messageOnUserContext": "Woaw, you somehow triggered this action from a User context menu, that should not be possible.",
 	"numberValue": "{{value, number}}",
 	"dateValue": "{{value, date}}",
 	"timeValue": "{{value, time}}",

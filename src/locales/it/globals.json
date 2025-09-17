@@ -2,6 +2,7 @@
 	"default": "{{key}} non è ancora stato localizzato per it.",
 	"defaultLanguage": "Lingua predefinita",
 	"supportServer": "Server di Assistenza",
+	"messageOnUserContext": "Woaw, you somehow triggered this action from a User context menu, that should not be possible.",
 	"numberValue": "{{value, number}}",
 	"dateValue": "{{value, date}}",
 	"timeValue": "{{value, time}}",
