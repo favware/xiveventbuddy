@@ -1,5 +1,5 @@
 import { XIVEventBuddyCommand } from '#lib/extensions/XIVEventBuddyComand';
-import { ErrorIdentifiers, UpdateEmbedPayloadOrigin, XIVEventBuddyEvents } from '#lib/util/constants';
+import { BrandingColors, ErrorIdentifiers, UpdateEmbedPayloadOrigin, XIVEventBuddyEvents } from '#lib/util/constants';
 import { XIVEventBuddyEmojis } from '#lib/util/emojis';
 import { buildEventComponents } from '#lib/util/functions/buildEventComponents';
 import { resolveOnErrorCodes } from '#lib/util/functions/resolveOnErrorCodes';
@@ -71,6 +71,7 @@ export class SlashCommand extends XIVEventBuddyCommand {
 						embed.fields?.at(1)?.value.replace(XIVEventBuddyEmojis.Time, XIVEventBuddyEmojis.TimeExpired);
 						embed.fields?.at(2)?.value.replace(XIVEventBuddyEmojis.Countdown, XIVEventBuddyEmojis.CountdownExpired);
 						embed.fields?.at(3)?.value.replace(XIVEventBuddyEmojis.Duration, XIVEventBuddyEmojis.DurationExpired);
+						embed.color = BrandingColors.ExpiredEvent;
 
 						await targetMessage.edit({
 							embeds: [embed],
