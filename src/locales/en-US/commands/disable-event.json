@@ -1,5 +1,6 @@
 {
 	"rootName": "Disable Event",
-	"noEventFound": "🚫 No event found for the selected message, are you sure that is a message from me with an event?",
-	"success": "✅ Successfully disabled the event **{{eventName}}**. The embed will be updated shortly."
+	"noEventFound": "{{REDCROSS}} No event found for the selected message, are you sure that is a message from me with an event?",
+	"disableUnexpectedError": "{{REDCROSS}} An unexpected error occurred while disabling the event. Contact support for assistance.",
+	"success": "{{GREENTICK}} Successfully disabled the event. The embed will be updated shortly."
 }

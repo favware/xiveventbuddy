@@ -1,9 +1,11 @@
 import { XIVEventBuddyCommand } from '#lib/extensions/XIVEventBuddyComand';
 import { ErrorIdentifiers, UpdateEmbedPayloadOrigin, XIVEventBuddyEvents } from '#lib/util/constants';
+import { XIVEventBuddyEmojis } from '#lib/util/emojis';
+import { buildEventComponents } from '#lib/util/functions/buildEventComponents';
 import { resolveOnErrorCodes } from '#lib/util/functions/resolveOnErrorCodes';
 import { UserError, type ApplicationCommandRegistry, type Awaitable, type ContextMenuCommand } from '@sapphire/framework';
 import { applyNameLocalizedBuilder, resolveKey } from '@sapphire/plugin-i18next';
-import { ApplicationCommandType, ApplicationIntegrationType, InteractionContextType, RESTJSONErrorCodes } from 'discord.js';
+import { ApplicationCommandType, ApplicationIntegrationType, InteractionContextType, MessageFlags, RESTJSONErrorCodes } from 'discord.js';
 
 export class SlashCommand extends XIVEventBuddyCommand {
 	public override registerApplicationCommands(registry: ApplicationCommandRegistry): Awaitable<void> {
@@ -30,33 +32,57 @@ export class SlashCommand extends XIVEventBuddyCommand {
 				}
 			});
 
-			if (!event) {
-				throw new UserError({
-					identifier: ErrorIdentifiers.DisableEventEventNotFound,
-					message: await resolveKey(interaction, 'commands/disable-event:noEventFound')
+			if (event) {
+				this.container.client.emit(XIVEventBuddyEvents.UpdateEmbed, {
+					interaction,
+					eventId: event.id,
+					guildId: event.guildId,
+					shouldDisableEvent: true,
+					origin: UpdateEmbedPayloadOrigin.DisableOldEventScheduledTask
 				});
-			}
 
-			this.container.client.emit(XIVEventBuddyEvents.UpdateEmbed, {
-				interaction,
-				eventId: event.id,
-				guildId: event.guildId,
-				shouldDisableEvent: true,
-				origin: UpdateEmbedPayloadOrigin.DisableOldEventScheduledTask
-			});
+				try {
+					await this.container.prisma.event.delete({
+						where: {
+							id: event.id
+						}
+					});
 
-			if (event.instance?.discordEventId) {
-				await resolveOnErrorCodes(
-					interaction.guild.scheduledEvents.delete(event.instance.discordEventId),
-					RESTJSONErrorCodes.UnknownGuildScheduledEvent
-				);
+					if (event.instance?.discordEventId) {
+						await resolveOnErrorCodes(
+							interaction.guild.scheduledEvents.delete(event.instance.discordEventId),
+							RESTJSONErrorCodes.UnknownGuildScheduledEvent
+						);
+					}
+				} catch {
+					return interaction.editReply({
+						content: await resolveKey(interaction, 'commands/disable-event:disableUnexpectedError')
+					});
+				}
+			} else {
+				const { targetMessage } = interaction;
+
+				if (targetMessage.author?.id === this.container.client.user?.id) {
+					const embed = targetMessage.embeds.map((embed) => embed.toJSON()).at(0);
+
+					if (embed) {
+						embed.fields?.at(0)?.value.replace(XIVEventBuddyEmojis.Date, XIVEventBuddyEmojis.DateExpired);
+						embed.fields?.at(1)?.value.replace(XIVEventBuddyEmojis.Signups, XIVEventBuddyEmojis.SignupsExpired);
+						embed.fields?.at(1)?.value.replace(XIVEventBuddyEmojis.Time, XIVEventBuddyEmojis.TimeExpired);
+						embed.fields?.at(2)?.value.replace(XIVEventBuddyEmojis.Countdown, XIVEventBuddyEmojis.CountdownExpired);
+						embed.fields?.at(3)?.value.replace(XIVEventBuddyEmojis.Duration, XIVEventBuddyEmojis.DurationExpired);
+
+						await targetMessage.edit({
+							embeds: [embed],
+							components: await buildEventComponents(interaction, 'none', true)
+						});
+					}
+				}
 			}
 
 			return interaction.reply({
-				content: await resolveKey(interaction, 'commands/disable-event:success', {
-					eventName: event.name
-				}),
-				ephemeral: true
+				content: await resolveKey(interaction, 'commands/disable-event:success'),
+				flags: MessageFlags.Ephemeral
 			});
 		}
 
