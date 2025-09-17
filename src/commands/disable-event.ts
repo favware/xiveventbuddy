@@ -1,8 +1,9 @@
 import { XIVEventBuddyCommand } from '#lib/extensions/XIVEventBuddyComand';
 import { ErrorIdentifiers, UpdateEmbedPayloadOrigin, XIVEventBuddyEvents } from '#lib/util/constants';
+import { resolveOnErrorCodes } from '#lib/util/functions/resolveOnErrorCodes';
 import { UserError, type ApplicationCommandRegistry, type Awaitable, type ContextMenuCommand } from '@sapphire/framework';
 import { applyNameLocalizedBuilder, resolveKey } from '@sapphire/plugin-i18next';
-import { ApplicationCommandType, ApplicationIntegrationType, InteractionContextType } from 'discord.js';
+import { ApplicationCommandType, ApplicationIntegrationType, InteractionContextType, RESTJSONErrorCodes } from 'discord.js';
 
 export class SlashCommand extends XIVEventBuddyCommand {
 	public override registerApplicationCommands(registry: ApplicationCommandRegistry): Awaitable<void> {
@@ -43,6 +44,13 @@ export class SlashCommand extends XIVEventBuddyCommand {
 				shouldDisableEvent: true,
 				origin: UpdateEmbedPayloadOrigin.DisableOldEventScheduledTask
 			});
+
+			if (event.instance?.discordEventId) {
+				await resolveOnErrorCodes(
+					interaction.guild.scheduledEvents.delete(event.instance.discordEventId),
+					RESTJSONErrorCodes.UnknownGuildScheduledEvent
+				);
+			}
 
 			return interaction.reply({
 				content: await resolveKey(interaction, 'commands/disable-event:success', {
