@@ -1,10 +1,18 @@
 import { Owners } from '#root/config';
-import { Precondition } from '@sapphire/framework';
+import { Precondition, type Command } from '@sapphire/framework';
 import { resolveKey } from '@sapphire/plugin-i18next';
-import { PermissionFlagsBits, type ChatInputCommandInteraction } from 'discord.js';
+import { PermissionFlagsBits } from 'discord.js';
 
 export class UserPrecondition extends Precondition {
-	public override async chatInputRun(interaction: ChatInputCommandInteraction<'cached'>) {
+	public override async chatInputRun(interaction: Command.ChatInputCommandInteraction<'cached'>) {
+		return this.shared(interaction);
+	}
+
+	public override async contextMenuRun(interaction: Command.ContextMenuCommandInteraction<'cached'>) {
+		return this.shared(interaction);
+	}
+
+	private async shared(interaction: Command.ChatInputCommandInteraction<'cached'> | Command.ContextMenuCommandInteraction<'cached'>) {
 		// Check if the user ID is included in the Owners array
 		if (Owners.includes(interaction.user.id)) {
 			return this.ok();

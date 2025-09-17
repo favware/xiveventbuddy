@@ -61,6 +61,8 @@ export const enum LanguageFormatters {
 }
 
 export const enum ErrorIdentifiers {
+	DisableEventEventNotFound = 'DisableEventEventNotFound',
+	DisableEventTriggeredOnUserContextMenu = 'DisableEventTriggeredOnUserContextMenu',
 	EventBannerImageDownloadError = 'EventBannerImageDownloadError',
 	EventEditIdNotFound = 'EventEditIdNotFound',
 	EventEditMessageChannelNotFoundError = 'EventEditMessageChannelNotFoundError',
@@ -71,8 +73,8 @@ export const enum ErrorIdentifiers {
 	RoleAlreadyInEventManagers = 'RoleAlreadyInEventManagers',
 	RoleNotInEventManagers = 'RoleNotInEventManagers',
 	UnableToFindEventForButtonClickError = 'UnableToFindEventForButtonClickError',
-	UnableToFindEventForSelectMenuChoiceError = 'unableToFindEventForSelectMenuChoiceError',
-	UnexpectedRoleSelectMenuChoiceError = 'unexpectedRoleSelectMenuChoiceError'
+	UnableToFindEventForSelectMenuChoiceError = 'UnableToFindEventForSelectMenuChoiceError',
+	UnexpectedRoleSelectMenuChoiceError = 'UnexpectedRoleSelectMenuChoiceError'
 }
 
 /* eslint-disable typescript-sort-keys/string-enum */
