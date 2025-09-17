@@ -73,11 +73,15 @@ export class SlashCommand extends XIVEventBuddyCommand {
 						embed.fields?.at(3)?.value.replace(XIVEventBuddyEmojis.Duration, XIVEventBuddyEmojis.DurationExpired);
 						embed.color = BrandingColors.ExpiredEvent;
 
-						await targetMessage.edit({
-							embeds: [embed],
-							components: await buildEventComponents(interaction, 'none', true),
-							files: []
-						});
+						await resolveOnErrorCodes(
+							targetMessage.edit({
+								embeds: [embed],
+								components: await buildEventComponents(interaction, 'none', true),
+								files: []
+							}),
+							RESTJSONErrorCodes.UnknownMessage,
+							RESTJSONErrorCodes.MissingPermissions
+						);
 					}
 				}
 			}
