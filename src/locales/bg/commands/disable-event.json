@@ -1,0 +1,5 @@
+{
+	"rootName": "Disable Event",
+	"noEventFound": "🚫 No event found for the selected message, are you sure that is a message from me with an event?",
+	"success": "✅ Successfully disabled the event **{{eventName}}**. The embed will be updated shortly."
+}
