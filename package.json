@@ -32,16 +32,16 @@
 		"@sapphire/decorators": "^6.2.0",
 		"@sapphire/discord.js-utilities": "^7.3.3",
 		"@sapphire/fetch": "^3.0.5",
-		"@sapphire/framework": "^5.3.6",
+		"@sapphire/framework": "^5.3.7",
 		"@sapphire/plugin-i18next": "^8.0.0",
 		"@sapphire/plugin-logger": "^4.1.0",
-		"@sapphire/plugin-scheduled-tasks": "^10.0.3",
+		"@sapphire/plugin-scheduled-tasks": "^10.0.4",
 		"@sapphire/utilities": "^3.18.2",
 		"@skyra/env-utilities": "^2.0.1",
 		"@skyra/jaro-winkler": "^1.1.1",
 		"@skyra/start-banner": "^2.0.2",
 		"bufferutil": "^4.0.9",
-		"bullmq": "^5.58.7",
+		"bullmq": "^5.58.9",
 		"colorette": "^2.0.20",
 		"date-fns": "^4.1.0",
 		"discord.js": "^14.22.1",
@@ -57,7 +57,7 @@
 		"@favware/discord-application-emojis-manager": "^1.1.1",
 		"@sapphire/prettier-config": "^2.0.0",
 		"@sapphire/ts-config": "^5.0.1",
-		"@swc/core": "^1.13.5",
+		"@swc/core": "^1.13.20",
 		"@types/figlet": "^1.7.0",
 		"@types/gradient-string": "^1.1.6",
 		"@types/node": "^24.5.2",
@@ -68,13 +68,13 @@
 		"eslint-config-neon": "^0.2.7",
 		"eslint-config-prettier": "^10.1.8",
 		"eslint-plugin-prettier": "^5.5.4",
-		"lint-staged": "^16.1.6",
+		"lint-staged": "^16.2.1",
 		"prettier": "^3.6.2",
 		"prettier-plugin-prisma": "^5.0.0",
 		"prisma": "^6.16.2",
 		"rimraf": "^6.0.1",
 		"tsup": "^8.5.0",
-		"tsx": "^4.20.5",
+		"tsx": "^4.20.6",
 		"typescript": "~5.4.5"
 	},
 	"commitlint": {
@@ -86,8 +86,8 @@
 		"*": "prettier --ignore-unknown --write",
 		"*.{mjs,js,ts}": "eslint --fix"
 	},
-	"packageManager": "yarn@4.10.0",
+	"packageManager": "yarn@4.10.3",
 	"volta": {
-		"node": "22.19.0"
+		"node": "22.20.0"
 	}
 }
