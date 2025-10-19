@@ -77,21 +77,6 @@ export class UserListener extends Listener<typeof XIVEventBuddyEvents.UpdateEmbe
 							files: buildEventAttachment(eventData as EventData),
 							allowedMentions: { roles: isNullishOrEmpty(eventData.rolesToPing) ? undefined : eventData.rolesToPing }
 						});
-					} else {
-						throw new UserError({
-							message: await resolveKey(interaction!, 'listeners/updateEmbed:unexpectedError', {
-								lng: isNullish(interaction) ? preferredLocale : undefined
-							}),
-							identifier: ErrorIdentifiers.EventEditPostedMessageUndefinedError,
-							context: {
-								origin,
-								eventId,
-								guildId,
-								channelWithMessage,
-								eventData,
-								additionalInformation: 'Posted message could not be found when fetching it'
-							}
-						});
 					}
 				} catch (error) {
 					console.error(error);
