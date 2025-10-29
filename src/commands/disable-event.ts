@@ -38,7 +38,7 @@ export class SlashCommand extends XIVEventBuddyCommand {
 					eventId: event.id,
 					guildId: event.guildId,
 					shouldDisableEvent: true,
-					origin: UpdateEmbedPayloadOrigin.DisableOldEventScheduledTask
+					origin: UpdateEmbedPayloadOrigin.DisableEventCommand
 				});
 
 				try {

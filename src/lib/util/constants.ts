@@ -142,6 +142,7 @@ export interface UpdateEmbedPayload extends EventIdGuildIdPayload {
 }
 
 export const enum UpdateEmbedPayloadOrigin {
+	DisableEventCommand = 'disable-event-command',
 	DisableOldEventScheduledTask = 'disable-old-event-scheduled-task',
 	EditEventCommand = 'edit-event-command',
 	JobOrRoleButtonClick = 'job-or-role-button-click',
