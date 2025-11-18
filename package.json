@@ -44,7 +44,7 @@
 		"bullmq": "^5.63.2",
 		"colorette": "^2.0.20",
 		"date-fns": "^4.1.0",
-		"discord.js": "^14.24.2",
+		"discord.js": "^14.25.0",
 		"figlet": "^1.9.4",
 		"gradient-string": "^3.0.0",
 		"utf-8-validate": "^6.0.5",
@@ -62,8 +62,8 @@
 		"@types/gradient-string": "^1.1.6",
 		"@types/node": "^24.10.1",
 		"@types/ws": "^8.18.1",
-		"@typescript-eslint/eslint-plugin": "^8.37.0",
-		"@typescript-eslint/parser": "^8.37.0",
+		"@typescript-eslint/eslint-plugin": "^8.47.0",
+		"@typescript-eslint/parser": "^8.47.0",
 		"eslint": "^9.39.1",
 		"eslint-config-neon": "^0.2.9",
 		"eslint-config-prettier": "^10.1.8",
@@ -86,8 +86,5 @@
 		"*": "prettier --ignore-unknown --write",
 		"*.{mjs,js,ts}": "eslint --fix"
 	},
-	"packageManager": "yarn@4.11.0",
-	"volta": {
-		"node": "24.11.1"
-	}
+	"packageManager": "yarn@4.11.0"
 }
