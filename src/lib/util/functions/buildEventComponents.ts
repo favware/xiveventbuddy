@@ -132,7 +132,6 @@ export async function buildEventComponents({
 		);
 
 	const addToCalendarUrl = buildAddToCalendarUrl(event);
-	sapphireContainer.logger.info('>>>>', addToCalendarUrl);
 	if (addToCalendarUrl) {
 		container.addActionRowComponents((actionRow) =>
 			actionRow.setComponents(
@@ -144,15 +143,17 @@ export async function buildEventComponents({
 	container.addSeparatorComponents((separator) => separator);
 
 	if (event.variant === $Enums.EventVariant.NORMAL) {
-		container.addTextDisplayComponents((textDisplay) =>
-			textDisplay.setContent(
-				[
-					`${XIVEventBuddyEmojis.Tank} Tanks ${bold(tankParticipants.length.toString())}`,
-					`${XIVEventBuddyEmojis.DPS} DPS ${bold((meleeDpsParticipants.length + physRangedDpsParticipants.length + magicRangedDpsParticipants.length).toString())}`,
-					`${XIVEventBuddyEmojis.Healer} Healers ${bold(healerParticipants.length.toString())}`
-				].join('\t')
+		container
+			.addTextDisplayComponents((textDisplay) =>
+				textDisplay.setContent(
+					[
+						`${XIVEventBuddyEmojis.Tank} Tanks ${bold(tankParticipants.length.toString())}`,
+						`${XIVEventBuddyEmojis.DPS} DPS ${bold((meleeDpsParticipants.length + physRangedDpsParticipants.length + magicRangedDpsParticipants.length).toString())}`,
+						`${XIVEventBuddyEmojis.Healer} Healers ${bold(healerParticipants.length.toString())}`
+					].join('\t')
+				)
 			)
-		);
+			.addSeparatorComponents((separator) => separator);
 	}
 
 	if (tankParticipants.length > 0) {
