@@ -42,6 +42,7 @@ import {
 	TankOption
 } from '#lib/util/roleStringSelectOptionBuilders';
 import { $Enums } from '@prisma/client';
+import { container as sapphireContainer } from '@sapphire/framework';
 import { resolveKey } from '@sapphire/plugin-i18next';
 import { isNullish, isNullishOrEmpty } from '@sapphire/utilities';
 import {
@@ -80,17 +81,6 @@ export async function buildEventComponents({
 
 	const container = new ContainerBuilder();
 
-	const {
-		id,
-		name,
-		leader,
-		description,
-		bannerImage,
-		rolesToPing,
-		variant,
-		instance: { dateTime: eventDateTime }
-	} = event;
-
 	const benchedParticipants = getBenchedParticipants(event);
 	const presentParticipants = getPresentParticipants(event);
 	const absentParticipants = getAbsentParticipants(event);
@@ -104,9 +94,9 @@ export async function buildEventComponents({
 	const phantomJobParticipants = getPhantomJobParticipants(event);
 	const allRounderParticipants = getAllRounderParticipants(event);
 
-	if (!isNullishOrEmpty(rolesToPing)) {
+	if (!isNullishOrEmpty(event.rolesToPing)) {
 		const content = await resolveKey(interactionAsInteraction!, 'globals:andListValue', {
-			value: rolesToPing.map(roleMention),
+			value: event.rolesToPing.map(roleMention),
 			lng
 		});
 		container.addTextDisplayComponents((textDisplay) => textDisplay.setContent(content));
@@ -114,10 +104,10 @@ export async function buildEventComponents({
 
 	container
 		.setAccentColor(shouldDisableEvent ? BrandingColors.ExpiredEvent : BrandingColors.Primary)
-		.addTextDisplayComponents((textDisplay) => textDisplay.setContent(name));
+		.addTextDisplayComponents((textDisplay) => textDisplay.setContent(event.name));
 
-	if (description) {
-		container.addTextDisplayComponents((textDisplay) => textDisplay.setContent(description.split(/\\{2,4}n/).join('\n')));
+	if (event.description) {
+		container.addTextDisplayComponents((textDisplay) => textDisplay.setContent(event.description!.split(/\\{2,4}n/).join('\n')));
 	}
 
 	container
@@ -126,7 +116,7 @@ export async function buildEventComponents({
 			(textDisplay) =>
 				textDisplay.setContent(
 					[
-						`${XIVEventBuddyEmojis.Leader} ${userMention(leader)}`,
+						`${XIVEventBuddyEmojis.Leader} ${userMention(event.leader)}`,
 						`${shouldDisableEvent ? XIVEventBuddyEmojis.SignupsExpired : XIVEventBuddyEmojis.Signups} ${bold(presentParticipants.length.toString())} (+${benchedParticipants.length + lateParticipants.length + tentativeParticipants.length})`,
 						`${shouldDisableEvent ? XIVEventBuddyEmojis.DurationExpired : XIVEventBuddyEmojis.Duration} ${durationString}`
 					].join('\t')
@@ -134,24 +124,26 @@ export async function buildEventComponents({
 			(textDisplay) =>
 				textDisplay.setContent(
 					[
-						`${shouldDisableEvent ? XIVEventBuddyEmojis.DateExpired : XIVEventBuddyEmojis.Date} ${time(eventDateTime, TimestampStyles.ShortDate)}`,
-						`${shouldDisableEvent ? XIVEventBuddyEmojis.TimeExpired : XIVEventBuddyEmojis.Time} ${underline(time(eventDateTime, TimestampStyles.ShortTime))}`,
-						`${shouldDisableEvent ? XIVEventBuddyEmojis.CountdownExpired : XIVEventBuddyEmojis.Countdown} ${time(eventDateTime, TimestampStyles.RelativeTime)}`
+						`${shouldDisableEvent ? XIVEventBuddyEmojis.DateExpired : XIVEventBuddyEmojis.Date} ${time(event.instance.dateTime, TimestampStyles.ShortDate)}`,
+						`${shouldDisableEvent ? XIVEventBuddyEmojis.TimeExpired : XIVEventBuddyEmojis.Time} ${underline(time(event.instance.dateTime, TimestampStyles.ShortTime))}`,
+						`${shouldDisableEvent ? XIVEventBuddyEmojis.CountdownExpired : XIVEventBuddyEmojis.Countdown} ${time(event.instance.dateTime, TimestampStyles.RelativeTime)}`
 					].join('\t')
 				)
-		)
-		.addActionRowComponents((actionRow) =>
-			actionRow.setComponents(
-				new ButtonBuilder()
-					.setURL(buildAddToCalendarUrl(event))
-					.setLabel(addToCalendarString)
-					.setStyle(ButtonStyle.Link)
-					.setEmoji({ name: '📅' })
-			)
-		)
-		.addSeparatorComponents((separator) => separator);
+		);
 
-	if (variant === $Enums.EventVariant.NORMAL) {
+	const addToCalendarUrl = buildAddToCalendarUrl(event);
+	sapphireContainer.logger.info('>>>>', addToCalendarUrl);
+	if (addToCalendarUrl) {
+		container.addActionRowComponents((actionRow) =>
+			actionRow.setComponents(
+				new ButtonBuilder().setURL(addToCalendarUrl).setLabel(addToCalendarString).setStyle(ButtonStyle.Link).setEmoji({ name: '📅' })
+			)
+		);
+	}
+
+	container.addSeparatorComponents((separator) => separator);
+
+	if (event.variant === $Enums.EventVariant.NORMAL) {
 		container.addTextDisplayComponents((textDisplay) =>
 			textDisplay.setContent(
 				[
@@ -298,9 +290,9 @@ export async function buildEventComponents({
 	}
 
 	const roleSelectMenu =
-		variant === $Enums.EventVariant.NORMAL
+		event.variant === $Enums.EventVariant.NORMAL
 			? new StringSelectMenuBuilder()
-					.setCustomId(`${CustomIdPrefixes.RoleSelectMenu}|${id}`)
+					.setCustomId(`${CustomIdPrefixes.RoleSelectMenu}|${event.id}`)
 					.setOptions(
 						TankOption.setDescription(await resolveKey(interactionAsInteraction!, 'components:selectTank', { lng })),
 						MeleeDpsOption.setDescription(await resolveKey(interactionAsInteraction!, 'components:selectMeleeDps', { lng })),
@@ -310,7 +302,7 @@ export async function buildEventComponents({
 						AllRounderOption.setDescription(await resolveKey(interactionAsInteraction!, 'components:selectAllRounder', { lng }))
 					)
 			: new StringSelectMenuBuilder()
-					.setCustomId(`${CustomIdPrefixes.PhantomJobSelectMenu}|${id}`)
+					.setCustomId(`${CustomIdPrefixes.PhantomJobSelectMenu}|${event.id}`)
 					.setOptions(
 						PhantomBardOption.setDescription(await resolveKey(interactionAsInteraction!, 'components:selectPhantomBard', { lng })),
 						PhantomBerserkerOption.setDescription(
@@ -340,13 +332,13 @@ export async function buildEventComponents({
 
 		container.addActionRowComponents((actionRow) => actionRow.setComponents(roleSelectMenu));
 	} else {
-		const presenceStateButtons = await getPresenceStateButtons(interactionOrLocale, id);
+		const presenceStateButtons = await getPresenceStateButtons(interactionOrLocale, event.id);
 		container
 			.addActionRowComponents((actionRow) => actionRow.setComponents(roleSelectMenu))
 			.addActionRowComponents((actionRow) => actionRow.setComponents(presenceStateButtons));
 	}
 
-	if (bannerImage) {
+	if (event.bannerImage) {
 		container.addMediaGalleryComponents((builder) =>
 			builder.addItems((item) =>
 				item //
@@ -357,7 +349,7 @@ export async function buildEventComponents({
 	}
 
 	if (!shouldDisableEvent) {
-		const removeParticipationButton = await getRemoveParticipationButton(interactionOrLocale, id);
+		const removeParticipationButton = await getRemoveParticipationButton(interactionOrLocale, event.id);
 		container.addActionRowComponents((actionRow) => actionRow.setComponents(removeParticipationButton));
 	}
 
