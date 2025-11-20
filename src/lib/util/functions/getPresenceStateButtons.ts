@@ -27,11 +27,17 @@ export async function getPresenceStateButtons(interactionOrLocale: BaseInteracti
 		.setEmoji({ id: '1324558615939649559', name: 'Absence' })
 		.setLabel(await resolveKey(interactionAsInteraction!, 'components:labelAbsence', { lng }))
 		.setStyle(ButtonStyle.Secondary);
-	const removeParticipationButton = new ButtonBuilder()
+
+	return [benchButton, lateButton, tentativeButton, absenceButton];
+}
+
+export async function getRemoveParticipationButton(interactionOrLocale: BaseInteraction | Locale, eventId: string) {
+	const interactionAsInteraction = interactionOrLocale instanceof BaseInteraction ? interactionOrLocale : null;
+	const lng = isNullish(interactionAsInteraction) ? (interactionOrLocale as Locale) : undefined;
+
+	return new ButtonBuilder()
 		.setCustomId(`${CustomIdPrefixes.RemoveParticipation}|${eventId}`)
 		.setEmoji({ id: '1325255133592031272', name: 'RemoveParticipation' })
 		.setLabel(await resolveKey(interactionAsInteraction!, 'components:labelRemoveParticipation', { lng }))
 		.setStyle(ButtonStyle.Secondary);
-
-	return [benchButton, lateButton, tentativeButton, absenceButton, removeParticipationButton];
 }

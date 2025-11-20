@@ -3,8 +3,6 @@ import { ErrorIdentifiers, UpdateEmbedPayloadOrigin, XIVEventBuddyEvents, type E
 import { XIVEventBuddyEmojis } from '#lib/util/emojis';
 import { buildEventAttachment } from '#lib/util/functions/buildEventAttachment';
 import { buildEventComponents } from '#lib/util/functions/buildEventComponents';
-import { buildEventEmbed } from '#lib/util/functions/buildEventEmbed';
-import { buildPhantomJobComponent } from '#lib/util/functions/buildPhantomJobComponent';
 import { resolveOnErrorCodes } from '#lib/util/functions/resolveOnErrorCodes';
 import { Owners } from '#root/config';
 import { $Enums } from '@prisma/client';
@@ -666,11 +664,10 @@ export class SlashCommand extends XIVEventBuddyCommand {
 				await oldPostedMessage?.delete();
 
 				const postedMessage = await resolvedEventChannel.send({
-					content: isNullishOrEmpty(updatedEvent.rolesToPing)
-						? undefined
-						: await resolveKey(interaction, 'globals:andListValue', { value: updatedEvent.rolesToPing.map(roleMention) }),
-					embeds: [
-						buildEventEmbed({
+					flags: [MessageFlags.IsComponentsV2],
+					components: [
+						await buildEventComponents({
+							interactionOrLocale: interaction,
 							event: updatedEvent as EventData,
 							addToCalendarString: await resolveKey(interaction, 'globals:addToCalendar'),
 							durationString: await resolveKey(interaction, 'globals:duration', {
@@ -678,10 +675,6 @@ export class SlashCommand extends XIVEventBuddyCommand {
 							})
 						})
 					],
-					components:
-						updatedEvent.variant === $Enums.EventVariant.NORMAL
-							? await buildEventComponents(interaction, updatedEvent.id)
-							: await buildPhantomJobComponent(interaction, updatedEvent.id),
 					files: buildEventAttachment(updatedEvent as EventData),
 					allowedMentions: { roles: isNullishOrEmpty(updatedEvent.rolesToPing) ? undefined : updatedEvent.rolesToPing }
 				});
