@@ -132,11 +132,6 @@ export async function buildEventComponents({
 		);
 
 	const addToCalendarUrl = buildAddToCalendarUrl(event);
-
-	if (addToCalendarUrl.length >= 500) {
-		sapphireContainer.logger.info(addToCalendarUrl);
-	}
-
 	if (addToCalendarUrl) {
 		container.addActionRowComponents((actionRow) =>
 			actionRow.setComponents(
