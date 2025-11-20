@@ -1,4 +1,5 @@
 import type { EventData } from '#lib/util/constants';
+import { splitText } from '@sapphire/utilities';
 import { addHours } from 'date-fns';
 import { URL } from 'node:url';
 
@@ -9,8 +10,8 @@ export function buildAddToCalendarUrl(event: EventData): string {
 	url.searchParams.set('end', addHours(event.instance.dateTime, event.duration).toISOString());
 	url.searchParams.set('allDay', 'false');
 	url.searchParams.set('location', '');
-	url.searchParams.set('summary', event.name);
-	url.searchParams.set('description', event.description ?? '');
+	url.searchParams.set('summary', splitText(event.name, 75));
+	url.searchParams.set('description', splitText(event.description ?? '', 275));
 
 	return url.toString();
 }
