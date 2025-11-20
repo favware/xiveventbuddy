@@ -38,6 +38,8 @@ export class UserListener extends Listener<typeof XIVEventBuddyEvents.UpdateEmbe
 					if (postedMessage) {
 						await postedMessage.edit({
 							flags: [MessageFlags.IsComponentsV2],
+							content: null,
+							embeds: [],
 							components: [
 								await buildEventComponents({
 									interactionOrLocale: interaction ?? preferredLocale,
