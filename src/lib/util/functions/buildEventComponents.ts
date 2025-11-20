@@ -80,8 +80,17 @@ export async function buildEventComponents({
 
 	const container = new ContainerBuilder();
 
-	const { description, bannerImage, instance } = event;
-	const { dateTime: eventDateTime } = instance;
+	const {
+		id,
+		name,
+		leader,
+		description,
+		bannerImage,
+		rolesToPing,
+		variant,
+		instance: { dateTime: eventDateTime }
+	} = event;
+
 	const benchedParticipants = getBenchedParticipants(event);
 	const presentParticipants = getPresentParticipants(event);
 	const absentParticipants = getAbsentParticipants(event);
@@ -95,9 +104,9 @@ export async function buildEventComponents({
 	const phantomJobParticipants = getPhantomJobParticipants(event);
 	const allRounderParticipants = getAllRounderParticipants(event);
 
-	if (!isNullishOrEmpty(event.rolesToPing)) {
+	if (!isNullishOrEmpty(rolesToPing)) {
 		const content = await resolveKey(interactionAsInteraction!, 'globals:andListValue', {
-			value: event.rolesToPing.map(roleMention),
+			value: rolesToPing.map(roleMention),
 			lng
 		});
 		container.addTextDisplayComponents((textDisplay) => textDisplay.setContent(content));
@@ -105,7 +114,7 @@ export async function buildEventComponents({
 
 	container
 		.setAccentColor(shouldDisableEvent ? BrandingColors.ExpiredEvent : BrandingColors.Primary)
-		.addTextDisplayComponents((textDisplay) => textDisplay.setContent(event.name));
+		.addTextDisplayComponents((textDisplay) => textDisplay.setContent(name));
 
 	if (description) {
 		container.addTextDisplayComponents((textDisplay) => textDisplay.setContent(description.split(/\\{2,4}n/).join('\n')));
@@ -117,7 +126,7 @@ export async function buildEventComponents({
 			(textDisplay) =>
 				textDisplay.setContent(
 					[
-						`${XIVEventBuddyEmojis.Leader} ${userMention(event.leader)}`,
+						`${XIVEventBuddyEmojis.Leader} ${userMention(leader)}`,
 						`${shouldDisableEvent ? XIVEventBuddyEmojis.SignupsExpired : XIVEventBuddyEmojis.Signups} ${bold(presentParticipants.length.toString())} (+${benchedParticipants.length + lateParticipants.length + tentativeParticipants.length})`,
 						`${shouldDisableEvent ? XIVEventBuddyEmojis.DurationExpired : XIVEventBuddyEmojis.Duration} ${durationString}`
 					].join('\t')
@@ -142,7 +151,7 @@ export async function buildEventComponents({
 		)
 		.addSeparatorComponents((separator) => separator);
 
-	if (event.variant === $Enums.EventVariant.NORMAL) {
+	if (variant === $Enums.EventVariant.NORMAL) {
 		container.addTextDisplayComponents((textDisplay) =>
 			textDisplay.setContent(
 				[
@@ -289,9 +298,9 @@ export async function buildEventComponents({
 	}
 
 	const roleSelectMenu =
-		event.variant === $Enums.EventVariant.NORMAL
+		variant === $Enums.EventVariant.NORMAL
 			? new StringSelectMenuBuilder()
-					.setCustomId(`${CustomIdPrefixes.RoleSelectMenu}|${event.id}`)
+					.setCustomId(`${CustomIdPrefixes.RoleSelectMenu}|${id}`)
 					.setOptions(
 						TankOption.setDescription(await resolveKey(interactionAsInteraction!, 'components:selectTank', { lng })),
 						MeleeDpsOption.setDescription(await resolveKey(interactionAsInteraction!, 'components:selectMeleeDps', { lng })),
@@ -301,7 +310,7 @@ export async function buildEventComponents({
 						AllRounderOption.setDescription(await resolveKey(interactionAsInteraction!, 'components:selectAllRounder', { lng }))
 					)
 			: new StringSelectMenuBuilder()
-					.setCustomId(`${CustomIdPrefixes.PhantomJobSelectMenu}|${event.id}`)
+					.setCustomId(`${CustomIdPrefixes.PhantomJobSelectMenu}|${id}`)
 					.setOptions(
 						PhantomBardOption.setDescription(await resolveKey(interactionAsInteraction!, 'components:selectPhantomBard', { lng })),
 						PhantomBerserkerOption.setDescription(
@@ -331,7 +340,7 @@ export async function buildEventComponents({
 
 		container.addActionRowComponents((actionRow) => actionRow.setComponents(roleSelectMenu));
 	} else {
-		const presenceStateButtons = await getPresenceStateButtons(interactionOrLocale, event.id);
+		const presenceStateButtons = await getPresenceStateButtons(interactionOrLocale, id);
 		container
 			.addActionRowComponents((actionRow) => actionRow.setComponents(roleSelectMenu))
 			.addActionRowComponents((actionRow) => actionRow.setComponents(presenceStateButtons));
@@ -348,7 +357,7 @@ export async function buildEventComponents({
 	}
 
 	if (!shouldDisableEvent) {
-		const removeParticipationButton = await getRemoveParticipationButton(interactionOrLocale, event.id);
+		const removeParticipationButton = await getRemoveParticipationButton(interactionOrLocale, id);
 		container.addActionRowComponents((actionRow) => actionRow.setComponents(removeParticipationButton));
 	}
 
