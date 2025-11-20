@@ -1,11 +1,18 @@
 import { XIVEventBuddyCommand } from '#lib/extensions/XIVEventBuddyComand';
 import { BrandingColors, ErrorIdentifiers, UpdateEmbedPayloadOrigin, XIVEventBuddyEvents } from '#lib/util/constants';
 import { XIVEventBuddyEmojis } from '#lib/util/emojis';
-import { buildEventComponents } from '#lib/util/functions/buildEventComponents';
 import { resolveOnErrorCodes } from '#lib/util/functions/resolveOnErrorCodes';
 import { UserError, type ApplicationCommandRegistry, type Awaitable, type ContextMenuCommand } from '@sapphire/framework';
 import { applyNameLocalizedBuilder, resolveKey } from '@sapphire/plugin-i18next';
-import { ApplicationCommandType, ApplicationIntegrationType, InteractionContextType, MessageFlags, RESTJSONErrorCodes } from 'discord.js';
+import {
+	ApplicationCommandType,
+	ApplicationIntegrationType,
+	ContainerComponent,
+	InteractionContextType,
+	MessageFlags,
+	RESTJSONErrorCodes,
+	type APITextDisplayComponent
+} from 'discord.js';
 
 export class SlashCommand extends XIVEventBuddyCommand {
 	public override registerApplicationCommands(registry: ApplicationCommandRegistry): Awaitable<void> {
@@ -40,14 +47,12 @@ export class SlashCommand extends XIVEventBuddyCommand {
 					shouldDisableEvent: true,
 					origin: UpdateEmbedPayloadOrigin.DisableEventCommand
 				});
-
 				try {
 					await this.container.prisma.event.delete({
 						where: {
 							id: event.id
 						}
 					});
-
 					if (event.instance?.discordEventId) {
 						await resolveOnErrorCodes(
 							interaction.guild.scheduledEvents.delete(event.instance.discordEventId),
@@ -63,20 +68,29 @@ export class SlashCommand extends XIVEventBuddyCommand {
 				const { targetMessage } = interaction;
 
 				if (targetMessage.author?.id === this.container.client.user?.id) {
-					const embed = targetMessage.embeds.map((embed) => embed.toJSON()).at(0);
+					const containerComponent = targetMessage.components.at(0);
 
-					if (embed) {
-						embed.fields?.at(0)?.value.replace(XIVEventBuddyEmojis.Date, XIVEventBuddyEmojis.DateExpired);
-						embed.fields?.at(1)?.value.replace(XIVEventBuddyEmojis.Signups, XIVEventBuddyEmojis.SignupsExpired);
-						embed.fields?.at(1)?.value.replace(XIVEventBuddyEmojis.Time, XIVEventBuddyEmojis.TimeExpired);
-						embed.fields?.at(2)?.value.replace(XIVEventBuddyEmojis.Countdown, XIVEventBuddyEmojis.CountdownExpired);
-						embed.fields?.at(3)?.value.replace(XIVEventBuddyEmojis.Duration, XIVEventBuddyEmojis.DurationExpired);
-						embed.color = BrandingColors.ExpiredEvent;
+					if (containerComponent instanceof ContainerComponent) {
+						const containerComponentJson = containerComponent.toJSON();
+						containerComponentJson.accent_color = BrandingColors.ExpiredEvent;
+						const raidLeaderLineComponent = containerComponentJson.components.at(4) as APITextDisplayComponent;
+						const dateTimeComponent = containerComponentJson.components.at(5) as APITextDisplayComponent;
+
+						raidLeaderLineComponent.content = raidLeaderLineComponent.content
+							.replace(XIVEventBuddyEmojis.Signups, XIVEventBuddyEmojis.SignupsExpired)
+							.replace(XIVEventBuddyEmojis.Duration, XIVEventBuddyEmojis.DurationExpired);
+
+						dateTimeComponent.content = dateTimeComponent.content
+							.replace(XIVEventBuddyEmojis.Date, XIVEventBuddyEmojis.DateExpired)
+							.replace(XIVEventBuddyEmojis.Time, XIVEventBuddyEmojis.TimeExpired)
+							.replace(XIVEventBuddyEmojis.Countdown, XIVEventBuddyEmojis.CountdownExpired);
+
+						containerComponentJson.components[4] = raidLeaderLineComponent;
+						containerComponentJson.components[5] = dateTimeComponent;
 
 						await resolveOnErrorCodes(
 							targetMessage.edit({
-								embeds: [embed],
-								components: await buildEventComponents(interaction, 'none', true),
+								components: [containerComponentJson],
 								files: []
 							}),
 							RESTJSONErrorCodes.UnknownMessage,
