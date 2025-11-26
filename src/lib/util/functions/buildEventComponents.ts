@@ -226,7 +226,7 @@ export async function buildEventComponents({
 			value: allRounderParticipants.map(filteredParticipantsNewLines),
 			lng
 		});
-		const allRounderCount = bold(`(${allRounderLines.length.toString()})`);
+		const allRounderCount = bold(`(${allRounderParticipants.length.toString()})`);
 
 		container.addTextDisplayComponents(
 			(textDisplay) => textDisplay.setContent(`${XIVEventBuddyEmojis.AllRounder} ${bold(underline('Allrounder'))} ${allRounderCount}`),
