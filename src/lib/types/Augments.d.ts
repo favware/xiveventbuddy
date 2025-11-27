@@ -1,6 +1,8 @@
 import type { prismaType } from '#lib/setup/prisma';
 import type {
 	CreateServerEventPayload,
+	DeleteEventInstancePayload,
+	DeleteEventPayload,
 	PostEmbedPayload,
 	UpdateEmbedPayload,
 	UpdateServerEventPayload,
@@ -54,5 +56,12 @@ declare module '@skyra/env-utilities' {
 		WEBHOOK_ERROR_ID: string;
 
 		WEBHOOK_ERROR_TOKEN: string;
+	}
+}
+
+declare module '@sapphire/plugin-scheduled-tasks' {
+	interface ScheduledTasks {
+		'delete-event': DeleteEventPayload;
+		'delete-event-instance': DeleteEventInstancePayload;
 	}
 }

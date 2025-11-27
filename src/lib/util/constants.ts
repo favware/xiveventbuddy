@@ -141,6 +141,14 @@ export interface UpdateEmbedPayload extends EventIdGuildIdPayload {
 	shouldDisableEvent?: boolean;
 }
 
+export interface DeleteEventInstancePayload {
+	eventInstanceId: string;
+}
+
+export interface DeleteEventPayload {
+	eventId: string;
+}
+
 export const enum UpdateEmbedPayloadOrigin {
 	DisableEventCommand = 'disable-event-command',
 	DisableOldEventScheduledTask = 'disable-old-event-scheduled-task',

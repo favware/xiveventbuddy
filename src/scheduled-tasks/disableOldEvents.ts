@@ -2,7 +2,7 @@ import { UpdateEmbedPayloadOrigin, XIVEventBuddyEvents } from '#lib/util/constan
 import { ApplyOptions } from '@sapphire/decorators';
 import { ScheduledTask } from '@sapphire/plugin-scheduled-tasks';
 import { isNullish } from '@sapphire/utilities';
-import { subHours } from 'date-fns';
+import { minutesToMilliseconds, subHours } from 'date-fns';
 import { Status } from 'discord.js';
 
 @ApplyOptions<ScheduledTask.Options>({
@@ -42,20 +42,15 @@ export class DisableOldEvents extends ScheduledTask {
 						origin: UpdateEmbedPayloadOrigin.DisableOldEventScheduledTask
 					});
 
-					// Delete the event instance so it doesn't get picked up with the next run of this task
-					await this.container.prisma.eventInstance.delete({
-						where: {
-							id: event.instance.id
-						}
-					});
+					// Queue a delete of the event instance so it doesn't get picked up with the next run of this task
+					await this.container.tasks.create(
+						{ name: 'delete-event-instance', payload: { eventInstanceId: event.id } },
+						minutesToMilliseconds(5)
+					);
 
 					// If the event is not repeating, fully remove it from the database, so it doesn't clutter up the database
 					if (isNullish(event.interval)) {
-						await this.container.prisma.event.delete({
-							where: {
-								id: event.id
-							}
-						});
+						await this.container.tasks.create({ name: 'delete-event', payload: { eventId: event.id } }, minutesToMilliseconds(8));
 					}
 				}
 			}
