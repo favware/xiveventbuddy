@@ -42,7 +42,6 @@ import {
 	TankOption
 } from '#lib/util/roleStringSelectOptionBuilders';
 import { $Enums } from '@prisma/client';
-import { container as sapphireContainer } from '@sapphire/framework';
 import { resolveKey } from '@sapphire/plugin-i18next';
 import { isNullish, isNullishOrEmpty } from '@sapphire/utilities';
 import {
