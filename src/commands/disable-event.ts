@@ -48,11 +48,20 @@ export class SlashCommand extends XIVEventBuddyCommand {
 					origin: UpdateEmbedPayloadOrigin.DisableEventCommand
 				});
 				try {
-					await this.container.prisma.event.delete({
-						where: {
-							id: event.id
-						}
-					});
+					if (event.interval && event.instance) {
+						await this.container.prisma.eventInstance.delete({
+							where: {
+								id: event.instance.id
+							}
+						});
+					} else if (!event.interval) {
+						await this.container.prisma.event.delete({
+							where: {
+								id: event.id
+							}
+						});
+					}
+
 					if (event.instance?.discordEventId) {
 						await resolveOnErrorCodes(
 							interaction.guild.scheduledEvents.delete(event.instance.discordEventId),
