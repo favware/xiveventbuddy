@@ -11,5 +11,6 @@
 	"sonarlint.connectedMode.project": {
 		"connectionId": "favware",
 		"projectKey": "favware_xiveventbuddy"
-	}
+	},
+	"prisma.pinToPrisma6": true
 }

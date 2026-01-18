@@ -1,4 +1,5 @@
 import type { Event, EventInstance, Jobs, Participant } from '@prisma/client';
+import type { $Dictionary } from '@sapphire/plugin-i18next';
 import type { BaseInteraction } from 'discord.js';
 
 export const rootFolder = new URL('../../../', import.meta.url);
@@ -42,6 +43,7 @@ export enum XIVEventBuddyEvents {
 	AnalyticsSync = 'analyticsSync',
 	CreateServerEvent = 'createServerEvent',
 	PostEmbed = 'postEmbed',
+	SendReminder = 'sendReminder',
 	UpdateEmbed = 'updateEmbed',
 	UpdateServerEvent = 'updateServerEvent'
 }
@@ -119,6 +121,14 @@ export const enum CustomIdPrefixes {
 }
 /* eslint-enable typescript-sort-keys/string-enum */
 
+export interface ListHeaders extends $Dictionary {
+	date: string;
+	description: string;
+	name: string;
+	time: string;
+	variant: string;
+}
+
 interface EventIdGuildIdPayload {
 	eventId: string;
 	guildId: string;
@@ -139,6 +149,12 @@ export type PostEmbedPayload = EventIdGuildIdPayload;
 export interface UpdateEmbedPayload extends EventIdGuildIdPayload {
 	origin: UpdateEmbedPayloadOrigin;
 	shouldDisableEvent?: boolean;
+}
+
+export interface SendReminderPayload {
+	eventId: string;
+	guildId: string;
+	reminderChannelId: string;
 }
 
 export interface DeleteEventInstancePayload {

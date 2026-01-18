@@ -4,6 +4,7 @@ import type {
 	DeleteEventInstancePayload,
 	DeleteEventPayload,
 	PostEmbedPayload,
+	SendReminderPayload,
 	UpdateEmbedPayload,
 	UpdateServerEventPayload,
 	XIVEventBuddyEvents
@@ -34,6 +35,7 @@ declare module '@sapphire/framework' {
 		emit(event: XIVEventBuddyEvents.UpdateServerEvent, payload: UpdateServerEventPayload): boolean;
 		emit(event: XIVEventBuddyEvents.PostEmbed, payload: PostEmbedPayload): boolean;
 		emit(event: XIVEventBuddyEvents.UpdateEmbed, payload: UpdateEmbedPayload): boolean;
+		emit(event: XIVEventBuddyEvents.SendReminder, payload: SendReminderPayload): boolean;
 	}
 }
 
