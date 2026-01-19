@@ -1,0 +1,3 @@
+{
+	"reminderBody": "{{nameWithUrl}} is starting {{relativeTime}}."
+}
