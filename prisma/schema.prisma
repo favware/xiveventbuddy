@@ -105,6 +105,7 @@ model Event {
     updatedAt   DateTime       @updatedAt @map("updated_at")
     instance    EventInstance?
     variant     EventVariant   @default(NORMAL) @map("event_variant")
+    reminderChannelId String? @map("reminder_channel_id")
 
     @@map("events")
 }
@@ -119,6 +120,7 @@ model EventInstance {
     eventId        String        @unique @map("event_id")
     discordEventId String?       @map("discord_event_id")
     participants   Participant[]
+    reminder       Int?
 
     @@map("event_instances")
 }

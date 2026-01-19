@@ -1,22 +1,23 @@
 import { XIVEventBuddyCommand } from '#lib/extensions/XIVEventBuddyComand';
-import { ErrorIdentifiers, UpdateEmbedPayloadOrigin, XIVEventBuddyEvents, type EventData } from '#lib/util/constants';
+import { ErrorIdentifiers, UpdateEmbedPayloadOrigin, XIVEventBuddyEvents, type EventData, type ListHeaders } from '#lib/util/constants';
 import { XIVEventBuddyEmojis } from '#lib/util/emojis';
 import { buildEventAttachment } from '#lib/util/functions/buildEventAttachment';
 import { buildEventComponents } from '#lib/util/functions/buildEventComponents';
 import { resolveOnErrorCodes } from '#lib/util/functions/resolveOnErrorCodes';
+import { verifyHasSendPermissions } from '#lib/util/functions/verifyHasSendPermissions';
 import { Owners } from '#root/config';
 import { $Enums } from '@prisma/client';
 import { fetch, FetchResultTypes } from '@sapphire/fetch';
 import { Result, UserError, type ApplicationCommandRegistry, type Awaitable, type ChatInputCommand } from '@sapphire/framework';
-import { applyLocalizedBuilder, createLocalizedChoice, resolveKey, type $Dictionary } from '@sapphire/plugin-i18next';
+import { applyLocalizedBuilder, createLocalizedChoice, resolveKey } from '@sapphire/plugin-i18next';
 import { filterNullish, isNullishOrEmpty, isNullishOrZero } from '@sapphire/utilities';
 import { format } from 'date-fns';
 import {
 	ApplicationIntegrationType,
+	bold,
 	heading,
 	inlineCode,
 	MessageFlags,
-	PermissionFlagsBits,
 	RESTJSONErrorCodes,
 	roleMention,
 	time,
@@ -106,6 +107,22 @@ export class SlashCommand extends XIVEventBuddyCommand {
 									createLocalizedChoice('commands/event:variantOccultCrescent', { value: $Enums.EventVariant.OCCULT_CRESCENT })
 								)
 						)
+						.addIntegerOption((builder) =>
+							applyLocalizedBuilder(builder, 'commands/event:reminder') //
+								.setRequired(false)
+								.setChoices(
+									createLocalizedChoice('commands/event:reminder05Minutes', { value: 5 }),
+									createLocalizedChoice('commands/event:reminder10Minutes', { value: 10 }),
+									createLocalizedChoice('commands/event:reminder15Minutes', { value: 15 }),
+									createLocalizedChoice('commands/event:reminder30Minutes', { value: 30 }),
+									createLocalizedChoice('commands/event:reminder1Hour', { value: 60 }),
+									createLocalizedChoice('commands/event:reminder2Hours', { value: 120 })
+								)
+						)
+						.addChannelOption((builder) =>
+							applyLocalizedBuilder(builder, 'commands/event:reminderChannel') //
+								.setRequired(false)
+						)
 				)
 				.addSubcommand(
 					(builder) => applyLocalizedBuilder(builder, 'commands/event:list') //
@@ -188,6 +205,22 @@ export class SlashCommand extends XIVEventBuddyCommand {
 									createLocalizedChoice('commands/event:variantNormal', { value: $Enums.EventVariant.NORMAL }),
 									createLocalizedChoice('commands/event:variantOccultCrescent', { value: $Enums.EventVariant.OCCULT_CRESCENT })
 								)
+						)
+						.addIntegerOption((builder) =>
+							applyLocalizedBuilder(builder, 'commands/event:reminder') //
+								.setRequired(false)
+								.setChoices(
+									createLocalizedChoice('commands/event:reminder05Minutes', { value: 5 }),
+									createLocalizedChoice('commands/event:reminder10Minutes', { value: 10 }),
+									createLocalizedChoice('commands/event:reminder15Minutes', { value: 15 }),
+									createLocalizedChoice('commands/event:reminder30Minutes', { value: 30 }),
+									createLocalizedChoice('commands/event:reminder1Hour', { value: 60 }),
+									createLocalizedChoice('commands/event:reminder2Hours', { value: 120 })
+								)
+						)
+						.addChannelOption((builder) =>
+							applyLocalizedBuilder(builder, 'commands/event:reminderChannel') //
+								.setRequired(false)
 						)
 				)
 				.addSubcommand((builder) =>
@@ -325,14 +358,29 @@ export class SlashCommand extends XIVEventBuddyCommand {
 			});
 		}
 
-		if (
-			interaction.guild.members.me &&
-			!eventChannel
-				.permissionsFor(interaction.guild.members.me)
-				?.has([PermissionFlagsBits.SendMessages, PermissionFlagsBits.ViewChannel, PermissionFlagsBits.EmbedLinks])
-		) {
+		if (verifyHasSendPermissions(interaction, eventChannel)) {
 			return interaction.editReply({
 				content: await resolveKey(interaction, 'commands/event:checksChannelPermissions', {
+					type: await resolveKey(interaction, 'commands/event:eventChannelType'),
+					viewChannel: await resolveKey(interaction, `permissions:ViewChannel`),
+					sendMessages: await resolveKey(interaction, `permissions:SendMessages`),
+					embedLinks: await resolveKey(interaction, `permissions:EmbedLinks`)
+				})
+			});
+		}
+
+		const reminderChannel = interaction.options.getChannel('reminder-channel', false) ?? eventChannel;
+
+		if (!reminderChannel?.isSendable()) {
+			return interaction.editReply({
+				content: await resolveKey(interaction, 'commands/event:paramsInvalidChannel')
+			});
+		}
+
+		if (verifyHasSendPermissions(interaction, reminderChannel)) {
+			return interaction.editReply({
+				content: await resolveKey(interaction, 'commands/event:checksChannelPermissions', {
+					type: await resolveKey(interaction, 'commands/event:reminderChannelType'),
 					viewChannel: await resolveKey(interaction, `permissions:ViewChannel`),
 					sendMessages: await resolveKey(interaction, `permissions:SendMessages`),
 					embedLinks: await resolveKey(interaction, `permissions:EmbedLinks`)
@@ -349,6 +397,7 @@ export class SlashCommand extends XIVEventBuddyCommand {
 		const eventDuration = interaction.options.getInteger('duration', true);
 		const leader = interaction.options.getUser('leader', false);
 		const variant = interaction.options.getString('variant', false);
+		const reminder = interaction.options.getInteger('reminder', false);
 
 		const event = await this.container.prisma.event.create({
 			data: {
@@ -362,9 +411,11 @@ export class SlashCommand extends XIVEventBuddyCommand {
 				leader: leader?.id ?? interaction.user.id,
 				bannerImage: await this.getBannerImage(interaction),
 				variant: (variant as $Enums.EventVariant | null) ?? $Enums.EventVariant.NORMAL,
+				reminderChannelId: reminderChannel.id,
 				instance: {
 					create: {
-						dateTime: eventDate
+						dateTime: eventDate,
+						reminder
 					}
 				}
 			},
@@ -375,6 +426,7 @@ export class SlashCommand extends XIVEventBuddyCommand {
 				rolesToPing: true,
 				leader: true,
 				channelId: true,
+				reminderChannelId: true,
 				instance: {
 					select: {
 						dateTime: true,
@@ -425,6 +477,7 @@ export class SlashCommand extends XIVEventBuddyCommand {
 			select: {
 				id: true,
 				dateTime: true,
+				reminder: true,
 				event: {
 					select: {
 						name: true,
@@ -453,37 +506,38 @@ export class SlashCommand extends XIVEventBuddyCommand {
 			[$Enums.EventVariant.OCCULT_CRESCENT]: `${XIVEventBuddyEmojis.PhantomJob} Occult Crescent`
 		};
 
-		interface ListHeaders extends $Dictionary {
-			date: string;
-			description: string;
-			name: string;
-			roleToPing: string;
-			time: string;
-			variant: string;
-		}
-
 		const listHeaders = await resolveKey<string, { returnObjects: true }, ListHeaders>(interaction, 'commands/event:listHeaders');
 
-		const eventList = eventInstances
-			.map((eventInstance) => {
-				const { id, dateTime, event } = eventInstance;
-				const { name, description, rolesToPing, variant } = event;
+		const eventList = (
+			await Promise.all(
+				eventInstances.map(async (eventInstance) => {
+					const { id, dateTime, event, reminder } = eventInstance;
+					const { name, description, rolesToPing, variant } = event;
+					const hasReminder = isNullishOrZero(reminder) === false;
+					const reminderText = hasReminder
+						? await resolveKey(interaction, 'commands/event:listReminder', { reminder: reminder?.toString() ?? '' })
+						: undefined;
+					const rolesToPingHeader = await resolveKey(interaction, 'commands/event:listHeaderRoleToPing', {
+						count: rolesToPing?.length ?? 0
+					});
 
-				return [
-					`${eventIdHeader}: ${id}`,
-					unorderedList(
-						[
-							`**${listHeaders.name}:** ${name}`,
-							`**${listHeaders.description}:** ${description}`,
-							`**${listHeaders.date}:** ${time(dateTime, TimestampStyles.ShortDate)}`,
-							`**${listHeaders.time}:** ${time(dateTime, TimestampStyles.ShortTime)}`,
-							isNullishOrEmpty(rolesToPing) ? undefined : `**${listHeaders.roleToPing}:** ${rolesToPing.map(roleMention)}`,
-							`**${listHeaders.variant}:** ${variantMapping[variant]}`
-						].filter(filterNullish)
-					)
-				].join('\n');
-			})
-			.join('\n\n');
+					return [
+						`${eventIdHeader}: ${id}`,
+						unorderedList(
+							[
+								`${bold(listHeaders.name)}: ${name}`,
+								`${bold(listHeaders.description)}: ${description}`,
+								`${bold(listHeaders.date)}: ${time(dateTime, TimestampStyles.ShortDate)}`,
+								`${bold(listHeaders.time)}: ${time(dateTime, TimestampStyles.ShortTime)}`,
+								isNullishOrEmpty(rolesToPing) ? undefined : `${bold(rolesToPingHeader)}: ${rolesToPing.map(roleMention)}`,
+								`${bold(listHeaders.variant)}: ${variantMapping[variant]}`,
+								hasReminder ? `${bold(listHeaders.reminder)}: ${reminderText}` : undefined
+							].filter(filterNullish)
+						)
+					].join('\n');
+				})
+			)
+		).join('\n\n');
 
 		const messageContent = [eventListHeader, eventList].join('\n');
 
@@ -520,11 +574,13 @@ export class SlashCommand extends XIVEventBuddyCommand {
 				leader: true,
 				rolesToPing: true,
 				variant: true,
+				reminderChannelId: true,
 				instance: {
 					select: {
 						dateTime: true,
 						messageId: true,
-						discordEventId: true
+						discordEventId: true,
+						reminder: true
 					}
 				}
 			}
@@ -578,9 +634,17 @@ export class SlashCommand extends XIVEventBuddyCommand {
 		const thirdRoleToPing = interaction.options.getRole('third-role-to-ping', false);
 		const leader = interaction.options.getUser('leader', false);
 		const variant = interaction.options.getString('variant', false);
+		const reminder = interaction.options.getInteger('reminder', false) ?? existingEvent.instance.reminder;
+		const reminderChannel = interaction.options.getChannel('reminder-channel', false);
 
 		const resolvedEventChannel =
 			channel ?? (existingEvent.channelId ? interaction.guild.channels.cache.get(existingEvent.channelId) : null) ?? interaction.channel;
+
+		const resolvedReminderChannel =
+			reminderChannel ??
+			(existingEvent.reminderChannelId ? interaction.guild.channels.cache.get(existingEvent.reminderChannelId) : null) ??
+			resolvedEventChannel ??
+			interaction.channel;
 
 		let rolesToPing = [roleToPing?.id, secondRoleToPing?.id, thirdRoleToPing?.id].filter(filterNullish);
 
@@ -589,6 +653,12 @@ export class SlashCommand extends XIVEventBuddyCommand {
 		}
 
 		if (!resolvedEventChannel?.isSendable()) {
+			return interaction.editReply({
+				content: await resolveKey(interaction, 'commands/event:paramsInvalidChannel')
+			});
+		}
+
+		if (!resolvedReminderChannel?.isSendable()) {
 			return interaction.editReply({
 				content: await resolveKey(interaction, 'commands/event:paramsInvalidChannel')
 			});
@@ -609,9 +679,11 @@ export class SlashCommand extends XIVEventBuddyCommand {
 				bannerImage: (await this.getBannerImage(interaction)) ?? existingEvent.bannerImage,
 				duration: eventDuration ?? existingEvent.duration,
 				variant: (variant as $Enums.EventVariant | null) ?? existingEvent.variant,
+				reminderChannelId: resolvedReminderChannel.id,
 				instance: {
 					update: {
 						dateTime: eventDate,
+						reminder,
 						discordEventId: existingEvent.instance.discordEventId
 					}
 				}
