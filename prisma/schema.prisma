@@ -91,36 +91,37 @@ model EventManagers {
 }
 
 model Event {
-    id          String         @id @default(cuid())
-    name        String
-    bannerImage String?        @map("banner_image")
-    channelId   String         @map("channel_id")
-    description String?
-    duration    Int
-    guildId     String         @map("guild_id")
-    interval    EventInterval?
-    leader      String
-    rolesToPing String[]       @map("roles_to_ping")
-    createdAt   DateTime       @default(now()) @map("created_at")
-    updatedAt   DateTime       @updatedAt @map("updated_at")
-    instance    EventInstance?
-    variant     EventVariant   @default(NORMAL) @map("event_variant")
-    reminderChannelId String? @map("reminder_channel_id")
+    id                String         @id @default(cuid())
+    name              String
+    bannerImage       String?        @map("banner_image")
+    channelId         String         @map("channel_id")
+    description       String?
+    duration          Int
+    guildId           String         @map("guild_id")
+    interval          EventInterval?
+    leader            String
+    rolesToPing       String[]       @map("roles_to_ping")
+    createdAt         DateTime       @default(now()) @map("created_at")
+    updatedAt         DateTime       @updatedAt @map("updated_at")
+    instance          EventInstance?
+    variant           EventVariant   @default(NORMAL) @map("event_variant")
+    reminderChannelId String?        @map("reminder_channel_id")
 
     @@map("events")
 }
 
 model EventInstance {
-    id             String        @id @default(cuid())
-    dateTime       DateTime      @map("date_time")
-    messageId      String?       @map("message_id")
-    createdAt      DateTime      @default(now()) @map("created_at")
-    updatedAt      DateTime      @updatedAt @map("updated_at")
-    event          Event         @relation(fields: [eventId], references: [id], onUpdate: Cascade, onDelete: Cascade)
-    eventId        String        @unique @map("event_id")
-    discordEventId String?       @map("discord_event_id")
-    participants   Participant[]
-    reminder       Int?
+    id              String        @id @default(cuid())
+    dateTime        DateTime      @map("date_time")
+    messageId       String?       @map("message_id")
+    createdAt       DateTime      @default(now()) @map("created_at")
+    updatedAt       DateTime      @updatedAt @map("updated_at")
+    event           Event         @relation(fields: [eventId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+    eventId         String        @unique @map("event_id")
+    discordEventId  String?       @map("discord_event_id")
+    participants    Participant[]
+    reminder        Int?
+    hasSentReminder Boolean       @default(false) @map("has_sent_reminder")
 
     @@map("event_instances")
 }

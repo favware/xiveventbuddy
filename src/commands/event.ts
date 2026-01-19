@@ -415,7 +415,8 @@ export class SlashCommand extends XIVEventBuddyCommand {
 				instance: {
 					create: {
 						dateTime: eventDate,
-						reminder
+						reminder,
+						hasSentReminder: true
 					}
 				}
 			},
@@ -580,7 +581,8 @@ export class SlashCommand extends XIVEventBuddyCommand {
 						dateTime: true,
 						messageId: true,
 						discordEventId: true,
-						reminder: true
+						reminder: true,
+						hasSentReminder: true
 					}
 				}
 			}
@@ -684,6 +686,7 @@ export class SlashCommand extends XIVEventBuddyCommand {
 					update: {
 						dateTime: eventDate,
 						reminder,
+						hasSentReminder: existingEvent.instance.hasSentReminder,
 						discordEventId: existingEvent.instance.discordEventId
 					}
 				}

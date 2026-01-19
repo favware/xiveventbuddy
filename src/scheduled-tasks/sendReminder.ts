@@ -29,9 +29,9 @@ export class SendReminder extends ScheduledTask {
 
 		for (const event of events) {
 			const { reminderChannelId, instance, id: eventId } = event;
-			const { reminder, dateTime, id: eventInstanceId } = instance ?? {};
+			const { reminder, dateTime, id: eventInstanceId, hasSentReminder } = instance ?? {};
 
-			if (!isNullishOrZero(reminder) && !isNullishOrEmpty(reminderChannelId) && !isNullishOrZero(dateTime)) {
+			if (!hasSentReminder && !isNullishOrZero(reminder) && !isNullishOrEmpty(reminderChannelId) && !isNullishOrZero(dateTime)) {
 				const reminderTime = new Date(dateTime.getTime() - minutesToMilliseconds(reminder));
 
 				// If it's time to send the reminder
@@ -51,7 +51,7 @@ export class SendReminder extends ScheduledTask {
 							}
 						},
 						data: {
-							reminder: null
+							hasSentReminder: true
 						}
 					});
 				}
