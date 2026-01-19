@@ -37,7 +37,7 @@ export class RescheduleEventTask extends ScheduledTask {
 			if (!event.instance) continue;
 
 			const { duration } = event;
-			const { dateTime } = event.instance;
+			const { dateTime, reminder } = event.instance;
 			let shouldReschedule = false;
 			let newDateTime = dateTime;
 
@@ -74,7 +74,8 @@ export class RescheduleEventTask extends ScheduledTask {
 				await this.container.prisma.eventInstance.create({
 					data: {
 						eventId: event.id,
-						dateTime: newDateTime
+						dateTime: newDateTime,
+						reminder
 					}
 				});
 
