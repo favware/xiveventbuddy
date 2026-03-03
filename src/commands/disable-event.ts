@@ -49,6 +49,14 @@ export class SlashCommand extends XIVEventBuddyCommand {
 					shouldDisableEvent: true,
 					origin: UpdateEmbedPayloadOrigin.DisableEventCommand
 				});
+
+				if (event.instance?.discordEventId && !event.instance.isDisabled) {
+					await resolveOnErrorCodes(
+						interaction.guild.scheduledEvents.delete(event.instance.discordEventId),
+						RESTJSONErrorCodes.UnknownGuildScheduledEvent
+					);
+				}
+
 				this.container.prisma.eventInstance.update({
 					where: {
 						id: event.instance?.id
@@ -58,17 +66,8 @@ export class SlashCommand extends XIVEventBuddyCommand {
 					}
 				});
 
-				if (event.instance && !event.instance.isDisabled) {
-					if (event.instance.discordEventId) {
-						await resolveOnErrorCodes(
-							interaction.guild.scheduledEvents.delete(event.instance.discordEventId),
-							RESTJSONErrorCodes.UnknownGuildScheduledEvent
-						);
-					}
-
-					if (isNullish(event.interval)) {
-						await this.container.tasks.create({ name: 'delete-event', payload: { eventId: event.id } }, minutesToMilliseconds(8));
-					}
+				if (isNullish(event.interval)) {
+					await this.container.tasks.create({ name: 'delete-event', payload: { eventId: event.id } }, minutesToMilliseconds(8));
 				}
 			} else {
 				const { targetMessage } = interaction;
