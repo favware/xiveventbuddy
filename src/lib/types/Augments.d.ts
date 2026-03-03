@@ -1,7 +1,6 @@
 import type { prismaType } from '#lib/setup/prisma';
 import type {
 	CreateServerEventPayload,
-	DeleteEventInstancePayload,
 	DeleteEventPayload,
 	PostEmbedPayload,
 	SendReminderPayload,
@@ -64,6 +63,5 @@ declare module '@skyra/env-utilities' {
 declare module '@sapphire/plugin-scheduled-tasks' {
 	interface ScheduledTasks {
 		'delete-event': DeleteEventPayload;
-		'delete-event-instance': DeleteEventInstancePayload;
 	}
 }

@@ -122,6 +122,7 @@ model EventInstance {
     participants    Participant[]
     reminder        Int?
     hasSentReminder Boolean       @default(false) @map("has_sent_reminder")
+    isDisabled      Boolean       @default(false) @map("is_disabled")
 
     @@map("event_instances")
 }

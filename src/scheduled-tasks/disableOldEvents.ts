@@ -30,7 +30,7 @@ export class DisableOldEvents extends ScheduledTask {
 		for (const event of events) {
 			const afterDurationOfEvent = subHours(now, event.duration);
 
-			if (event.instance?.dateTime) {
+			if (event.instance?.dateTime && !event.instance.isDisabled) {
 				const eventInstanceDateTime = event.instance.dateTime;
 
 				if (eventInstanceDateTime <= afterDurationOfEvent) {
@@ -42,13 +42,15 @@ export class DisableOldEvents extends ScheduledTask {
 						origin: UpdateEmbedPayloadOrigin.DisableOldEventScheduledTask
 					});
 
-					// Queue a delete of the event instance so it doesn't get picked up with the next run of this task
-					await this.container.tasks.create(
-						{ name: 'delete-event-instance', payload: { eventInstanceId: event.id } },
-						minutesToMilliseconds(5)
-					);
+					this.container.prisma.eventInstance.update({
+						where: {
+							id: event.instance.id
+						},
+						data: {
+							isDisabled: true
+						}
+					});
 
-					// If the event is not repeating, fully remove it from the database, so it doesn't clutter up the database
 					if (isNullish(event.interval)) {
 						await this.container.tasks.create({ name: 'delete-event', payload: { eventId: event.id } }, minutesToMilliseconds(8));
 					}

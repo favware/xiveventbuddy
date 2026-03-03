@@ -4,6 +4,8 @@ import { XIVEventBuddyEmojis } from '#lib/util/emojis';
 import { resolveOnErrorCodes } from '#lib/util/functions/resolveOnErrorCodes';
 import { UserError, type ApplicationCommandRegistry, type Awaitable, type ContextMenuCommand } from '@sapphire/framework';
 import { applyNameLocalizedBuilder, resolveKey } from '@sapphire/plugin-i18next';
+import { isNullish } from '@sapphire/utilities';
+import { minutesToMilliseconds } from 'date-fns';
 import {
 	ApplicationCommandType,
 	ApplicationIntegrationType,
@@ -47,31 +49,26 @@ export class SlashCommand extends XIVEventBuddyCommand {
 					shouldDisableEvent: true,
 					origin: UpdateEmbedPayloadOrigin.DisableEventCommand
 				});
-				try {
-					if (event.interval && event.instance) {
-						await this.container.prisma.eventInstance.delete({
-							where: {
-								id: event.instance.id
-							}
-						});
-					} else if (!event.interval) {
-						await this.container.prisma.event.delete({
-							where: {
-								id: event.id
-							}
-						});
+				this.container.prisma.eventInstance.update({
+					where: {
+						id: event.instance?.id
+					},
+					data: {
+						isDisabled: true
 					}
+				});
 
-					if (event.instance?.discordEventId) {
+				if (event.instance && !event.instance.isDisabled) {
+					if (event.instance.discordEventId) {
 						await resolveOnErrorCodes(
 							interaction.guild.scheduledEvents.delete(event.instance.discordEventId),
 							RESTJSONErrorCodes.UnknownGuildScheduledEvent
 						);
 					}
-				} catch {
-					return interaction.editReply({
-						content: await resolveKey(interaction, 'commands/disable-event:disableUnexpectedError')
-					});
+
+					if (isNullish(event.interval)) {
+						await this.container.tasks.create({ name: 'delete-event', payload: { eventId: event.id } }, minutesToMilliseconds(8));
+					}
 				}
 			} else {
 				const { targetMessage } = interaction;
