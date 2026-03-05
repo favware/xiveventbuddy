@@ -11,7 +11,7 @@ export function buildAddToCalendarUrl(event: EventData): string {
 	url.searchParams.set('allDay', 'false');
 	url.searchParams.set('location', '');
 	url.searchParams.set('summary', splitText(event.name, 75));
-	url.searchParams.set('description', splitText(event.description ?? '', 250));
+	url.searchParams.set('description', splitText((event.description ?? '').split('\n').join(' '), 250));
 
 	return url.toString();
 }
