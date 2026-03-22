@@ -48,12 +48,12 @@
 		"figlet": "^1.11.0",
 		"gradient-string": "^3.0.0",
 		"utf-8-validate": "^6.0.6",
-		"ws": "^8.19.0",
+		"ws": "^8.20.0",
 		"zlib-sync": "^0.1.10"
 	},
 	"devDependencies": {
-		"@commitlint/cli": "^20.4.4",
-		"@commitlint/config-conventional": "^20.4.4",
+		"@commitlint/cli": "^20.5.0",
+		"@commitlint/config-conventional": "^20.5.0",
 		"@favware/discord-application-emojis-manager": "^1.1.1",
 		"@sapphire/prettier-config": "^2.0.0",
 		"@sapphire/ts-config": "^5.0.3",
@@ -64,8 +64,8 @@
 		"@types/ws": "^8.18.1",
 		"@typescript-eslint/eslint-plugin": "^8.50.0",
 		"@typescript-eslint/parser": "^8.50.0",
-		"eslint": "^10.0.3",
-		"eslint-config-neon": "^0.3.2",
+		"eslint": "^10.1.0",
+		"eslint-config-neon": "^0.4.0",
 		"eslint-config-prettier": "^10.1.8",
 		"eslint-plugin-prettier": "^5.5.5",
 		"lint-staged": "^16.4.0",
@@ -86,5 +86,5 @@
 		"*": "prettier --ignore-unknown --write",
 		"*.{mjs,js,ts}": "eslint --fix"
 	},
-	"packageManager": "yarn@4.12.0"
+	"packageManager": "yarn@4.13.0"
 }
