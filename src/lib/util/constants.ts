@@ -41,6 +41,7 @@ export const enum XIVServers {
 
 export enum XIVEventBuddyEvents {
 	AnalyticsSync = 'analyticsSync',
+	CalendarFetchError = 'calendarFetchError',
 	CreateServerEvent = 'createServerEvent',
 	PostEmbed = 'postEmbed',
 	SendReminder = 'sendReminder',
@@ -162,6 +163,11 @@ export interface DeleteEventInstancePayload {
 }
 
 export interface DeleteEventPayload {
+	eventId: string;
+}
+
+export interface CalendarFetchErrorPayload {
+	error: Error;
 	eventId: string;
 }
 

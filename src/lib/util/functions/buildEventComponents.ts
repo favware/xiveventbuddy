@@ -130,7 +130,7 @@ export async function buildEventComponents({
 				)
 		);
 
-	const addToCalendarUrl = buildAddToCalendarUrl(event);
+	const addToCalendarUrl = await buildAddToCalendarUrl(event);
 	if (addToCalendarUrl) {
 		container.addActionRowComponents((actionRow) =>
 			actionRow.setComponents(

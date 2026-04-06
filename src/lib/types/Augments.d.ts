@@ -1,5 +1,6 @@
 import type { prismaType } from '#lib/setup/prisma';
 import type {
+	CalendarFetchErrorPayload,
 	CreateServerEventPayload,
 	DeleteEventPayload,
 	PostEmbedPayload,
@@ -35,12 +36,14 @@ declare module '@sapphire/framework' {
 		emit(event: XIVEventBuddyEvents.PostEmbed, payload: PostEmbedPayload): boolean;
 		emit(event: XIVEventBuddyEvents.UpdateEmbed, payload: UpdateEmbedPayload): boolean;
 		emit(event: XIVEventBuddyEvents.SendReminder, payload: SendReminderPayload): boolean;
+		emit(event: XIVEventBuddyEvents.CalendarFetchError, payload: CalendarFetchErrorPayload): boolean;
 	}
 }
 
 declare module '@skyra/env-utilities' {
 	interface Env {
 		BOTLIST_ME_TOKEN: string;
+		CAL_LINKS_API_KEY: string;
 		DATABASE_URL: string;
 		DISCORDS_TOKEN: string;
 		DISCORD_BOT_LIST_TOKEN: string;
