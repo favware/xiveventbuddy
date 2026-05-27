@@ -55,7 +55,8 @@ export class SlashCommand extends XIVEventBuddyCommand {
 						id: event.instance?.id
 					},
 					data: {
-						isDisabled: true
+						isDisabled: true,
+						hasSentReminder: true
 					}
 				});
 
