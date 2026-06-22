@@ -48,6 +48,9 @@ RUN yarn workspaces focus --all --production
 # Patch .prisma with the built files
 COPY --chown=node:node --from=builder /usr/src/app/node_modules/.prisma node_modules/.prisma
 
+LABEL org.opencontainers.image.title="XIVEventBuddy"
+LABEL org.opencontainers.image.description="A user friendly first discord bot to host your XIV events"
+
 RUN chown node:node /usr/src/app/
 
 USER node
