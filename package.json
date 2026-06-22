@@ -52,8 +52,8 @@
 		"zlib-sync": "^0.1.10"
 	},
 	"devDependencies": {
-		"@commitlint/cli": "^20.4.4",
-		"@commitlint/config-conventional": "^20.4.4",
+		"@commitlint/cli": "^21.0.2",
+		"@commitlint/config-conventional": "^21.0.2",
 		"@favware/discord-application-emojis-manager": "^1.1.1",
 		"@sapphire/prettier-config": "^2.0.0",
 		"@sapphire/ts-config": "^5.0.3",
