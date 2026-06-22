@@ -43,6 +43,7 @@ jobs:
           push: true
           context: ./
           file: Dockerfile
+          labels: ${{ steps.meta.outputs.labels }}
           tags: ${{ steps.meta.outputs.tags }}
 
   UpdateOnServer:
