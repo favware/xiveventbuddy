@@ -1,7 +1,7 @@
 import { secondsFromMilliseconds } from '#lib/util/functions/time';
 import { Owners } from '#root/config';
 import { BrandingColors } from '#utils/constants';
-import { ApplyOptions } from '@sapphire/decorators';
+import { ApplyOptions, RegisterChatInputCommand } from '@sapphire/decorators';
 import { Command, version as sapphireVersion, type ChatInputCommand } from '@sapphire/framework';
 import { applyLocalizedBuilder, resolveKey } from '@sapphire/plugin-i18next';
 import { roundNumber } from '@sapphire/utilities';
@@ -25,11 +25,8 @@ import { cpus, uptime, type CpuInfo } from 'node:os';
 @ApplyOptions<ChatInputCommand.Options>({
 	requiredClientPermissions: [PermissionFlagsBits.EmbedLinks, PermissionFlagsBits.CreateEvents, PermissionFlagsBits.ManageEvents]
 })
+@RegisterChatInputCommand((builder) => applyLocalizedBuilder(builder, 'commands/info:root'))
 export class SlashCommand extends Command {
-	public override registerApplicationCommands(registry: ChatInputCommand.Registry) {
-		registry.registerChatInputCommand((builder) => applyLocalizedBuilder(builder, 'commands/info:root'));
-	}
-
 	public override async chatInputRun(interaction: ChatInputCommand.Interaction) {
 		return interaction.reply({
 			//

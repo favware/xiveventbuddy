@@ -2,7 +2,8 @@ import { XIVEventBuddyCommand } from '#lib/extensions/XIVEventBuddyComand';
 import { BrandingColors, ErrorIdentifiers, UpdateEmbedPayloadOrigin, XIVEventBuddyEvents } from '#lib/util/constants';
 import { XIVEventBuddyEmojis } from '#lib/util/emojis';
 import { resolveOnErrorCodes } from '#lib/util/functions/resolveOnErrorCodes';
-import { UserError, type ApplicationCommandRegistry, type Awaitable, type ContextMenuCommand } from '@sapphire/framework';
+import { RegisterMessageContextMenuCommand } from '@sapphire/decorators';
+import { UserError, type ContextMenuCommand } from '@sapphire/framework';
 import { applyNameLocalizedBuilder, resolveKey } from '@sapphire/plugin-i18next';
 import { isNullish } from '@sapphire/utilities';
 import { minutesToMilliseconds } from 'date-fns';
@@ -16,16 +17,13 @@ import {
 	type APITextDisplayComponent
 } from 'discord.js';
 
+@RegisterMessageContextMenuCommand((builder) =>
+	applyNameLocalizedBuilder(builder, 'commands/disable-event:rootName')
+		.setType(ApplicationCommandType.Message)
+		.setIntegrationTypes(ApplicationIntegrationType.GuildInstall)
+		.setContexts(InteractionContextType.Guild)
+)
 export class SlashCommand extends XIVEventBuddyCommand {
-	public override registerApplicationCommands(registry: ApplicationCommandRegistry): Awaitable<void> {
-		registry.registerContextMenuCommand((builder) =>
-			applyNameLocalizedBuilder(builder, 'commands/disable-event:rootName')
-				.setType(ApplicationCommandType.Message)
-				.setIntegrationTypes(ApplicationIntegrationType.GuildInstall)
-				.setContexts(InteractionContextType.Guild)
-		);
-	}
-
 	public override async contextMenuRun(interaction: ContextMenuCommand.Interaction<'cached'>) {
 		if (interaction.isMessageContextMenuCommand()) {
 			const event = await this.container.prisma.event.findFirst({

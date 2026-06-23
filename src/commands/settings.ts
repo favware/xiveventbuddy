@@ -1,30 +1,27 @@
 import { XIVEventBuddyCommand } from '#lib/extensions/XIVEventBuddyComand';
 import { ErrorIdentifiers } from '#lib/util/constants';
-import { ApplyOptions } from '@sapphire/decorators';
-import { UserError, type ApplicationCommandRegistry, type Awaitable, type ChatInputCommand } from '@sapphire/framework';
+import { ApplyOptions, RegisterChatInputCommand } from '@sapphire/decorators';
+import { UserError, type ChatInputCommand } from '@sapphire/framework';
 import { applyLocalizedBuilder, resolveKey } from '@sapphire/plugin-i18next';
 import { ApplicationIntegrationType, MessageFlags, roleMention } from 'discord.js';
 
 @ApplyOptions<ChatInputCommand.Options>({
 	description: 'Change the settings of the bot'
 })
+@RegisterChatInputCommand((builder) =>
+	applyLocalizedBuilder(builder, 'commands/settings:root')
+		.setIntegrationTypes(ApplicationIntegrationType.GuildInstall)
+		//  Event managers
+		.addSubcommand((builder) =>
+			applyLocalizedBuilder(builder, 'commands/settings:addManager') //
+				.addRoleOption((builder) => applyLocalizedBuilder(builder, 'commands/settings:role').setRequired(true))
+		)
+		.addSubcommand((builder) =>
+			applyLocalizedBuilder(builder, 'commands/settings:removeManager') //
+				.addRoleOption((builder) => applyLocalizedBuilder(builder, 'commands/settings:role').setRequired(true))
+		)
+)
 export class SlashCommand extends XIVEventBuddyCommand {
-	public override registerApplicationCommands(registry: ApplicationCommandRegistry): Awaitable<void> {
-		registry.registerChatInputCommand((builder) =>
-			applyLocalizedBuilder(builder, 'commands/settings:root')
-				.setIntegrationTypes(ApplicationIntegrationType.GuildInstall)
-				//  Event managers
-				.addSubcommand((builder) =>
-					applyLocalizedBuilder(builder, 'commands/settings:addManager') //
-						.addRoleOption((builder) => applyLocalizedBuilder(builder, 'commands/settings:role').setRequired(true))
-				)
-				.addSubcommand((builder) =>
-					applyLocalizedBuilder(builder, 'commands/settings:removeManager') //
-						.addRoleOption((builder) => applyLocalizedBuilder(builder, 'commands/settings:role').setRequired(true))
-				)
-		);
-	}
-
 	public override async chatInputRun(interaction: ChatInputCommand.Interaction<'cached'>) {
 		await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 

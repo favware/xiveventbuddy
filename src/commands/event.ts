@@ -7,8 +7,9 @@ import { buildEventComponents } from '#lib/util/functions/buildEventComponents';
 import { resolveOnErrorCodes } from '#lib/util/functions/resolveOnErrorCodes';
 import { verifyHasSendPermissions } from '#lib/util/functions/verifyHasSendPermissions';
 import { Owners } from '#root/config';
+import { RegisterChatInputCommand } from '@sapphire/decorators';
 import { fetch, FetchResultTypes } from '@sapphire/fetch';
-import { Result, UserError, type ApplicationCommandRegistry, type Awaitable, type ChatInputCommand } from '@sapphire/framework';
+import { Result, UserError, type ChatInputCommand } from '@sapphire/framework';
 import { applyLocalizedBuilder, createLocalizedChoice, resolveKey } from '@sapphire/plugin-i18next';
 import { filterNullish, isNullishOrEmpty, isNullishOrZero } from '@sapphire/utilities';
 import { format } from 'date-fns';
@@ -26,225 +27,222 @@ import {
 	userMention
 } from 'discord.js';
 
+@RegisterChatInputCommand((command) =>
+	applyLocalizedBuilder(command, 'commands/event:root') //
+		.setIntegrationTypes(ApplicationIntegrationType.GuildInstall)
+		.addSubcommand((builder) =>
+			applyLocalizedBuilder(builder, 'commands/event:create')
+				.addStringOption((builder) =>
+					applyLocalizedBuilder(builder, 'commands/event:event') //
+						.setRequired(true)
+				)
+				.addStringOption((builder) =>
+					applyLocalizedBuilder(builder, 'commands/event:date') //
+						.setRequired(true)
+				)
+				.addStringOption((builder) =>
+					applyLocalizedBuilder(builder, 'commands/event:time') //
+						.setRequired(true)
+				)
+				.addIntegerOption((builder) =>
+					applyLocalizedBuilder(builder, 'commands/event:duration') //
+						.setChoices(
+							createLocalizedChoice('commands/event:duration1Hour', { value: 1 }),
+							createLocalizedChoice('commands/event:duration2Hours', { value: 2 }),
+							createLocalizedChoice('commands/event:duration3Hours', { value: 3 }),
+							createLocalizedChoice('commands/event:duration4Hours', { value: 4 })
+						)
+						.setRequired(true)
+				)
+				.addStringOption((builder) =>
+					applyLocalizedBuilder(builder, 'commands/event:description') //
+						.setRequired(false)
+				)
+				.addStringOption((builder) =>
+					applyLocalizedBuilder(builder, 'commands/event:interval') //
+						.setRequired(false)
+						.setChoices(
+							createLocalizedChoice('commands/event:intervalWeekly', { value: $Enums.EventInterval.WEEKLY }),
+							createLocalizedChoice('commands/event:intervalOnceEveryOtherWeek', {
+								value: $Enums.EventInterval.ONCE_EVERY_OTHER_WEEK
+							}),
+							createLocalizedChoice('commands/event:intervalMonthly', { value: $Enums.EventInterval.MONTHLY }),
+							createLocalizedChoice('commands/event:intervalOneBeforeLastFridayOfTheMonth', {
+								value: $Enums.EventInterval.ONE_BEFORE_LAST_FRIDAY_OF_THE_MONTH
+							})
+						)
+				)
+				.addRoleOption((builder) =>
+					applyLocalizedBuilder(builder, 'commands/event:roleToPing') //
+						.setRequired(false)
+				)
+				.addRoleOption((builder) =>
+					applyLocalizedBuilder(builder, 'commands/event:secondRoleToPing') //
+						.setRequired(false)
+				)
+				.addRoleOption((builder) =>
+					applyLocalizedBuilder(builder, 'commands/event:thirdRoleToPing') //
+						.setRequired(false)
+				)
+				.addChannelOption((builder) =>
+					applyLocalizedBuilder(builder, 'commands/event:channel') //
+						.setRequired(false)
+				)
+				.addUserOption((builder) =>
+					applyLocalizedBuilder(builder, 'commands/event:leader') //
+						.setRequired(false)
+				)
+				.addAttachmentOption((builder) =>
+					applyLocalizedBuilder(builder, 'commands/event:banner') //
+						.setRequired(false)
+				)
+				.addStringOption((builder) =>
+					applyLocalizedBuilder(builder, 'commands/event:variant') //
+						.setRequired(false)
+						.setChoices(
+							createLocalizedChoice('commands/event:variantNormal', { value: $Enums.EventVariant.NORMAL }),
+							createLocalizedChoice('commands/event:variantOccultCrescent', { value: $Enums.EventVariant.OCCULT_CRESCENT })
+						)
+				)
+				.addIntegerOption((builder) =>
+					applyLocalizedBuilder(builder, 'commands/event:reminder') //
+						.setRequired(false)
+						.setChoices(
+							createLocalizedChoice('commands/event:reminder05Minutes', { value: 5 }),
+							createLocalizedChoice('commands/event:reminder10Minutes', { value: 10 }),
+							createLocalizedChoice('commands/event:reminder15Minutes', { value: 15 }),
+							createLocalizedChoice('commands/event:reminder30Minutes', { value: 30 }),
+							createLocalizedChoice('commands/event:reminder1Hour', { value: 60 }),
+							createLocalizedChoice('commands/event:reminder2Hours', { value: 120 })
+						)
+				)
+				.addChannelOption((builder) =>
+					applyLocalizedBuilder(builder, 'commands/event:reminderChannel') //
+						.setRequired(false)
+				)
+		)
+		.addSubcommand(
+			(builder) => applyLocalizedBuilder(builder, 'commands/event:list') //
+		)
+		.addSubcommand((builder) =>
+			applyLocalizedBuilder(builder, 'commands/event:edit') //
+				.addStringOption((builder) =>
+					applyLocalizedBuilder(builder, 'commands/event:eventId') //
+						.setAutocomplete(true)
+						.setRequired(true)
+				)
+				.addStringOption((builder) =>
+					applyLocalizedBuilder(builder, 'commands/event:event') //
+						.setRequired(false)
+				)
+				.addStringOption((builder) =>
+					applyLocalizedBuilder(builder, 'commands/event:date') //
+						.setRequired(false)
+				)
+				.addStringOption((builder) =>
+					applyLocalizedBuilder(builder, 'commands/event:time') //
+						.setRequired(false)
+				)
+				.addIntegerOption((builder) =>
+					applyLocalizedBuilder(builder, 'commands/event:duration') //
+						.setChoices(
+							createLocalizedChoice('commands/event:duration1Hour', { value: 1 }),
+							createLocalizedChoice('commands/event:duration2Hours', { value: 2 }),
+							createLocalizedChoice('commands/event:duration3Hours', { value: 3 }),
+							createLocalizedChoice('commands/event:duration4Hours', { value: 4 })
+						)
+						.setRequired(false)
+				)
+				.addStringOption((builder) =>
+					applyLocalizedBuilder(builder, 'commands/event:description') //
+						.setRequired(false)
+				)
+				.addStringOption((builder) =>
+					applyLocalizedBuilder(builder, 'commands/event:interval') //
+						.setRequired(false)
+						.setChoices(
+							createLocalizedChoice('commands/event:intervalWeekly', { value: $Enums.EventInterval.WEEKLY }),
+							createLocalizedChoice('commands/event:intervalOnceEveryOtherWeek', {
+								value: $Enums.EventInterval.ONCE_EVERY_OTHER_WEEK
+							}),
+							createLocalizedChoice('commands/event:intervalMonthly', { value: $Enums.EventInterval.MONTHLY }),
+							createLocalizedChoice('commands/event:intervalOneBeforeLastFridayOfTheMonth', {
+								value: $Enums.EventInterval.ONE_BEFORE_LAST_FRIDAY_OF_THE_MONTH
+							})
+						)
+				)
+				.addRoleOption((builder) =>
+					applyLocalizedBuilder(builder, 'commands/event:roleToPing') //
+						.setRequired(false)
+				)
+				.addRoleOption((builder) =>
+					applyLocalizedBuilder(builder, 'commands/event:secondRoleToPing') //
+						.setRequired(false)
+				)
+				.addRoleOption((builder) =>
+					applyLocalizedBuilder(builder, 'commands/event:thirdRoleToPing') //
+						.setRequired(false)
+				)
+				.addChannelOption((builder) =>
+					applyLocalizedBuilder(builder, 'commands/event:channel') //
+						.setRequired(false)
+				)
+				.addUserOption((builder) =>
+					applyLocalizedBuilder(builder, 'commands/event:leader') //
+						.setRequired(false)
+				)
+				.addAttachmentOption((builder) =>
+					applyLocalizedBuilder(builder, 'commands/event:banner') //
+						.setRequired(false)
+				)
+				.addStringOption((builder) =>
+					applyLocalizedBuilder(builder, 'commands/event:variant') //
+						.setRequired(false)
+						.setChoices(
+							createLocalizedChoice('commands/event:variantNormal', { value: $Enums.EventVariant.NORMAL }),
+							createLocalizedChoice('commands/event:variantOccultCrescent', { value: $Enums.EventVariant.OCCULT_CRESCENT })
+						)
+				)
+				.addIntegerOption((builder) =>
+					applyLocalizedBuilder(builder, 'commands/event:reminder') //
+						.setRequired(false)
+						.setChoices(
+							createLocalizedChoice('commands/event:reminder05Minutes', { value: 5 }),
+							createLocalizedChoice('commands/event:reminder10Minutes', { value: 10 }),
+							createLocalizedChoice('commands/event:reminder15Minutes', { value: 15 }),
+							createLocalizedChoice('commands/event:reminder30Minutes', { value: 30 }),
+							createLocalizedChoice('commands/event:reminder1Hour', { value: 60 }),
+							createLocalizedChoice('commands/event:reminder2Hours', { value: 120 })
+						)
+				)
+				.addChannelOption((builder) =>
+					applyLocalizedBuilder(builder, 'commands/event:reminderChannel') //
+						.setRequired(false)
+				)
+		)
+		.addSubcommand((builder) =>
+			applyLocalizedBuilder(builder, 'commands/event:delete') //
+				.addStringOption((builder) =>
+					applyLocalizedBuilder(builder, 'commands/event:eventId') //
+						.setAutocomplete(true)
+						.setRequired(true)
+				)
+		)
+		.addSubcommand((builder) =>
+			applyLocalizedBuilder(builder, 'commands/event:removeParticipant') //
+				.addStringOption((builder) =>
+					applyLocalizedBuilder(builder, 'commands/event:eventId') //
+						.setAutocomplete(true)
+						.setRequired(true)
+				)
+				.addUserOption((builder) =>
+					applyLocalizedBuilder(builder, 'commands/event:participant') //
+						.setRequired(true)
+				)
+		)
+)
 export class SlashCommand extends XIVEventBuddyCommand {
 	private readonly timeRegex = /^(?:0\d|1\d|2[0-4]):[0-5]\d$/;
-
-	public override registerApplicationCommands(registry: ApplicationCommandRegistry): Awaitable<void> {
-		registry.registerChatInputCommand((command) =>
-			applyLocalizedBuilder(command, 'commands/event:root') //
-				.setIntegrationTypes(ApplicationIntegrationType.GuildInstall)
-				.addSubcommand((builder) =>
-					applyLocalizedBuilder(builder, 'commands/event:create')
-						.addStringOption((builder) =>
-							applyLocalizedBuilder(builder, 'commands/event:event') //
-								.setRequired(true)
-						)
-						.addStringOption((builder) =>
-							applyLocalizedBuilder(builder, 'commands/event:date') //
-								.setRequired(true)
-						)
-						.addStringOption((builder) =>
-							applyLocalizedBuilder(builder, 'commands/event:time') //
-								.setRequired(true)
-						)
-						.addIntegerOption((builder) =>
-							applyLocalizedBuilder(builder, 'commands/event:duration') //
-								.setChoices(
-									createLocalizedChoice('commands/event:duration1Hour', { value: 1 }),
-									createLocalizedChoice('commands/event:duration2Hours', { value: 2 }),
-									createLocalizedChoice('commands/event:duration3Hours', { value: 3 }),
-									createLocalizedChoice('commands/event:duration4Hours', { value: 4 })
-								)
-								.setRequired(true)
-						)
-						.addStringOption((builder) =>
-							applyLocalizedBuilder(builder, 'commands/event:description') //
-								.setRequired(false)
-						)
-						.addStringOption((builder) =>
-							applyLocalizedBuilder(builder, 'commands/event:interval') //
-								.setRequired(false)
-								.setChoices(
-									createLocalizedChoice('commands/event:intervalWeekly', { value: $Enums.EventInterval.WEEKLY }),
-									createLocalizedChoice('commands/event:intervalOnceEveryOtherWeek', {
-										value: $Enums.EventInterval.ONCE_EVERY_OTHER_WEEK
-									}),
-									createLocalizedChoice('commands/event:intervalMonthly', { value: $Enums.EventInterval.MONTHLY }),
-									createLocalizedChoice('commands/event:intervalOneBeforeLastFridayOfTheMonth', {
-										value: $Enums.EventInterval.ONE_BEFORE_LAST_FRIDAY_OF_THE_MONTH
-									})
-								)
-						)
-						.addRoleOption((builder) =>
-							applyLocalizedBuilder(builder, 'commands/event:roleToPing') //
-								.setRequired(false)
-						)
-						.addRoleOption((builder) =>
-							applyLocalizedBuilder(builder, 'commands/event:secondRoleToPing') //
-								.setRequired(false)
-						)
-						.addRoleOption((builder) =>
-							applyLocalizedBuilder(builder, 'commands/event:thirdRoleToPing') //
-								.setRequired(false)
-						)
-						.addChannelOption((builder) =>
-							applyLocalizedBuilder(builder, 'commands/event:channel') //
-								.setRequired(false)
-						)
-						.addUserOption((builder) =>
-							applyLocalizedBuilder(builder, 'commands/event:leader') //
-								.setRequired(false)
-						)
-						.addAttachmentOption((builder) =>
-							applyLocalizedBuilder(builder, 'commands/event:banner') //
-								.setRequired(false)
-						)
-						.addStringOption((builder) =>
-							applyLocalizedBuilder(builder, 'commands/event:variant') //
-								.setRequired(false)
-								.setChoices(
-									createLocalizedChoice('commands/event:variantNormal', { value: $Enums.EventVariant.NORMAL }),
-									createLocalizedChoice('commands/event:variantOccultCrescent', { value: $Enums.EventVariant.OCCULT_CRESCENT })
-								)
-						)
-						.addIntegerOption((builder) =>
-							applyLocalizedBuilder(builder, 'commands/event:reminder') //
-								.setRequired(false)
-								.setChoices(
-									createLocalizedChoice('commands/event:reminder05Minutes', { value: 5 }),
-									createLocalizedChoice('commands/event:reminder10Minutes', { value: 10 }),
-									createLocalizedChoice('commands/event:reminder15Minutes', { value: 15 }),
-									createLocalizedChoice('commands/event:reminder30Minutes', { value: 30 }),
-									createLocalizedChoice('commands/event:reminder1Hour', { value: 60 }),
-									createLocalizedChoice('commands/event:reminder2Hours', { value: 120 })
-								)
-						)
-						.addChannelOption((builder) =>
-							applyLocalizedBuilder(builder, 'commands/event:reminderChannel') //
-								.setRequired(false)
-						)
-				)
-				.addSubcommand(
-					(builder) => applyLocalizedBuilder(builder, 'commands/event:list') //
-				)
-				.addSubcommand((builder) =>
-					applyLocalizedBuilder(builder, 'commands/event:edit') //
-						.addStringOption((builder) =>
-							applyLocalizedBuilder(builder, 'commands/event:eventId') //
-								.setAutocomplete(true)
-								.setRequired(true)
-						)
-						.addStringOption((builder) =>
-							applyLocalizedBuilder(builder, 'commands/event:event') //
-								.setRequired(false)
-						)
-						.addStringOption((builder) =>
-							applyLocalizedBuilder(builder, 'commands/event:date') //
-								.setRequired(false)
-						)
-						.addStringOption((builder) =>
-							applyLocalizedBuilder(builder, 'commands/event:time') //
-								.setRequired(false)
-						)
-						.addIntegerOption((builder) =>
-							applyLocalizedBuilder(builder, 'commands/event:duration') //
-								.setChoices(
-									createLocalizedChoice('commands/event:duration1Hour', { value: 1 }),
-									createLocalizedChoice('commands/event:duration2Hours', { value: 2 }),
-									createLocalizedChoice('commands/event:duration3Hours', { value: 3 }),
-									createLocalizedChoice('commands/event:duration4Hours', { value: 4 })
-								)
-								.setRequired(false)
-						)
-						.addStringOption((builder) =>
-							applyLocalizedBuilder(builder, 'commands/event:description') //
-								.setRequired(false)
-						)
-						.addStringOption((builder) =>
-							applyLocalizedBuilder(builder, 'commands/event:interval') //
-								.setRequired(false)
-								.setChoices(
-									createLocalizedChoice('commands/event:intervalWeekly', { value: $Enums.EventInterval.WEEKLY }),
-									createLocalizedChoice('commands/event:intervalOnceEveryOtherWeek', {
-										value: $Enums.EventInterval.ONCE_EVERY_OTHER_WEEK
-									}),
-									createLocalizedChoice('commands/event:intervalMonthly', { value: $Enums.EventInterval.MONTHLY }),
-									createLocalizedChoice('commands/event:intervalOneBeforeLastFridayOfTheMonth', {
-										value: $Enums.EventInterval.ONE_BEFORE_LAST_FRIDAY_OF_THE_MONTH
-									})
-								)
-						)
-						.addRoleOption((builder) =>
-							applyLocalizedBuilder(builder, 'commands/event:roleToPing') //
-								.setRequired(false)
-						)
-						.addRoleOption((builder) =>
-							applyLocalizedBuilder(builder, 'commands/event:secondRoleToPing') //
-								.setRequired(false)
-						)
-						.addRoleOption((builder) =>
-							applyLocalizedBuilder(builder, 'commands/event:thirdRoleToPing') //
-								.setRequired(false)
-						)
-						.addChannelOption((builder) =>
-							applyLocalizedBuilder(builder, 'commands/event:channel') //
-								.setRequired(false)
-						)
-						.addUserOption((builder) =>
-							applyLocalizedBuilder(builder, 'commands/event:leader') //
-								.setRequired(false)
-						)
-						.addAttachmentOption((builder) =>
-							applyLocalizedBuilder(builder, 'commands/event:banner') //
-								.setRequired(false)
-						)
-						.addStringOption((builder) =>
-							applyLocalizedBuilder(builder, 'commands/event:variant') //
-								.setRequired(false)
-								.setChoices(
-									createLocalizedChoice('commands/event:variantNormal', { value: $Enums.EventVariant.NORMAL }),
-									createLocalizedChoice('commands/event:variantOccultCrescent', { value: $Enums.EventVariant.OCCULT_CRESCENT })
-								)
-						)
-						.addIntegerOption((builder) =>
-							applyLocalizedBuilder(builder, 'commands/event:reminder') //
-								.setRequired(false)
-								.setChoices(
-									createLocalizedChoice('commands/event:reminder05Minutes', { value: 5 }),
-									createLocalizedChoice('commands/event:reminder10Minutes', { value: 10 }),
-									createLocalizedChoice('commands/event:reminder15Minutes', { value: 15 }),
-									createLocalizedChoice('commands/event:reminder30Minutes', { value: 30 }),
-									createLocalizedChoice('commands/event:reminder1Hour', { value: 60 }),
-									createLocalizedChoice('commands/event:reminder2Hours', { value: 120 })
-								)
-						)
-						.addChannelOption((builder) =>
-							applyLocalizedBuilder(builder, 'commands/event:reminderChannel') //
-								.setRequired(false)
-						)
-				)
-				.addSubcommand((builder) =>
-					applyLocalizedBuilder(builder, 'commands/event:delete') //
-						.addStringOption((builder) =>
-							applyLocalizedBuilder(builder, 'commands/event:eventId') //
-								.setAutocomplete(true)
-								.setRequired(true)
-						)
-				)
-				.addSubcommand((builder) =>
-					applyLocalizedBuilder(builder, 'commands/event:removeParticipant') //
-						.addStringOption((builder) =>
-							applyLocalizedBuilder(builder, 'commands/event:eventId') //
-								.setAutocomplete(true)
-								.setRequired(true)
-						)
-						.addUserOption((builder) =>
-							applyLocalizedBuilder(builder, 'commands/event:participant') //
-								.setRequired(true)
-						)
-				)
-		);
-	}
 
 	public override async chatInputRun(interaction: ChatInputCommand.Interaction<'cached'>) {
 		await interaction.deferReply({ flags: MessageFlags.Ephemeral });

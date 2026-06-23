@@ -1,46 +1,44 @@
 import { XIVEventBuddyCommand } from '#lib/extensions/XIVEventBuddyComand';
 import { XIVServers } from '#lib/util/constants';
 import { convertToEorzeaTime, getEUServerTime } from '#lib/util/functions/ffxivTime';
-import type { ApplicationCommandRegistry, Awaitable, ChatInputCommand } from '@sapphire/framework';
+import { RegisterChatInputCommand } from '@sapphire/decorators';
+import type { ChatInputCommand } from '@sapphire/framework';
 import { applyLocalizedBuilder, createLocalizedChoice, resolveKey } from '@sapphire/plugin-i18next';
 import { ApplicationIntegrationType, inlineCode, MessageFlags } from 'discord.js';
 
-export class SlashCommand extends XIVEventBuddyCommand {
-	public override registerApplicationCommands(registry: ApplicationCommandRegistry): Awaitable<void> {
-		registry.registerChatInputCommand((builder) =>
-			applyLocalizedBuilder(builder, 'commands/time:root') //
-				.setIntegrationTypes(ApplicationIntegrationType.GuildInstall)
-				.addSubcommand((builder) => applyLocalizedBuilder(builder, 'commands/time:eorzea'))
-				.addSubcommand((builder) =>
-					applyLocalizedBuilder(builder, 'commands/time:serverTime') //
-						.addStringOption((builder) =>
-							applyLocalizedBuilder(builder, 'commands/time:server')
-								.setRequired(true)
-								.setChoices([
-									// EU
-									createLocalizedChoice('commands/time:choiceLight', { value: XIVServers.Light }),
-									createLocalizedChoice('commands/time:choiceChaos', { value: XIVServers.Chaos }),
+@RegisterChatInputCommand((builder) =>
+	applyLocalizedBuilder(builder, 'commands/time:root') //
+		.setIntegrationTypes(ApplicationIntegrationType.GuildInstall)
+		.addSubcommand((builder) => applyLocalizedBuilder(builder, 'commands/time:eorzea'))
+		.addSubcommand((builder) =>
+			applyLocalizedBuilder(builder, 'commands/time:serverTime') //
+				.addStringOption((builder) =>
+					applyLocalizedBuilder(builder, 'commands/time:server')
+						.setRequired(true)
+						.setChoices([
+							// EU
+							createLocalizedChoice('commands/time:choiceLight', { value: XIVServers.Light }),
+							createLocalizedChoice('commands/time:choiceChaos', { value: XIVServers.Chaos }),
 
-									// USA
-									createLocalizedChoice('commands/time:choiceAether', { value: XIVServers.Aether }),
-									createLocalizedChoice('commands/time:choiceCrystal', { value: XIVServers.Crystal }),
-									createLocalizedChoice('commands/time:choiceDynamis', { value: XIVServers.Dynamis }),
-									createLocalizedChoice('commands/time:choicePrimal', { value: XIVServers.Primal }),
+							// USA
+							createLocalizedChoice('commands/time:choiceAether', { value: XIVServers.Aether }),
+							createLocalizedChoice('commands/time:choiceCrystal', { value: XIVServers.Crystal }),
+							createLocalizedChoice('commands/time:choiceDynamis', { value: XIVServers.Dynamis }),
+							createLocalizedChoice('commands/time:choicePrimal', { value: XIVServers.Primal }),
 
-									// OCE
-									createLocalizedChoice('commands/time:choiceMateria', { value: XIVServers.Materia }),
+							// OCE
+							createLocalizedChoice('commands/time:choiceMateria', { value: XIVServers.Materia }),
 
-									// JPN
-									createLocalizedChoice('commands/time:choiceElemental', { value: XIVServers.Elemental }),
-									createLocalizedChoice('commands/time:choiceGaia', { value: XIVServers.Gaia }),
-									createLocalizedChoice('commands/time:choiceMana', { value: XIVServers.Mana }),
-									createLocalizedChoice('commands/time:choiceMeteor', { value: XIVServers.Meteor })
-								])
-						)
+							// JPN
+							createLocalizedChoice('commands/time:choiceElemental', { value: XIVServers.Elemental }),
+							createLocalizedChoice('commands/time:choiceGaia', { value: XIVServers.Gaia }),
+							createLocalizedChoice('commands/time:choiceMana', { value: XIVServers.Mana }),
+							createLocalizedChoice('commands/time:choiceMeteor', { value: XIVServers.Meteor })
+						])
 				)
-		);
-	}
-
+		)
+)
+export class SlashCommand extends XIVEventBuddyCommand {
 	public override async chatInputRun(interaction: ChatInputCommand.Interaction<'cached'>) {
 		const subcommand = interaction.options.getSubcommand(true) as 'eorzea' | 'server-time';
 

@@ -1,4 +1,4 @@
-import { ApplyOptions } from '@sapphire/decorators';
+import { ApplyOptions, RegisterChatInputCommand } from '@sapphire/decorators';
 import { Command, type ChatInputCommand } from '@sapphire/framework';
 import { applyLocalizedBuilder, resolveKey } from '@sapphire/plugin-i18next';
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, chatInputApplicationCommandMention, MessageFlags } from 'discord.js';
@@ -6,14 +6,11 @@ import { ActionRowBuilder, ButtonBuilder, ButtonStyle, chatInputApplicationComma
 @ApplyOptions<ChatInputCommand.Options>({
 	description: 'Provides setup information for getting started with XIVEventBuddy'
 })
+@RegisterChatInputCommand((builder) => applyLocalizedBuilder(builder, 'commands/help:root'))
 export class SlashCommand extends Command {
 	private readonly settingsCommandMention = chatInputApplicationCommandMention('settings', 'add-manager-role', '1324565167282978908');
 
 	private readonly eventsCommandMention = chatInputApplicationCommandMention('event', 'create', '1384445458705027096');
-
-	public override registerApplicationCommands(registry: ChatInputCommand.Registry) {
-		registry.registerChatInputCommand((builder) => applyLocalizedBuilder(builder, 'commands/help:root'));
-	}
 
 	public override async chatInputRun(interaction: ChatInputCommand.Interaction) {
 		return interaction.reply({
