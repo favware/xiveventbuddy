@@ -100,11 +100,11 @@ export async function stringError(interaction: BaseInteraction, error: string) {
 }
 
 export async function userError(interaction: BaseInteraction, error: UserError) {
-	return alert(interaction, error.message ?? (await resolveKey(interaction, 'errors: userError')));
+	return alert(interaction, error.message ?? (await resolveKey(interaction, 'errors:userError')));
 }
 
 async function alert(interaction: BaseInteraction, content: string) {
-	if (!interaction.isStringSelectMenu() && !interaction.isButton()) return;
+	if (!interaction.isChatInputCommand() && !interaction.isContextMenuCommand()) return;
 
 	if (interaction.replied || interaction.deferred) {
 		return interaction.editReply({
