@@ -7,7 +7,7 @@ import { getPresenceActivity } from '#lib/util/functions/getPresenceActivity';
 import { LanguageFormatters, rootFolder } from '#utils/constants';
 import { LogLevel } from '@sapphire/framework';
 import { i18next, type I18nextFormatter, type InternationalizationOptions } from '@sapphire/plugin-i18next';
-import { envParseInteger, envParseString } from '@skyra/env-utilities';
+import { envParseInteger, envParseString, setup } from '@skyra/env-utilities';
 import type { RedisOptions } from 'bullmq';
 import {
 	GatewayIntentBits,
@@ -21,6 +21,8 @@ import {
 } from 'discord.js';
 import type { InterpolationOptions } from 'i18next';
 import { fileURLToPath } from 'node:url';
+
+setup();
 
 export const Owners = ['268792781713965056'];
 export const OwnerMentions = Owners.map(userMention);

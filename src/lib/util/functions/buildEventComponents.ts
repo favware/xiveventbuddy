@@ -1,3 +1,4 @@
+import { $Enums } from '#lib/generated/prisma-client/client';
 import type { EventData } from '#lib/util/constants';
 import { BrandingColors, CustomIdPrefixes } from '#lib/util/constants';
 import { getEmojiForJob, XIVEventBuddyEmojis } from '#lib/util/emojis';
@@ -41,7 +42,6 @@ import {
 	PhysRangeDpsOption,
 	TankOption
 } from '#lib/util/roleStringSelectOptionBuilders';
-import { $Enums } from '@prisma/client';
 import { resolveKey } from '@sapphire/plugin-i18next';
 import { isNullish, isNullishOrEmpty } from '@sapphire/utilities';
 import {

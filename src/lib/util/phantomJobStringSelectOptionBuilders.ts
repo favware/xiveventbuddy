@@ -1,5 +1,5 @@
+import { $Enums } from '#lib/generated/prisma-client/client';
 import { formatPhantomJobName } from '#lib/util/functions/formatPhantomJobName';
-import { $Enums } from '@prisma/client';
 import { StringSelectMenuOptionBuilder } from 'discord.js';
 
 export const PhantomBardOption = new StringSelectMenuOptionBuilder()

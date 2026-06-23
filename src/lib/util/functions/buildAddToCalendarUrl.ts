@@ -27,7 +27,7 @@ export async function buildAddToCalendarUrl(event: EventData): Promise<string | 
 					'X-API-KEY': envParseString('CAL_LINKS_API_KEY')
 				},
 				body: {
-					url: url.toString()
+					url: url.href
 				}
 			},
 			FetchResultTypes.Text

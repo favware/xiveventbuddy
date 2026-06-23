@@ -1,5 +1,5 @@
+import { $Enums } from '#lib/generated/prisma-client/client';
 import { XIVEventBuddyEvents } from '#lib/util/constants';
-import { $Enums } from '@prisma/client';
 import { ApplyOptions } from '@sapphire/decorators';
 import { ScheduledTask } from '@sapphire/plugin-scheduled-tasks';
 import { addDays, addHours, addMonths, differenceInHours, getDay, isBefore, isFirstDayOfMonth, lastDayOfMonth, subDays } from 'date-fns';

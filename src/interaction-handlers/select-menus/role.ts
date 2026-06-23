@@ -1,3 +1,4 @@
+import { $Enums } from '#lib/generated/prisma-client/client';
 import { CustomIdPrefixes, ErrorIdentifiers, UpdateEmbedPayloadOrigin, XIVEventBuddyEvents } from '#lib/util/constants';
 import { XIVEventBuddyEmojis } from '#lib/util/emojis';
 import { getFullEventData } from '#lib/util/functions/getFullEventData';
@@ -6,7 +7,6 @@ import { getMagicDpsJobButtons } from '#lib/util/job-buttons/magicdps';
 import { getMeleeDpsJobButtons } from '#lib/util/job-buttons/meleedps';
 import { getPhysRangedDpsJobButtons } from '#lib/util/job-buttons/physrangeddps';
 import { getTankJobButtons } from '#lib/util/job-buttons/tank';
-import { $Enums } from '@prisma/client';
 import { ApplyOptions } from '@sapphire/decorators';
 import { InteractionHandler, InteractionHandlerTypes, UserError } from '@sapphire/framework';
 import { resolveKey } from '@sapphire/plugin-i18next';

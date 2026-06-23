@@ -1,7 +1,7 @@
+import { $Enums } from '#lib/generated/prisma-client/client';
 import type { CreateServerEventPayload, XIVEventBuddyEvents } from '#lib/util/constants';
 import { createServerEventOptions } from '#lib/util/functions/createServerEventOptions';
 import { resolveOnErrorCodes } from '#lib/util/functions/resolveOnErrorCodes';
-import { $Enums } from '@prisma/client';
 import { Listener } from '@sapphire/framework';
 import { RESTJSONErrorCodes } from 'discord.js';
 

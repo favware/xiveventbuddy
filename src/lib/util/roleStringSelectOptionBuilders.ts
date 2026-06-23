@@ -1,4 +1,4 @@
-import { $Enums } from '@prisma/client';
+import { $Enums } from '#lib/generated/prisma-client/client';
 import { StringSelectMenuOptionBuilder } from 'discord.js';
 
 export const TankOption = new StringSelectMenuOptionBuilder()

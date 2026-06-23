@@ -12,6 +12,5 @@
 		"connectionId": "favware",
 		"projectKey": "favware_xiveventbuddy"
 	},
-	"prisma.pinToPrisma6": true,
 	"eslint.useFlatConfig": true
 }

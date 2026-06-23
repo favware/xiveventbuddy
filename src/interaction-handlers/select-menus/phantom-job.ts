@@ -1,8 +1,8 @@
+import { $Enums } from '#lib/generated/prisma-client/client';
 import { CustomIdPrefixes, ErrorIdentifiers, UpdateEmbedPayloadOrigin, XIVEventBuddyEvents } from '#lib/util/constants';
 import { XIVEventBuddyEmojis } from '#lib/util/emojis';
 import { formatPhantomJobName } from '#lib/util/functions/formatPhantomJobName';
 import { getFullEventData } from '#lib/util/functions/getFullEventData';
-import { $Enums } from '@prisma/client';
 import { ApplyOptions } from '@sapphire/decorators';
 import { InteractionHandler, InteractionHandlerTypes, UserError } from '@sapphire/framework';
 import { resolveKey } from '@sapphire/plugin-i18next';

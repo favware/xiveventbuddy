@@ -1,6 +1,6 @@
+import { $Enums } from '#lib/generated/prisma-client/client';
 import { CustomIdPrefixes } from '#lib/util/constants';
 import { handleJobOrRoleButtonClick } from '#lib/util/functions/handleJobOrRoleButtonClick';
-import { $Enums } from '@prisma/client';
 import { ApplyOptions } from '@sapphire/decorators';
 import { InteractionHandler, InteractionHandlerTypes } from '@sapphire/framework';
 import { resolveKey } from '@sapphire/plugin-i18next';

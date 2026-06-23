@@ -1,4 +1,4 @@
-import type { Event, EventInstance, Jobs, Participant } from '@prisma/client';
+import type { Event, EventInstance, Jobs, Participant } from '#lib/generated/prisma-client/client';
 import type { $Dictionary } from '@sapphire/plugin-i18next';
 import type { BaseInteraction } from 'discord.js';
 

@@ -1,4 +1,5 @@
 import { XIVEventBuddyCommand } from '#lib/extensions/XIVEventBuddyComand';
+import { $Enums } from '#lib/generated/prisma-client/client';
 import { ErrorIdentifiers, UpdateEmbedPayloadOrigin, XIVEventBuddyEvents, type EventData, type ListHeaders } from '#lib/util/constants';
 import { XIVEventBuddyEmojis } from '#lib/util/emojis';
 import { buildEventAttachment } from '#lib/util/functions/buildEventAttachment';
@@ -6,7 +7,6 @@ import { buildEventComponents } from '#lib/util/functions/buildEventComponents';
 import { resolveOnErrorCodes } from '#lib/util/functions/resolveOnErrorCodes';
 import { verifyHasSendPermissions } from '#lib/util/functions/verifyHasSendPermissions';
 import { Owners } from '#root/config';
-import { $Enums } from '@prisma/client';
 import { fetch, FetchResultTypes } from '@sapphire/fetch';
 import { Result, UserError, type ApplicationCommandRegistry, type Awaitable, type ChatInputCommand } from '@sapphire/framework';
 import { applyLocalizedBuilder, createLocalizedChoice, resolveKey } from '@sapphire/plugin-i18next';

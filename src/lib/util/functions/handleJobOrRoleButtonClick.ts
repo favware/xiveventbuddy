@@ -1,5 +1,5 @@
+import type { $Enums } from '#lib/generated/prisma-client/client';
 import { ErrorIdentifiers, UpdateEmbedPayloadOrigin, XIVEventBuddyEvents } from '#lib/util/constants';
-import type { $Enums } from '@prisma/client';
 import { container, UserError } from '@sapphire/framework';
 import { resolveKey } from '@sapphire/plugin-i18next';
 import { MessageFlags, type ButtonInteraction } from 'discord.js';

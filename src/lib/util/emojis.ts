@@ -1,5 +1,5 @@
+import type { $Enums } from '#lib/generated/prisma-client/client';
 import type { Emojis } from '#lib/util/constants';
-import type { $Enums } from '@prisma/client';
 import { formatEmoji } from 'discord.js';
 
 export const XIVEventBuddyEmojis: Record<Emojis, string> = {

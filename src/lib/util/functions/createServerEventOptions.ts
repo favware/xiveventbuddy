@@ -1,4 +1,4 @@
-import { $Enums } from '@prisma/client';
+import { $Enums } from '#lib/generated/prisma-client/client';
 import { resolveKey } from '@sapphire/plugin-i18next';
 import { cutText, isNullish } from '@sapphire/utilities';
 import { addHours, getISODay } from 'date-fns';

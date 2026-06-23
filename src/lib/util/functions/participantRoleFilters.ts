@@ -1,5 +1,5 @@
 import type { EventData } from '#lib/util/constants';
-import { $Enums, type Participant } from '@prisma/client';
+import { $Enums, type Participant } from '#lib/generated/prisma-client/client';
 
 export type FilteredParticipant = Pick<Participant, 'discordId' | 'job' | 'role' | 'signupOrder'>;
 
