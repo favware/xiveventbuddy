@@ -25,7 +25,7 @@
 		"dev": "tsdown --watch --onSuccess \"yarn start\""
 	},
 	"prisma": {
-		"seed": "tsx prisma/initial-data-seed.ts"
+		"seed": "unrun prisma/initial-data-seed.ts"
 	},
 	"dependencies": {
 		"@prisma/adapter-pg": "^7.8.0",
@@ -74,8 +74,8 @@
 		"prisma": "^7.8.0",
 		"rimraf": "^6.1.3",
 		"tsdown": "^0.22.3",
-		"tsx": "^4.22.4",
-		"typescript": "^6.0.3"
+		"typescript": "^6.0.3",
+		"unrun": "^0.3.1"
 	},
 	"commitlint": {
 		"extends": [
