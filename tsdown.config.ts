@@ -4,7 +4,6 @@ export default defineConfig({
 	clean: true,
 	entry: ['src/**', '!src/locales/**'],
 	dts: false,
-
 	root: 'src',
 	unbundle: true,
 	minify: false,
