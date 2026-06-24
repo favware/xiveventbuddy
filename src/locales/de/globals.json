@@ -2,13 +2,13 @@
 	"default": "{{key}} wurde noch nicht für en-US lokalisiert.",
 	"defaultLanguage": "Standardsprache",
 	"supportServer": "Support Server",
-	"messageOnUserContext": "Woaw, you somehow triggered this action from a User context menu, that should not be possible.",
+	"messageOnUserContext": "Woaw, Sie haben diese Aktion irgendwie aus einem Benutzer-Kontextmenü ausgelöst, was nicht möglich sein sollte.",
 	"numberValue": "{{value, number}}",
 	"dateValue": "{{value, date}}",
 	"timeValue": "{{value, time}}",
 	"andListValue": "{{value, list(conjunction)}}",
 	"relativeTimeValue": "{{value, relativeTime}}",
-	"addToCalendar": "Add to your calendar",
-	"duration_one": "{{count}} hour",
-	"duration_other": "{{count}} hours"
+	"addToCalendar": "Zu deinem Kalender hinzufügen",
+	"duration_one": "{{count}} Stunde",
+	"duration_other": "{{count}} Stunden"
 }
