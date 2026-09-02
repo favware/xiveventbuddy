@@ -47,6 +47,8 @@
 	"reminder2Hours": "2 Stunden vor Beginn des Events",
 	"reminderChannelName": "Erinnerungs-Kanal",
 	"reminderChannelDescription": "Der Kanal, in dem die Erinnerung gesendet werden soll, wenn der Ereigniskanal nicht verwendet wird.",
+	"maximumParticipantsName": "maximum-participants",
+	"maximumParticipantsDescription": "The maximum number of participants for the event, if omitted there is no limit.",
 	"variantNormal": "Normal",
 	"variantOccultCrescent": "Occult Crescent",
 	"listName": "liste",
@@ -80,7 +82,8 @@
 		"date": "Datum",
 		"time": "Zeit",
 		"variant": "Variante",
-		"reminder": "Erinnerung"
+		"reminder": "Erinnerung",
+		"maximumParticipants": "Maximum Participants"
 	},
 	"listHeaderRoleToPing_one": "Rolle zum Pingen",
 	"listHeaderRoleToPing_other": "Rollen zum Pingen",
