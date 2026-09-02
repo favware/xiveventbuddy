@@ -20,3 +20,5 @@ jobs:
   build:
     name: Building
     uses: sapphiredev/.github/.github/workflows/reusable-build.yml@main
+    with:
+      node-version: 24
