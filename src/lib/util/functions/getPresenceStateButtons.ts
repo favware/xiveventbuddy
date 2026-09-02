@@ -1,4 +1,6 @@
+import { type Participant } from '#lib/generated/prisma-client/client';
 import { CustomIdPrefixes } from '#lib/util/constants';
+import { nonPresentEventRoles } from '#utils/functions/participantRoleFilters';
 import { resolveKey } from '@sapphire/plugin-i18next';
 import { isNullish } from '@sapphire/utilities';
 import { BaseInteraction, ButtonBuilder, ButtonStyle, type Locale } from 'discord.js';
@@ -6,7 +8,7 @@ import { BaseInteraction, ButtonBuilder, ButtonStyle, type Locale } from 'discor
 export async function getPresenceStateButtons(
 	interactionOrLocale: BaseInteraction | Locale,
 	eventMaximumParticipants: number | null,
-	eventParticipantsCount: number,
+	eventParticipants: Pick<Participant, 'discordId' | 'job' | 'role' | 'signupOrder'>[],
 	eventId: string
 ) {
 	const interactionAsInteraction = interactionOrLocale instanceof BaseInteraction ? interactionOrLocale : null;
@@ -37,7 +39,8 @@ export async function getPresenceStateButtons(
 		return [lateButton, tentativeButton, absenceButton];
 	}
 
-	if (eventParticipantsCount >= eventMaximumParticipants) {
+	const attendingParticipants = eventParticipants.filter((participant) => !nonPresentEventRoles.includes(participant.role));
+	if (attendingParticipants.length >= eventMaximumParticipants) {
 		return [benchButton, lateButton, tentativeButton, absenceButton];
 	}
 

@@ -343,7 +343,7 @@ export async function buildEventComponents({
 		const presenceStateButtons = await getPresenceStateButtons(
 			interactionOrLocale,
 			event.maximumParticipants,
-			event.instance.participants.length,
+			event.instance.participants,
 			event.id
 		);
 		container
