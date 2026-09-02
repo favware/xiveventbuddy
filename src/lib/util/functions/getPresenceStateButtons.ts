@@ -3,7 +3,12 @@ import { resolveKey } from '@sapphire/plugin-i18next';
 import { isNullish } from '@sapphire/utilities';
 import { BaseInteraction, ButtonBuilder, ButtonStyle, type Locale } from 'discord.js';
 
-export async function getPresenceStateButtons(interactionOrLocale: BaseInteraction | Locale, eventId: string) {
+export async function getPresenceStateButtons(
+	interactionOrLocale: BaseInteraction | Locale,
+	eventMaximumParticipants: number | null,
+	eventParticipantsCount: number,
+	eventId: string
+) {
 	const interactionAsInteraction = interactionOrLocale instanceof BaseInteraction ? interactionOrLocale : null;
 	const lng = isNullish(interactionAsInteraction) ? (interactionOrLocale as Locale) : undefined;
 
@@ -27,6 +32,16 @@ export async function getPresenceStateButtons(interactionOrLocale: BaseInteracti
 		.setEmoji({ id: '1324558615939649559', name: 'Absence' })
 		.setLabel(await resolveKey(interactionAsInteraction!, 'components:labelAbsence', { lng }))
 		.setStyle(ButtonStyle.Secondary);
+
+	if (eventMaximumParticipants === null) {
+		return [lateButton, tentativeButton, absenceButton];
+	}
+
+	if (eventParticipantsCount >= eventMaximumParticipants) {
+		return [benchButton, lateButton, tentativeButton, absenceButton];
+	}
+
+	benchButton.setDisabled(true);
 
 	return [benchButton, lateButton, tentativeButton, absenceButton];
 }

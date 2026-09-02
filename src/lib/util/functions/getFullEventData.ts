@@ -15,6 +15,7 @@ export function getFullEventData(eventId: string) {
 			name: true,
 			rolesToPing: true,
 			updatedAt: true,
+			maximumParticipants: true,
 			instance: {
 				select: {
 					eventId: true,

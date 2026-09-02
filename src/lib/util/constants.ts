@@ -184,7 +184,7 @@ export const enum UpdateEmbedPayloadOrigin {
 
 export type EventData = Pick<
 	Event,
-	'bannerImage' | 'channelId' | 'description' | 'duration' | 'id' | 'leader' | 'name' | 'rolesToPing' | 'variant'
+	'bannerImage' | 'channelId' | 'description' | 'duration' | 'id' | 'leader' | 'maximumParticipants' | 'name' | 'rolesToPing' | 'variant'
 > & {
 	instance: Pick<EventInstance, 'dateTime'> & {
 		participants: Pick<Participant, 'discordId' | 'job' | 'role' | 'signupOrder'>[];

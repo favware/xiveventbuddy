@@ -1,6 +1,6 @@
 generator client {
     provider = "prisma-client"
-	output = "../src/lib/generated/prisma-client"
+    output   = "../src/lib/generated/prisma-client"
 }
 
 datasource db {
@@ -91,21 +91,22 @@ model EventManagers {
 }
 
 model Event {
-    id                String         @id @default(cuid())
-    name              String
-    bannerImage       String?        @map("banner_image")
-    channelId         String         @map("channel_id")
-    description       String?
-    duration          Int
-    guildId           String         @map("guild_id")
-    interval          EventInterval?
-    leader            String
-    rolesToPing       String[]       @map("roles_to_ping")
-    createdAt         DateTime       @default(now()) @map("created_at")
-    updatedAt         DateTime       @updatedAt @map("updated_at")
-    instance          EventInstance?
-    variant           EventVariant   @default(NORMAL) @map("event_variant")
-    reminderChannelId String?        @map("reminder_channel_id")
+    id                  String         @id @default(cuid())
+    name                String
+    bannerImage         String?        @map("banner_image")
+    channelId           String         @map("channel_id")
+    description         String?
+    duration            Int
+    guildId             String         @map("guild_id")
+    interval            EventInterval?
+    leader              String
+    rolesToPing         String[]       @map("roles_to_ping")
+    createdAt           DateTime       @default(now()) @map("created_at")
+    updatedAt           DateTime       @updatedAt @map("updated_at")
+    instance            EventInstance?
+    variant             EventVariant   @default(NORMAL) @map("event_variant")
+    reminderChannelId   String?        @map("reminder_channel_id")
+    maximumParticipants Int?           @map("maximum_participants")
 
     @@map("events")
 }

@@ -130,6 +130,14 @@ export async function buildEventComponents({
 				)
 		);
 
+	if (event.maximumParticipants) {
+		const content = await resolveKey(interactionAsInteraction!, 'components:maximumParticipants', {
+			value: event.maximumParticipants,
+			lng
+		});
+		container.addTextDisplayComponents((textDisplay) => textDisplay.setContent(`👥 ${content}`));
+	}
+
 	const addToCalendarUrl = await buildAddToCalendarUrl(event);
 	if (addToCalendarUrl) {
 		container.addActionRowComponents((actionRow) =>
@@ -332,7 +340,12 @@ export async function buildEventComponents({
 
 		container.addActionRowComponents((actionRow) => actionRow.setComponents(roleSelectMenu));
 	} else {
-		const presenceStateButtons = await getPresenceStateButtons(interactionOrLocale, event.id);
+		const presenceStateButtons = await getPresenceStateButtons(
+			interactionOrLocale,
+			event.maximumParticipants,
+			event.instance.participants.length,
+			event.id
+		);
 		container
 			.addActionRowComponents((actionRow) => actionRow.setComponents(roleSelectMenu))
 			.addActionRowComponents((actionRow) => actionRow.setComponents(presenceStateButtons));

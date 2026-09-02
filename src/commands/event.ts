@@ -120,6 +120,10 @@ import {
 					applyLocalizedBuilder(builder, 'commands/event:reminderChannel') //
 						.setRequired(false)
 				)
+				.addIntegerOption((builder) =>
+					applyLocalizedBuilder(builder, 'commands/event:maximumParticipants') //
+						.setRequired(false)
+				)
 		)
 		.addSubcommand(
 			(builder) => applyLocalizedBuilder(builder, 'commands/event:list') //
@@ -217,6 +221,10 @@ import {
 				)
 				.addChannelOption((builder) =>
 					applyLocalizedBuilder(builder, 'commands/event:reminderChannel') //
+						.setRequired(false)
+				)
+				.addIntegerOption((builder) =>
+					applyLocalizedBuilder(builder, 'commands/event:maximumParticipants') //
 						.setRequired(false)
 				)
 		)
@@ -396,6 +404,7 @@ export class SlashCommand extends XIVEventBuddyCommand {
 		const leader = interaction.options.getUser('leader', false);
 		const variant = interaction.options.getString('variant', false);
 		const reminder = interaction.options.getInteger('reminder', false);
+		const maximumParticipants = interaction.options.getInteger('maximum-participants', false);
 
 		const event = await this.container.prisma.event.create({
 			data: {
@@ -410,6 +419,7 @@ export class SlashCommand extends XIVEventBuddyCommand {
 				bannerImage: await this.getBannerImage(interaction),
 				variant: (variant as $Enums.EventVariant | null) ?? $Enums.EventVariant.NORMAL,
 				reminderChannelId: reminderChannel.id,
+				maximumParticipants,
 				instance: {
 					create: {
 						dateTime: eventDate,
@@ -483,7 +493,8 @@ export class SlashCommand extends XIVEventBuddyCommand {
 						name: true,
 						description: true,
 						rolesToPing: true,
-						variant: true
+						variant: true,
+						maximumParticipants: true
 					}
 				}
 			},
@@ -512,7 +523,7 @@ export class SlashCommand extends XIVEventBuddyCommand {
 			await Promise.all(
 				eventInstances.map(async (eventInstance) => {
 					const { id, dateTime, event, reminder } = eventInstance;
-					const { name, description, rolesToPing, variant } = event;
+					const { name, description, rolesToPing, variant, maximumParticipants } = event;
 					const hasReminder = isNullishOrZero(reminder) === false;
 					const reminderText = hasReminder
 						? await resolveKey(interaction, 'commands/event:listReminder', { reminder: reminder?.toString() ?? '' })
@@ -531,7 +542,8 @@ export class SlashCommand extends XIVEventBuddyCommand {
 								`${bold(listHeaders.time)}: ${time(dateTime, TimestampStyles.ShortTime)}`,
 								isNullishOrEmpty(rolesToPing) ? undefined : `${bold(rolesToPingHeader)}: ${rolesToPing.map(roleMention)}`,
 								`${bold(listHeaders.variant)}: ${variantMapping[variant]}`,
-								hasReminder ? `${bold(listHeaders.reminder)}: ${reminderText}` : undefined
+								hasReminder ? `${bold(listHeaders.reminder)}: ${reminderText}` : undefined,
+								maximumParticipants ? `${bold(listHeaders.maximumParticipants)}: ${maximumParticipants}` : undefined
 							].filter(filterNullish)
 						)
 					].join('\n');
@@ -575,6 +587,7 @@ export class SlashCommand extends XIVEventBuddyCommand {
 				rolesToPing: true,
 				variant: true,
 				reminderChannelId: true,
+				maximumParticipants: true,
 				instance: {
 					select: {
 						dateTime: true,
@@ -638,6 +651,7 @@ export class SlashCommand extends XIVEventBuddyCommand {
 		const variant = interaction.options.getString('variant', false);
 		const reminder = interaction.options.getInteger('reminder', false) ?? existingEvent.instance.reminder;
 		const reminderChannel = interaction.options.getChannel('reminder-channel', false);
+		const maximumParticipants = interaction.options.getInteger('maximum-participants', false);
 
 		const resolvedEventChannel =
 			channel ?? (existingEvent.channelId ? interaction.guild.channels.cache.get(existingEvent.channelId) : null) ?? interaction.channel;
@@ -682,6 +696,7 @@ export class SlashCommand extends XIVEventBuddyCommand {
 				duration: eventDuration ?? existingEvent.duration,
 				variant: (variant as $Enums.EventVariant | null) ?? existingEvent.variant,
 				reminderChannelId: resolvedReminderChannel.id,
+				maximumParticipants: maximumParticipants ?? existingEvent.maximumParticipants,
 				instance: {
 					update: {
 						dateTime: eventDate,
@@ -705,6 +720,7 @@ export class SlashCommand extends XIVEventBuddyCommand {
 				rolesToPing: true,
 				updatedAt: true,
 				variant: true,
+				maximumParticipants: true,
 				instance: {
 					include: {
 						participants: true
