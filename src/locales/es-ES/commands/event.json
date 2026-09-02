@@ -47,6 +47,8 @@
 	"reminder2Hours": "2 hours before the start of the event",
 	"reminderChannelName": "reminder-channel",
 	"reminderChannelDescription": "The channel in which the reminder should be sent, if omitted the event channel is used.",
+	"maximumParticipantsName": "maximum-participants",
+	"maximumParticipantsDescription": "The maximum number of participants for the event, if omitted there is no limit.",
 	"variantNormal": "Estándar",
 	"variantOccultCrescent": "Occult Crescent",
 	"listName": "lista",
@@ -80,7 +82,8 @@
 		"date": "Fecha",
 		"time": "Tiempo",
 		"variant": "Variante",
-		"reminder": "Reminder"
+		"reminder": "Reminder",
+		"maximumParticipants": "Maximum Participants"
 	},
 	"listHeaderRoleToPing_one": "Role to ping",
 	"listHeaderRoleToPing_other": "Roles to ping",
