@@ -9,5 +9,6 @@
 			"#root/*": ["./*"]
 		}
 	},
-	"include": ["."]
+	"include": ["."],
+	"exclude": ["src/lib/generated/"]
 }
