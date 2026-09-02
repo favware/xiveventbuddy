@@ -132,7 +132,7 @@ export async function buildEventComponents({
 
 	if (event.maximumParticipants) {
 		const content = await resolveKey(interactionAsInteraction!, 'components:maximumParticipants', {
-			value: event.maximumParticipants,
+			maximumParticipants: event.maximumParticipants,
 			lng
 		});
 		container.addTextDisplayComponents((textDisplay) => textDisplay.setContent(`👥 ${content}`));
