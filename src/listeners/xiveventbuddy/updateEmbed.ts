@@ -53,7 +53,8 @@ export class UserListener extends Listener<typeof XIVEventBuddyEvents.UpdateEmbe
 										leader: eventData.leader,
 										name: eventData.name,
 										rolesToPing: eventData.rolesToPing,
-										variant: eventData.variant
+										variant: eventData.variant,
+										maximumParticipants: eventData.maximumParticipants
 									} as EventData,
 									addToCalendarString: await resolveKey(interaction!, 'globals:addToCalendar', {
 										lng: isNullish(interaction) ? preferredLocale : undefined
