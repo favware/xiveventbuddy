@@ -1,42 +1,15 @@
 import { XIVEventBuddyCommand } from '#lib/extensions/XIVEventBuddyComand';
-import { XIVServers } from '#lib/util/constants';
 import { convertToEorzeaTime, getEUServerTime } from '#lib/util/functions/ffxivTime';
 import { RegisterChatInputCommand } from '@sapphire/decorators';
 import type { ChatInputCommand } from '@sapphire/framework';
-import { applyLocalizedBuilder, createLocalizedChoice, resolveKey } from '@sapphire/plugin-i18next';
+import { applyLocalizedBuilder, resolveKey } from '@sapphire/plugin-i18next';
 import { ApplicationIntegrationType, inlineCode, MessageFlags } from 'discord.js';
 
 @RegisterChatInputCommand((builder) =>
 	applyLocalizedBuilder(builder, 'commands/time:root') //
 		.setIntegrationTypes(ApplicationIntegrationType.GuildInstall)
 		.addSubcommand((builder) => applyLocalizedBuilder(builder, 'commands/time:eorzea'))
-		.addSubcommand((builder) =>
-			applyLocalizedBuilder(builder, 'commands/time:serverTime') //
-				.addStringOption((builder) =>
-					applyLocalizedBuilder(builder, 'commands/time:server')
-						.setRequired(true)
-						.setChoices([
-							// EU
-							createLocalizedChoice('commands/time:choiceLight', { value: XIVServers.Light }),
-							createLocalizedChoice('commands/time:choiceChaos', { value: XIVServers.Chaos }),
-
-							// USA
-							createLocalizedChoice('commands/time:choiceAether', { value: XIVServers.Aether }),
-							createLocalizedChoice('commands/time:choiceCrystal', { value: XIVServers.Crystal }),
-							createLocalizedChoice('commands/time:choiceDynamis', { value: XIVServers.Dynamis }),
-							createLocalizedChoice('commands/time:choicePrimal', { value: XIVServers.Primal }),
-
-							// OCE
-							createLocalizedChoice('commands/time:choiceMateria', { value: XIVServers.Materia }),
-
-							// JPN
-							createLocalizedChoice('commands/time:choiceElemental', { value: XIVServers.Elemental }),
-							createLocalizedChoice('commands/time:choiceGaia', { value: XIVServers.Gaia }),
-							createLocalizedChoice('commands/time:choiceMana', { value: XIVServers.Mana }),
-							createLocalizedChoice('commands/time:choiceMeteor', { value: XIVServers.Meteor })
-						])
-				)
-		)
+		.addSubcommand((builder) => applyLocalizedBuilder(builder, 'commands/time:serverTime'))
 )
 export class SlashCommand extends XIVEventBuddyCommand {
 	public override async chatInputRun(interaction: ChatInputCommand.Interaction<'cached'>) {
@@ -58,20 +31,11 @@ export class SlashCommand extends XIVEventBuddyCommand {
 	}
 
 	private async serverTime(interaction: ChatInputCommand.Interaction<'cached'>) {
-		await interaction.deferReply({ flags: [MessageFlags.Ephemeral] });
-		const server = interaction.options.getString('server', true) as XIVServers;
-
-		switch (server) {
-			case XIVServers.Light:
-			case XIVServers.Chaos:
-				return interaction.editReply({
-					content: await resolveKey(interaction, 'commands/time:curerntTimeServer', { server, time: inlineCode(getEUServerTime()) })
-				});
-			default:
-				// TODO: Support US, OCE, and JPN servers
-				return interaction.editReply({
-					content: await resolveKey(interaction, 'commands/time:serverUnsupported', { server })
-				});
-		}
+		return interaction.reply({
+			content: await resolveKey(interaction, 'commands/time:currentTimeServer', {
+				time: inlineCode(getEUServerTime())
+			}),
+			flags: MessageFlags.Ephemeral
+		});
 	}
 }
