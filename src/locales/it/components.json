@@ -23,5 +23,6 @@
 	"labelLate": "Tardi",
 	"labelTentative": "Provvisorio",
 	"labelAbsence": "Assenza",
-	"labelRemoveParticipation": "Rimuovi Partecipazione"
+	"labelRemoveParticipation": "Rimuovi Partecipazione",
+	"maximumParticipants": "Maximum Participants: {{maximumParticipants}}"
 }
