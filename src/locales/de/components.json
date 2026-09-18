@@ -23,5 +23,6 @@
 	"labelLate": "Verspätet",
 	"labelTentative": "Ungewiss",
 	"labelAbsence": "Abwesenheit",
-	"labelRemoveParticipation": "Teilnahme entfernen"
+	"labelRemoveParticipation": "Teilnahme entfernen",
+	"maximumParticipants": "Maximum Participants: {{maximumParticipants}}"
 }
