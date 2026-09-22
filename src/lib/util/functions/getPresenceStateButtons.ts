@@ -35,16 +35,12 @@ export async function getPresenceStateButtons(
 		.setLabel(await resolveKey(interactionAsInteraction!, 'components:labelAbsence', { lng }))
 		.setStyle(ButtonStyle.Secondary);
 
-	if (eventMaximumParticipants === null) {
-		return [lateButton, tentativeButton, absenceButton];
+	if (
+		eventMaximumParticipants !== null &&
+		eventParticipants.filter((participant) => !nonPresentEventRoles.includes(participant.role)).length < eventMaximumParticipants
+	) {
+		benchButton.setDisabled(true);
 	}
-
-	const attendingParticipants = eventParticipants.filter((participant) => !nonPresentEventRoles.includes(participant.role));
-	if (attendingParticipants.length >= eventMaximumParticipants) {
-		return [benchButton, lateButton, tentativeButton, absenceButton];
-	}
-
-	benchButton.setDisabled(true);
 
 	return [benchButton, lateButton, tentativeButton, absenceButton];
 }
