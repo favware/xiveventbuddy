@@ -1,4 +1,4 @@
-FROM node:24-bullseye-slim AS base
+FROM node:24-trixie-slim AS base
 
 WORKDIR /usr/src/app
 
