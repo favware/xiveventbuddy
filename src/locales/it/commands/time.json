@@ -5,20 +5,6 @@
 	"eorzeaDescription": "Ottieni l'ora attuale in Eorzea.",
 	"serverTimeName": "server-time",
 	"serverTimeDescription": "Ottieni l'ora corrente nel fuso orario del server.",
-	"serverName": "server",
-	"serverDescription": "Il server per cui ottenere il tempo.",
-	"choiceLight": "Light",
-	"choiceChaos": "Chaos",
-	"choiceAether": "Aether",
-	"choicePrimal": "Primal",
-	"choiceCrystal": "Crystal",
-	"choiceDynamis": "Dynamis",
-	"choiceMateria": "Materia",
-	"choiceElemental": "Elemental",
-	"choiceGaia": "Gaia",
-	"choiceMana": "Mana",
-	"choiceMeteor": "Meteor",
 	"currentTimeEorzea": "L'ora attuale in Eorzea è {{time}}.",
-	"currentTimeServer": "L'ora attuale {{server}} è {{time}}.",
-	"serverUnsupported": "Il server {{server}} non è ancora supportato. Si prega di scegliere un altro server."
+	"currentTimeServer": "The current server time is {{time}}."
 }
