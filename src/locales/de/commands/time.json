@@ -6,5 +6,5 @@
 	"serverTimeName": "server-zeit",
 	"serverTimeDescription": "Erfahre die momentane Uhrzeit in der Zeitzone des Servers.",
 	"currentTimeEorzea": "Die aktuelle Uhrzeit in Eorzea ist {{time}}.",
-	"currentTimeServer": "The current server time is {{time}}."
+	"currentTimeServer": "Die aktuelle server Zeit ist {{time}}."
 }

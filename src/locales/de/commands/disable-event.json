@@ -2,5 +2,5 @@
 	"rootName": "Ereignis deaktivieren",
 	"noEventFound": "{{REDCROSS}} Kein Ereignis für die ausgewählte Nachricht gefunden. Bist du sicher, dass es sich um eine Nachricht mit einem Ereignis handelt?",
 	"disableUnexpectedError": "{{REDCROSS}} Beim Löschen des Events ist ein unerwarteter Fehler aufgetreten. Kontaktiere den Support für Unterstützung.",
-	"success": "{{GREENTICK}} Erfolgreich das Event {} gelöscht."
+	"success": "{{GREENTICK}} Erfolgreich das Event gelöscht."
 }

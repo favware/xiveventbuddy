@@ -24,5 +24,5 @@
 	"labelTentative": "Ungewiss",
 	"labelAbsence": "Abwesenheit",
 	"labelRemoveParticipation": "Teilnahme entfernen",
-	"maximumParticipants": "Maximum Participants: {{maximumParticipants}}"
+	"maximumParticipants": "Maximale Teilnehmer: {{maximumParticipants}}"
 }
