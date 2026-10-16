@@ -96,7 +96,7 @@ model Event {
     bannerImage         String?        @map("banner_image")
     channelId           String         @map("channel_id")
     description         String?
-    duration            Int
+    duration            Float
     guildId             String         @map("guild_id")
     interval            EventInterval?
     leader              String
