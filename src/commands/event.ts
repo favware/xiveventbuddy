@@ -44,10 +44,12 @@ import {
 					applyLocalizedBuilder(builder, 'commands/event:time') //
 						.setRequired(true)
 				)
-				.addIntegerOption((builder) =>
+				.addNumberOption((builder) =>
 					applyLocalizedBuilder(builder, 'commands/event:duration') //
 						.setChoices(
+							createLocalizedChoice('commands/event:durationHalfHour', { value: 0.5 }),
 							createLocalizedChoice('commands/event:duration1Hour', { value: 1 }),
+							createLocalizedChoice('commands/event:duration1HourAndHalf', { value: 1.5 }),
 							createLocalizedChoice('commands/event:duration2Hours', { value: 2 }),
 							createLocalizedChoice('commands/event:duration3Hours', { value: 3 }),
 							createLocalizedChoice('commands/event:duration4Hours', { value: 4 })
@@ -147,10 +149,12 @@ import {
 					applyLocalizedBuilder(builder, 'commands/event:time') //
 						.setRequired(false)
 				)
-				.addIntegerOption((builder) =>
+				.addNumberOption((builder) =>
 					applyLocalizedBuilder(builder, 'commands/event:duration') //
 						.setChoices(
+							createLocalizedChoice('commands/event:durationHalfHour', { value: 0.5 }),
 							createLocalizedChoice('commands/event:duration1Hour', { value: 1 }),
+							createLocalizedChoice('commands/event:duration1HourAndHalf', { value: 1.5 }),
 							createLocalizedChoice('commands/event:duration2Hours', { value: 2 }),
 							createLocalizedChoice('commands/event:duration3Hours', { value: 3 }),
 							createLocalizedChoice('commands/event:duration4Hours', { value: 4 })
@@ -400,7 +404,7 @@ export class SlashCommand extends XIVEventBuddyCommand {
 		const roleToPing = interaction.options.getRole('role-to-ping', false);
 		const secondRoleToPing = interaction.options.getRole('second-role-to-ping', false);
 		const thirdRoleToPing = interaction.options.getRole('third-role-to-ping', false);
-		const eventDuration = interaction.options.getInteger('duration', true);
+		const eventDuration = interaction.options.getNumber('duration', true);
 		const leader = interaction.options.getUser('leader', false);
 		const variant = interaction.options.getString('variant', false);
 		const reminder = interaction.options.getInteger('reminder', false);
@@ -643,7 +647,7 @@ export class SlashCommand extends XIVEventBuddyCommand {
 		const description = interaction.options.getString('description', false) ?? existingEvent.description;
 		const interval = interaction.options.getString('interval', false) ?? existingEvent.interval;
 		const channel = interaction.options.getChannel('channel', false);
-		const eventDuration = interaction.options.getInteger('duration', false);
+		const eventDuration = interaction.options.getNumber('duration', false);
 		const roleToPing = interaction.options.getRole('role-to-ping', false);
 		const secondRoleToPing = interaction.options.getRole('second-role-to-ping', false);
 		const thirdRoleToPing = interaction.options.getRole('third-role-to-ping', false);
