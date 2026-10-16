@@ -24,9 +24,6 @@
 		"typecheck": "tsc -b src",
 		"dev": "tsdown --watch --onSuccess \"yarn start\""
 	},
-	"prisma": {
-		"seed": "unrun prisma/initial-data-seed.ts"
-	},
 	"dependencies": {
 		"@prisma/adapter-pg": "^7.10.0",
 		"@prisma/client": "^7.10.0",
