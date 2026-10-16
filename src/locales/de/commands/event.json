@@ -45,7 +45,7 @@
 	"reminder30Minutes": "30 Minuten vor Beginn des Events",
 	"reminder1Hour": "1 Stunde vor Beginn des Events",
 	"reminder2Hours": "2 Stunden vor Beginn des Events",
-	"reminderChannelName": "Erinnerungs-Kanal",
+	"reminderChannelName": "erinnerungs-kanal",
 	"reminderChannelDescription": "Der Kanal, in dem die Erinnerung gesendet werden soll, wenn der Ereigniskanal nicht verwendet wird.",
 	"maximumParticipantsName": "maximal-teilnehmer",
 	"maximumParticipantsDescription": "Die maximale Teilnehmerzahl für die Veranstaltung, wenn sie weggelassen wird, gibt es kein Limit.",
