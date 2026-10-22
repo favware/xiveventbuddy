@@ -20,7 +20,7 @@ export async function createServerEventOptions(
 	leaderUser: GuildMember | null
 ): Promise<Promise<GuildScheduledEventCreateOptions>> {
 	return {
-		name: cutText(eventData.name, 100),
+		name: cutText(eventData.name.replaceAll(/[*_]/g, ''), 100),
 		entityType: GuildScheduledEventEntityType.External,
 		entityMetadata: {
 			location: await resolveKey(interaction!, 'listeners/createServerEvent:entityMetadata', {
