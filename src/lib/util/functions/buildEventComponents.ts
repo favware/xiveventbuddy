@@ -5,6 +5,7 @@ import { getEmojiForJob, XIVEventBuddyEmojis } from '#lib/util/emojis';
 import { buildAddToCalendarUrl } from '#lib/util/functions/buildAddToCalendarUrl';
 import { getPresenceStateButtons, getRemoveParticipationButton } from '#lib/util/functions/getPresenceStateButtons';
 import {
+	canAcceptMoreParticipants,
 	getAbsentParticipants,
 	getAllRounderParticipants,
 	getBenchedParticipants,
@@ -340,6 +341,10 @@ export async function buildEventComponents({
 
 		container.addActionRowComponents((actionRow) => actionRow.setComponents(roleSelectMenu));
 	} else {
+		if (!canAcceptMoreParticipants(event.instance.participants, event.maximumParticipants)) {
+			roleSelectMenu.setDisabled(true);
+		}
+
 		const presenceStateButtons = await getPresenceStateButtons(
 			interactionOrLocale,
 			event.maximumParticipants,

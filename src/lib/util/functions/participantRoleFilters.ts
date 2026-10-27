@@ -51,3 +51,13 @@ export function getPhantomJobParticipants(event: EventData): FilteredParticipant
 export function getAllRounderParticipants(event: EventData): FilteredParticipant[] {
 	return event.instance.participants.filter((participant) => participant.role === $Enums.Roles.AllRounder);
 }
+
+export function canAcceptMoreParticipants(
+	eventParticipants: Pick<Participant, 'discordId' | 'job' | 'role' | 'signupOrder'>[],
+	eventMaximumParticipants: number | null
+): boolean {
+	return (
+		eventMaximumParticipants !== null &&
+		eventParticipants.filter((participant) => !nonPresentEventRoles.includes(participant.role)).length < eventMaximumParticipants
+	);
+}

@@ -1,6 +1,6 @@
 import { type Participant } from '#lib/generated/prisma-client/client';
 import { CustomIdPrefixes } from '#lib/util/constants';
-import { nonPresentEventRoles } from '#utils/functions/participantRoleFilters';
+import { canAcceptMoreParticipants } from '#utils/functions/participantRoleFilters';
 import { resolveKey } from '@sapphire/plugin-i18next';
 import { isNullish } from '@sapphire/utilities';
 import { BaseInteraction, ButtonBuilder, ButtonStyle, type Locale } from 'discord.js';
@@ -35,10 +35,7 @@ export async function getPresenceStateButtons(
 		.setLabel(await resolveKey(interactionAsInteraction!, 'components:labelAbsence', { lng }))
 		.setStyle(ButtonStyle.Secondary);
 
-	if (
-		eventMaximumParticipants !== null &&
-		eventParticipants.filter((participant) => !nonPresentEventRoles.includes(participant.role)).length < eventMaximumParticipants
-	) {
+	if (canAcceptMoreParticipants(eventParticipants, eventMaximumParticipants)) {
 		benchButton.setDisabled(true);
 	}
 
