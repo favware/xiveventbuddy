@@ -341,7 +341,7 @@ export async function buildEventComponents({
 
 		container.addActionRowComponents((actionRow) => actionRow.setComponents(roleSelectMenu));
 	} else {
-		if (!canAcceptMoreParticipants(event.instance.participants, event.maximumParticipants)) {
+		if (!isNullish(event.maximumParticipants) && !canAcceptMoreParticipants(event.instance.participants, event.maximumParticipants)) {
 			roleSelectMenu.setDisabled(true);
 		}
 
