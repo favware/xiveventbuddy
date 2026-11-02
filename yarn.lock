@@ -493,18 +493,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@discordjs/builders@npm:^1.13.0, @discordjs/builders@npm:^1.14.1":
-  version: 1.14.1
-  resolution: "@discordjs/builders@npm:1.14.1"
+"@discordjs/builders@npm:^1.13.0, @discordjs/builders@npm:^1.15.0":
+  version: 1.15.0
+  resolution: "@discordjs/builders@npm:1.15.0"
   dependencies:
     "@discordjs/formatters": "npm:^0.6.2"
     "@discordjs/util": "npm:^1.2.0"
     "@sapphire/shapeshift": "npm:^4.0.0"
-    discord-api-types: "npm:^0.38.40"
+    discord-api-types: "npm:^0.38.50"
     fast-deep-equal: "npm:^3.1.3"
     ts-mixer: "npm:^6.0.4"
     tslib: "npm:^2.6.3"
-  checksum: 10/7360871e1d699b37d3b37f25aaf09e9d63d403af0284ad422d9e5044e8a95165b0f4019ba3b180dc31338cde85654e2fa17c400df25d10bffdaafe85d83cbdfa
+  checksum: 10/fdb7f2bc0580dc2d7fc8bf9ac7008db6d75519ca37f622198360dca89fe9bdbef3baa5b1c104054bb8c5140e9a21a5b089b0dfce6ec657a68d7046ed5696c775
   languageName: node
   linkType: hard
 
@@ -531,7 +531,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@discordjs/rest@npm:^2.4.0, @discordjs/rest@npm:^2.5.1, @discordjs/rest@npm:^2.6.2":
+"@discordjs/rest@npm:^2.4.0, @discordjs/rest@npm:^2.5.1, @discordjs/rest@npm:^2.6.3":
   version: 2.6.3
   resolution: "@discordjs/rest@npm:2.6.3"
   dependencies:
@@ -775,7 +775,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@humanfs/node@npm:^0.16.6":
+"@humanfs/node@npm:^0.16.8":
   version: 0.16.8
   resolution: "@humanfs/node@npm:0.16.8"
   dependencies:
@@ -2173,10 +2173,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/figlet@npm:^1.7.0":
-  version: 1.7.0
-  resolution: "@types/figlet@npm:1.7.0"
-  checksum: 10/ee6fa9165b8c9bf3cb691b893c7bec21a6635abc7214017329ed78d13a5bfaef372292b412e2145b87646cbc00126875dedf8df925fcfb745cff94ef5979ef77
+"@types/figlet@npm:^1.12.0":
+  version: 1.12.0
+  resolution: "@types/figlet@npm:1.12.0"
+  dependencies:
+    figlet: "npm:*"
+  checksum: 10/35840c0134e4f7a2689854a6c19f792df3003957d545df27c720123336309eecb00a8f947bfec0269e580d7254fce1aeb2ca9644f328f257f65d67cbdc216a71
   languageName: node
   linkType: hard
 
@@ -4173,31 +4175,31 @@ __metadata:
   languageName: node
   linkType: hard
 
-"discord-api-types@npm:^0.38.1, discord-api-types@npm:^0.38.30, discord-api-types@npm:^0.38.33, discord-api-types@npm:^0.38.40, discord-api-types@npm:^0.38.49, discord-api-types@npm:^0.38.50":
+"discord-api-types@npm:^0.38.1, discord-api-types@npm:^0.38.30, discord-api-types@npm:^0.38.33, discord-api-types@npm:^0.38.50":
   version: 0.38.56
   resolution: "discord-api-types@npm:0.38.56"
   checksum: 10/ab7560fe28a756b86e55a8e07181ee73f34327b0019c720a704c36335d4bdd495ec18a890b7bee011ac0f113846e1bb3fe6dc527a399cb3a16c09a9641174b01
   languageName: node
   linkType: hard
 
-"discord.js@npm:^14.27.0":
-  version: 14.27.0
-  resolution: "discord.js@npm:14.27.0"
+"discord.js@npm:^14.28.0":
+  version: 14.28.0
+  resolution: "discord.js@npm:14.28.0"
   dependencies:
-    "@discordjs/builders": "npm:^1.14.1"
+    "@discordjs/builders": "npm:^1.15.0"
     "@discordjs/collection": "npm:1.5.3"
     "@discordjs/formatters": "npm:^0.6.2"
-    "@discordjs/rest": "npm:^2.6.2"
+    "@discordjs/rest": "npm:^2.6.3"
     "@discordjs/util": "npm:^1.2.0"
     "@discordjs/ws": "npm:^1.2.3"
     "@sapphire/snowflake": "npm:3.5.5"
-    discord-api-types: "npm:^0.38.49"
+    discord-api-types: "npm:^0.38.50"
     fast-deep-equal: "npm:3.1.3"
     lodash.snakecase: "npm:4.1.1"
     magic-bytes.js: "npm:^1.13.0"
     tslib: "npm:^2.6.3"
     undici: "npm:^6.27.0"
-  checksum: 10/5be8fa8551c334e3d3c6ddc66a96849050ebc1f8de226706f2bf71e4d6498603cca1718174f9191ba1457831459d029054d5027c8d52505a9909dd55602c3f25
+  checksum: 10/19348147bd653ae59510f77a38ff494ee2bb02568a66384cab00584182f5abaf851d68f361e8cfda29a844d96e9cc8b69952bc6bb14e1e80a54308ec6d00db7d
   languageName: node
   linkType: hard
 
@@ -5166,9 +5168,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint@npm:^10.13.0":
-  version: 10.13.0
-  resolution: "eslint@npm:10.13.0"
+"eslint@npm:^10.14.0":
+  version: 10.14.0
+  resolution: "eslint@npm:10.14.0"
   dependencies:
     "@eslint-community/eslint-utils": "npm:^4.8.0"
     "@eslint-community/regexpp": "npm:^4.12.2"
@@ -5176,7 +5178,7 @@ __metadata:
     "@eslint/config-helpers": "npm:^0.7.0"
     "@eslint/core": "npm:^1.2.1"
     "@eslint/plugin-kit": "npm:^0.7.3"
-    "@humanfs/node": "npm:^0.16.6"
+    "@humanfs/node": "npm:^0.16.8"
     "@humanwhocodes/module-importer": "npm:^1.0.1"
     "@humanwhocodes/retry": "npm:^0.4.2"
     "@types/estree": "npm:^1.0.6"
@@ -5197,7 +5199,7 @@ __metadata:
     imurmurhash: "npm:^0.1.4"
     is-glob: "npm:^4.0.0"
     json-stable-stringify-without-jsonify: "npm:^1.0.1"
-    minimatch: "npm:^10.2.5"
+    minimatch: "npm:^10.2.6"
     natural-compare: "npm:^1.4.0"
     optionator: "npm:^0.9.3"
   peerDependencies:
@@ -5207,7 +5209,7 @@ __metadata:
       optional: true
   bin:
     eslint: bin/eslint.js
-  checksum: 10/04b7140a6fb4614d3cd5feb35041cd3b2b92f80d7fd015d8d320c76e015577863dc530c1bcf228eb3b58b06151e45b6452dd349a6863d21eeefa02ceaee1377f
+  checksum: 10/66743528bfef3961deb3141fc6893e1f137f2ed2602ee36482107cdd49b1a14a1c3da9bb9824fd3530003a23f041b6854f28c20306e99d9b7222a825998e8ed9
   languageName: node
   linkType: hard
 
@@ -5417,7 +5419,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"figlet@npm:^1.12.0":
+"figlet@npm:*, figlet@npm:^1.12.0":
   version: 1.12.0
   resolution: "figlet@npm:1.12.0"
   dependencies:
@@ -7239,7 +7241,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"minimatch@npm:^10.2.2, minimatch@npm:^10.2.4, minimatch@npm:^10.2.5, minimatch@npm:^10.2.6, minimatch@npm:^9.0.3 || ^10.1.2":
+"minimatch@npm:^10.2.2, minimatch@npm:^10.2.4, minimatch@npm:^10.2.6, minimatch@npm:^9.0.3 || ^10.1.2":
   version: 10.2.6
   resolution: "minimatch@npm:10.2.6"
   dependencies:
@@ -8507,9 +8509,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rolldown-plugin-dts@npm:^0.29.0-beta.2":
-  version: 0.29.0-beta.2
-  resolution: "rolldown-plugin-dts@npm:0.29.0-beta.2"
+"rolldown-plugin-dts@npm:^0.28.8":
+  version: 0.28.8
+  resolution: "rolldown-plugin-dts@npm:0.28.8"
   dependencies:
     dts-resolver: "npm:^3.0.0"
     get-tsconfig: "npm:5.0.0-beta.6"
@@ -8518,12 +8520,15 @@ __metadata:
     yuku-codegen: "npm:^0.19.0"
     yuku-parser: "npm:^0.19.0"
   peerDependencies:
+    "@typescript/native-preview": "*"
     "@volar/typescript": ~2.4.0
     "@vue/language-core": ~3.2.0 || ~3.3.0
     rolldown: ^1.2.0
-    typescript: ^5.0.0 || ^6.0.0 || ~7.0.0 || ~7.1.0-0
+    typescript: ^5.0.0 || ^6.0.0 || ~7.0.0
     vue-tsc: ~3.2.0 || ~3.3.0
   peerDependenciesMeta:
+    "@typescript/native-preview":
+      optional: true
     "@volar/typescript":
       optional: true
     "@vue/language-core":
@@ -8532,7 +8537,7 @@ __metadata:
       optional: true
     vue-tsc:
       optional: true
-  checksum: 10/f224f32944f13918e9d1c889fdfa6920cd9ea08bce0dd36e65b69b1fb5549078a0bcfc79bf6de3e18b17a4865a5070b866a018811cef0a839834a92ef139b177
+  checksum: 10/77adc8deff37eace9f004b671d021ef74c0e435c923308746dde8424609370f874ee411c66015f8ecabada8a9cd17f0941f2b55de40a4565bca73d20bc3358fb
   languageName: node
   linkType: hard
 
@@ -9182,6 +9187,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"tinyps@npm:^0.5.1":
+  version: 0.5.1
+  resolution: "tinyps@npm:0.5.1"
+  checksum: 10/5ae6ce351831bef85b4325445cbbb6db6bb8c83c7670bad10f5ed67e8fbdf76ad4b4cb468524085c73027222ca466ad9e184ce8a94f1abf633e0e963b171ddba
+  languageName: node
+  linkType: hard
+
 "to-regex-range@npm:^5.0.1":
   version: 5.0.1
   resolution: "to-regex-range@npm:5.0.1"
@@ -9198,15 +9210,6 @@ __metadata:
     "@sindresorhus/base62": "npm:^1.0.0"
     reserved-identifiers: "npm:^1.0.0"
   checksum: 10/fba7ebdf464c92c92ccde887f917c9461792f99b738d36bebe5c3bd07562c3fdceedfd120ac115da359162b115798136bb8b9ea7417d7e3a663db9425ff1bcc1
-  languageName: node
-  linkType: hard
-
-"tree-kill@npm:^1.2.2":
-  version: 1.2.2
-  resolution: "tree-kill@npm:1.2.2"
-  bin:
-    tree-kill: cli.js
-  checksum: 10/49117f5f410d19c84b0464d29afb9642c863bc5ba40fcb9a245d474c6d5cc64d1b177a6e6713129eb346b40aebb9d4631d967517f9fbe8251c35b21b13cd96c7
   languageName: node
   linkType: hard
 
@@ -9233,9 +9236,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tsdown@npm:^0.23.2":
-  version: 0.23.2
-  resolution: "tsdown@npm:0.23.2"
+"tsdown@npm:^0.23.4":
+  version: 0.23.4
+  resolution: "tsdown@npm:0.23.4"
   dependencies:
     cac: "npm:^7.1.0"
     defu: "npm:^6.1.7"
@@ -9245,16 +9248,16 @@ __metadata:
     obug: "npm:^3.0.0"
     picomatch: "npm:^4.0.7"
     rolldown: "npm:~1.2.15"
-    rolldown-plugin-dts: "npm:^0.29.0-beta.2"
+    rolldown-plugin-dts: "npm:^0.28.8"
     tinyexec: "npm:^1.3.1"
     tinyglobby: "npm:^0.2.17"
-    tree-kill: "npm:^1.2.2"
+    tinyps: "npm:^0.5.1"
     unconfig-core: "npm:^7.5.0"
     verkit: "npm:^0.5.0"
   peerDependencies:
     "@arethetypeswrong/core": ^0.18.1
-    "@tsdown/css": 0.23.2
-    "@tsdown/exe": 0.23.2
+    "@tsdown/css": 0.23.4
+    "@tsdown/exe": 0.23.4
     "@vitejs/devtools": "*"
     publint: ^0.3.8
     tsx: "*"
@@ -9282,7 +9285,7 @@ __metadata:
       optional: true
   bin:
     tsdown: ./dist/run.mjs
-  checksum: 10/554c1e1c2e5e22ee19bcd46fdaa04f2a7db43f0b24a3ea1e5e97c46f82472679aa380707dd6ab295cd620e4142d63fdb22cb5842843d6d71aa171446359dc32c
+  checksum: 10/2392ae355cc2b77c0457d350d41954cbe65c8707bc03ea6e699cf4a76d694f783d5e5255fdc3d96a14488c0b8a3b4c9667bc3187c002f4c28da4cfbf6c9c0b64
   languageName: node
   linkType: hard
 
@@ -9989,9 +9992,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ws@npm:^8.17.0, ws@npm:^8.22.0":
-  version: 8.22.0
-  resolution: "ws@npm:8.22.0"
+"ws@npm:^8.17.0, ws@npm:^8.22.1":
+  version: 8.22.1
+  resolution: "ws@npm:8.22.1"
   peerDependencies:
     bufferutil: ^4.0.1
     utf-8-validate: ">=5.0.2"
@@ -10000,7 +10003,7 @@ __metadata:
       optional: true
     utf-8-validate:
       optional: true
-  checksum: 10/ed771c2766bdb5724a66872f60ffc1a39f06e1a5bc8849f453c273e97c91a40ed5a224f06dc0e22f44b4a9e03938bf746fc5938d6887433cc0f4c416237d3b10
+  checksum: 10/e4f596344d279e391702c541f7ef09d3b4ad3ac10914024d9a21cc8710ee5ca7cff0b9d10cd0b215282c75d0b054d5b2c8fb4d9a4c73f0495b3a15fcbfad76bf
   languageName: node
   linkType: hard
 
@@ -10026,7 +10029,7 @@ __metadata:
     "@skyra/env-utilities": "npm:^2.0.1"
     "@skyra/jaro-winkler": "npm:^1.1.1"
     "@skyra/start-banner": "npm:^2.0.2"
-    "@types/figlet": "npm:^1.7.0"
+    "@types/figlet": "npm:^1.12.0"
     "@types/gradient-string": "npm:^1.1.6"
     "@types/node": "npm:^24.19.2"
     "@types/pg": "npm:^8.23.1"
@@ -10037,8 +10040,8 @@ __metadata:
     bullmq: "npm:^5.81.5"
     colorette: "npm:^2.0.20"
     date-fns: "npm:^4.4.0"
-    discord.js: "npm:^14.27.0"
-    eslint: "npm:^10.13.0"
+    discord.js: "npm:^14.28.0"
+    eslint: "npm:^10.14.0"
     eslint-config-neon: "npm:^0.5.4"
     eslint-config-prettier: "npm:^10.1.8"
     eslint-plugin-prettier: "npm:^5.5.7"
@@ -10049,11 +10052,11 @@ __metadata:
     prettier-plugin-prisma: "npm:^5.0.0"
     prisma: "npm:^7.10.1"
     rimraf: "npm:^6.1.3"
-    tsdown: "npm:^0.23.2"
+    tsdown: "npm:^0.23.4"
     typescript: "npm:^6.0.3"
     unrun: "npm:^0.3.1"
     utf-8-validate: "npm:^6.0.6"
-    ws: "npm:^8.22.0"
+    ws: "npm:^8.22.1"
   languageName: unknown
   linkType: soft
 
