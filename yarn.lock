@@ -1762,10 +1762,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sapphire/fetch@npm:^3.0.5":
-  version: 3.0.5
-  resolution: "@sapphire/fetch@npm:3.0.5"
-  checksum: 10/c9fdcf2785dc26216836344967175d3f993fb9b11b225e55ceefec6a77d3747ecf684ed02fd9c8fb4826fbc4fc8edf541309506686c4bbd1569626c389a2541f
+"@sapphire/fetch@npm:^4.0.0":
+  version: 4.0.0
+  resolution: "@sapphire/fetch@npm:4.0.0"
+  checksum: 10/8ae5e75a305b2b1492bcd09b411d337d8e85127ed16d48765601f9582dadd05ea685bfc1497a59e8489cdbb39b4f6108f3aa7812a74d4204dfd4175ae8c40627
   languageName: node
   linkType: hard
 
@@ -10018,7 +10018,7 @@ __metadata:
     "@prisma/client": "npm:^7.10.1"
     "@sapphire/decorators": "npm:^6.2.0"
     "@sapphire/discord.js-utilities": "npm:^7.3.3"
-    "@sapphire/fetch": "npm:^3.0.5"
+    "@sapphire/fetch": "npm:^4.0.0"
     "@sapphire/framework": "npm:^5.5.1"
     "@sapphire/plugin-i18next": "npm:^8.0.0"
     "@sapphire/plugin-logger": "npm:^4.1.0"
