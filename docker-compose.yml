@@ -15,7 +15,7 @@ services:
 
   postgres:
     container_name: postgres
-    image: postgres:18-alpine
+    image: postgres:19-alpine
     networks:
       - xiveventbuddy
     ports:
